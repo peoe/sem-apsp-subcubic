@@ -1,0 +1,79 @@
+\documentclass[aspectratio=169,
+10pt,
+wide,
+xcolor={table},
+mygreen,
+hyperref={colorlinks=false},
+handout,
+tikz]
+{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{qrcode}
+
+\usepackage{csquotes}
+\usepackage{pgfplots}
+\usepackage{pgfpages}
+\usepackage{tikz}
+\usepackage{svg}
+\usetikzlibrary{spy}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{soul}
+
+\definecolor{Petrol}{HTML}{066F4F}
+\definecolor{Red}{HTML}{B11002}
+\definecolor{Blue}{HTML}{1078B1}
+\definecolor{Yellow}{HTML}{B88C09}
+\definecolor{maincolor}{named}{Petrol}
+
+\setbeamercolor{palette primary}{bg=Petrol}
+\setbeamercolor{alerted text}{fg=Red}
+\setbeamercolor{example text}{fg=Blue}
+\setbeamercolor{block title}{fg=Petrol}
+\setbeamercolor{title}{fg=Petrol}
+\setbeamercolor{progress bar}{fg=Petrol}
+
+\setbeamercolor{frame numbering}{fg=Petrol}
+
+\setbeamertemplate{frame footer}{\color{Petrol}\insertshorttitle}
+
+\newcommand{\bet}[1]{\textbf{\color{maincolor}#1}}
+\newcommand{\minor}[1]{\textcolor{black!50}{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\usepackage{xspace}
+\makeatletter 
+\xspaceaddexceptions{\grqq \grq \csq@qclose@i \} } 
+\makeatother
+\usepackage{multicol}
+% ===========================================================
+
+% Farben	
+% ===========================================================
+\usepackage{xcolor}
+\definecolor{fbblau}{HTML}{3078AB}
+\definecolor{mediumgray}{gray}{.65}
+\definecolor{blackberry}{rgb}{0.53, 0.0, 0.25}
+% ===========================================================
+
+\newcommand{\hyper}[1]{\bet{\underline{\smash{#1}}}}
+
+\renewcommand{\thead}[1]{%
+	\bfseries
+	\begin{tabular}{@{}c@{}}
+		\vrule height 1.2\ht\strutbox width 0pt\ignorespaces
+		#1
+		\unskip\vrule depth 1.2\dp\strutbox width 0pt
+	\end{tabular}%
+}
+
+\newcommand{\comment}[1]{}   % for multi-line comments
