@@ -11,7 +11,7 @@
             "command": "make",
             "args": [
                 "all",
-		"-j4"
+		"-j"
             ],
             "problemMatcher": []
         }

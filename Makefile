@@ -1,22 +1,23 @@
 TEX := latexmk
 TFLAGS := -pdf
 
-# Liste alle TeX-Files im aktuellen Verzeichnis auf
 TEXS := $(wildcard *.tex)
 PDFS := $(patsubst %.tex,%.pdf,$(TEXS))
+
+PYS := $(wildcard *.py)
 
 .PHONY: help all clean erase $(TEXS)
 help:
 	@echo "Latex Makefile."
-	@echo "Folgende Befehle gibt es:"
-	@echo "make all	| Führt latexmk für alle TeX-Files gefolgt von make clean aus."
-	@echo "make %.tex	| Führt latexmk für das angegebene TeX-File aus."
-	@echo "make clean	| Entfernt alle TeX-spezifischen Builddateien (aux,log,nav,out,snm,toc)"
-	@echo "make erase	| Entfernt alle PDF-Dateien von TeX-Files im aktuellen Verzeichnis."
-	@echo "Mit dem Flag -jN können N Jobs gleichzeitig ausgeführt werden. -j für unbegrenzte Anzahl."
+	@echo "Available commands:"
+	@echo "make all		| Run latexmk for all available TeX files. Clean log files afterwards."
+	@echo "make %.tex	| Run latexmk on a TeX file."
+	@echo "make clean	| Removes all TeX specific build files."
+	@echo "make erase	| Removes all PDF files generated from TeX files in the current directory."
+	@echo "The -jN flag allows running N jobs at the same time. Use -j for an unlimited number of jobs."
 
-all: $(PDFS)
-	@echo "Finished with all."
+all: imgs $(PDFS)
+	@echo "Finished."
 
 clean:
 	@echo "Cleaning up…"
@@ -26,11 +27,15 @@ clean:
 erase: clean
 	rm -f $(PDFS)
 
+imgs: $(PYS)
+	@mkdir -p imgs
+	@for PY in $(PYS); do python $$PY False; done
+
 %.pdf: %.tex
-	@echo "======= Running xelatex for: $@ =======";
+	@echo "======= Running latexmk for: $@ =======";
 	@while ($(TEX) $(TFLAGS) "$(basename $@).tex"; grep -q "Rerun to get" "$(basename $@).log") \
 	do \
-		echo "======= Rerunning xelatex for: $@ ======="; \
+		echo "======= Rerunning latexmk for: $@ ======="; \
 	done;
 	@echo "======= Deleting build files for: $@ =======";
 	rm -f $(basename $@).aux $(basename $@).log $(basename $@).nav $(basename $@).out $(basename $@).snm $(basename $@).toc
