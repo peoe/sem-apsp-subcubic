@@ -1,5 +1,5 @@
 TEX := latexmk
-TFLAGS := -pdf
+TFLAGS := -interaction=nonstopmode -pdf
 
 TEXS := $(wildcard *.tex)
 PDFS := $(patsubst %.tex,%.pdf,$(TEXS))

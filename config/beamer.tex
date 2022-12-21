@@ -17,13 +17,20 @@ tikz]
 \usepackage{listings}
 \usepackage{qrcode}
 
+\usepackage{verbatim}
 \usepackage{csquotes}
 \usepackage{pgfplots}
 \usepackage{pgfpages}
 \usepackage{tikz}
 \usepackage{svg}
-\usetikzlibrary{spy}
+\usetikzlibrary{spy, arrows, shapes}
 \usepgfplotslibrary{dateplot}
+
+% tikzstyles for graphs
+\tikzstyle{vertex}=[circle,fill=black!25,minimum size=20pt,inner sep=0pt]
+\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
 
 \usepackage{multicol}
 \usepackage{hyperref}
@@ -75,5 +82,3 @@ tikz]
 		\unskip\vrule depth 1.2\dp\strutbox width 0pt
 	\end{tabular}%
 }
-
-\newcommand{\comment}[1]{}   % for multi-line comments
