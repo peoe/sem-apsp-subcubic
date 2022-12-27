@@ -133,11 +133,11 @@
 \end{frame}
 
 \begin{frame}{Lemma 3.1\footnote[1]{\cite{Chan2007}}}
-    \begin{theorem}\label{thm:sub_mat_mul}
+    \begin{lemma}\label{lem:sub_mat_mul}
         Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
 
         Here, $\varepsilon$ and $c_\varepsilon$ are the same variables as in Lemma~\ref{lem:dom_pairs}.
-    \end{theorem}
+    \end{lemma}
 \end{frame}
 
 \begin{frame}{Splitting Quadratic Matrices}
@@ -145,6 +145,7 @@
 
     \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{\footnote[2]{\cite[Section~6.2]{Aho1974}}}}
 
+    % TODO: redo this part, because this is just Strassen's method! we want Aho Section 5.9 Theorem 5.7!!!!!
     \uncover<3->{
         \begin{columns}
             \begin{column}{.45\linewidth}

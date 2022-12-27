@@ -10,11 +10,10 @@
 
         \uncover<2->{
             \begin{exampleblock}{Assumption}
-                All palues are presorted by the $d$-th coordinate using a linear-time median-finding algorithm.
+                All values are presorted by the $d$-th coordinate.
             \end{exampleblock}
         }
     }
-
     \only<3-10>{
         \emph{Idea: Divide and Conquer!}
         
@@ -41,7 +40,6 @@
                 
                 Here, $m_d$ denote the median $d$-th coordinate for $\mathbb{P}_{red} \cup \mathbb{P}_{blue}$.
             }
-            
             \only<5-7>{
                 \begin{figure}
                     \begin{tikzpicture}[scale=0.6, auto, swap]
@@ -77,7 +75,7 @@
                             \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{blue, right}$};
                         }
 
-                        \only<6, 7>{
+                        \only<6->{
                             \node[ghost] (hook1) at (3, -.5) {};
                             \node[ghost] (hook2) at (3, 6.5) {};
 
@@ -101,20 +99,20 @@
                     \end{tikzpicture}
                 \end{figure}
             }
-            
-            \only<8-10>{
+
+            \only<8->{
                 We solve the dominating pairs problem on the sets
                 \[
                     \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \qquad \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}, \qquad \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}.
                 \]
                 (For the first $d - 1$ coordinates for the third set.)
 
-                \uncover<9, 10>{
+                \uncover<9->{
                     We do not consider $\mathbb{P}_{red, right} \cup \mathbb{P}_{blue, left}$, because $\forall p \in \mathbb{P}_{red, right}, q \in \mathbb{P}_{blue, left}: q_d \leq m_d \leq p_d$.
                     Hence no $q$ can never dominate any $p$.
                 }
 
-                \uncover<10>{
+                \uncover<10->{
                     We stop dividing if the number of points left to consider is $1$; we output all pairs of red and blue points if the number of dimensions left is $0$.
                 }
             }
@@ -122,11 +120,147 @@
             % TODO: think about if we need more figures here, that explain the termination conditions...
         }
     }
-
-    \only<11->{
+    \only<11-15>{
         Without the output costs of $\mathcal{O}\left( k \right)$, we get the recurrence relation
         \[
-            T_d(n) \leq 2 T_d\left( \frac{n}{2} \right) + T_{d - 1}(n) + \mathcal{O}(n).
+            T_d(n) \leq \underbrace{2 T_d\left( \frac{n}{2} \right)}_{(A)} + \underbrace{T_{d - 1}(n)}_{(B)} + \underbrace{\mathcal{O}(n)}_{(C)}.
         \]
+
+        \only<12-13>{
+            $(A)$: Two subproblems for half of the data each. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}$
+
+            $(B)$: Subproblem where d-th coordinate does not matter. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
+
+            $(C)$: Time to split current point set about the median.\footnote[3]{\cite[Section~2.3.2]{Preparata1985}}
+        
+            \uncover<13>{
+                From the termination criteria we get
+                \[
+                    T_d(1) = \mathcal{O}\left( 1 \right), \qquad T_0(n) = \mathcal{O}\left( n \right).
+                \]
+            }
+        }
+
+        \only<14->{
+            Let $b$ be fixed, and define $T'(N) := \max \left\{ T_k(i) \,|\, i = 1, \dots, n; k = 1, \dots, d: b^k i \leq N \right\}$.
+            
+            Substituting into the previous reccurence formula thus yields for some constant $c$:
+            \[
+                T'(N) \leq 2 T'\left( \frac{N}{2} \right) + T'\left( \frac{N}{b} \right) + cN.
+            \]
+            
+            \uncover<15>{
+                $\implies$ What does this reccurence evaluate to and how do we need to choose $b$?
+            }
+        }
+    }
+    \only<16-19>{
+        \[
+            T'(N) \leq 2 T'\left( \frac{N}{2} \right) + T'\left( \frac{N}{b} \right) + cN
+        \]
+
+        \uncover<17->{
+            By guessing that $T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right)$, we get
+            \begin{align*}
+                T'(N) &\leq 2 \tilde{c} \left( {\left[ \frac{N}{2} \right]}^{1 + \varepsilon} - \frac{N}{2} \right) + \tilde{c} \left( {\left[ \frac{N}{b} \right]}^{1 + \varepsilon} - \frac{N}{b} \right) + cN \\
+                \uncover<18->{
+                     &= \tilde{c} \left( \frac{2}{2^{1 + \varepsilon}} N^{1 + \varepsilon} - N \right) + \tilde{c} \left( \frac{1}{b^{1 + \varepsilon}} N^{1 + \varepsilon} - \frac{1}{b} N \right) + cN \\
+                     \uncover<19->{
+                         &\overset{(A)}{=} \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \underbrace{\frac{\tilde{c}}{b} N}_{\leq \tilde{c} N} + cN \overset{(B)}{=} \tilde{c} \left( N^{1 + \varepsilon} - N \right),
+                     }
+                }
+            \end{align*}
+        }
+    }
+    \only<20->{
+        If $(A)$: $\begin{aligned}1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}}\end{aligned}$, and $(B)$: $c \leq \tilde{c}$ are fulfilled:
+        \only<20-21>{
+            \[
+                T'(N) \overset{(A)}{\leq} \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \underbrace{\frac{\tilde{c}}{b} N}_{\leq \tilde{c} N} + cN \overset{(B)}{=} \tilde{c} \left( N^{1 + \varepsilon} - N \right),
+            \]
+        }
+        \only<21>{
+            \begin{align*}
+                1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} &\iff b^{1 + \varepsilon} = b^{1 + \varepsilon} \frac{1}{2^\varepsilon} + 1 \iff -1 = \frac{b^{1 + \varepsilon}}{2^\varepsilon} - b^{1 + \varepsilon} \\
+                &\iff -1 = \frac{1 - 2^\varepsilon}{2^\varepsilon} b^{1 + \varepsilon} \iff b^{1 + \varepsilon} = \frac{2^\varepsilon}{2^\varepsilon - 1} = c_\varepsilon
+            \end{align*}
+        }
+        \only<22->{
+            \begin{align*}
+                T'(N) &= \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right) \\
+                \implies T_d(n) &= \mathcal{O}\left( {\left( b^d n \right)}^{1 + \varepsilon} \right) = \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} \right),
+            \end{align*}
+            because $T'(N) := \max \left\{ T_k(i) \,|\, i = 1, \dots, n; k = 1, \dots, d: b^k i \leq N \right\}$. 
+            
+            Finally, outputing all $k$ dominating pairs requires $\mathcal{O}\left( k \right)$ time. \qed{}
+        }
+    }
+\end{frame}
+
+\begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}\footnote[1]{\cite[Lemma~3.1]{Chan2007}}}
+    \only<1>{
+        \setcounter{theorem}{1}
+        \begin{lemma}
+            Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, and $\varepsilon \in \interval[open]{0}{1}, \begin{aligned}c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}\end{aligned}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
+        \end{lemma}
+        % TODO: add remark about how we break ties in such a case!
+    }
+    \only<2-4>{
+        Consider $A$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{n, d}$, and $B$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{d, n}$.
+        We want to compute the pairs
+        \begin{align*}
+            X_k &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \} \\
+             &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j} \}.
+        \end{align*}
+        \uncover<3->{
+            This effectively amounts to computing all dominant pairs between the sets
+            \begin{align*}
+                \mathcal{A}_k &:= {\left\{ (a_{i, k} - a_{i, 1}), (a_{i, k} - a_{i, 2}), \dots, (a_{i, k} - a_{i, d}) \right\}}_{i = 1}^{n}, \text{and} \\
+                \mathcal{B}_k &:= {\left\{ (b_{1, j} - b_{k, j}), (b_{2, j} - b_{k, j}), \dots, (b_{d, j} - b_{k, j}) \right\}}_{j = 1}^{n},
+            \end{align*}
+            where $\mathcal{A}_k$ takes the role of red points and $\mathcal{B}_k$ acts as the set of blue points.
+        }
+
+        \uncover<4>{
+            By Lemma~\ref{lem:dom_pairs}, this takes an effort of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right)$.
+        }
+    }
+    \only<5>{
+        The penultimate step is to compute that
+        \begin{align*}
+            \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right),
+        \end{align*}
+        leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
+    }
+    \only<6->{
+        Suppose an index pair $(i, j)$ were to be included in $X_k$, and in $X_{\tilde{k}}$, with $k \neq \tilde{k}$.
+        Thus we especially get that $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
+        Applying the definition of $X_{\tilde{k}}$, we also get $a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k} + b_{k, j}$.
+        This means that $a_{i, \tilde{k}} + b_{\tilde{k}, j} = a_{i, k} + b_{k, j}$.
+        To break this tie, we can w.l.o.g. assume $k < \tilde{k}$, which would result in $(i, j) \not\in X_{\tilde{k}}$.
+
+        \uncover<7->{
+            Now assume that there would exist an index pair $(i, j)$ that is contained in none of the $X_k$.
+            Then the condition $\forall k = 1, \dots, d: \forall \tilde{k} = 1, \dots, d: a_{i, k} + b_{k, j} > a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
+            But obviously for $k = \tilde{k}$ we have ``$=$''.
+        }
+
+        \uncover<8>{
+            This shows that aggregating over all $X_k$ counts every index pair exactly once.
+            $\implies \begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2 \implies \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$. \qed{}
+        }
+    }
+    % TODO: add note on breaking ties to retrieve the shortest path after we have computed its length!
+\end{frame}
+
+\begin{frame}{Proof of Theorem~\ref{thm:mat_mul}\footnote[1]{\cite[Theorem~3.2]{Chan2007}}}
+    \only<1>{
+        \setcounter{theorem}{2}
+        \begin{theorem}
+            Given any two matrices $A, B \in \mathbb{R}^{n \times n}$ we can compute their min-plus (distance) product in a time of $\mathcal{O}\left( n^3 / \log(n) \right)$.
+        \end{theorem}
+    }
+    \only<2->{
+        adsf
     }
 \end{frame}
