@@ -1,5 +1,240 @@
 \section{Structure of the Proof}
 
-\begin{frame}{asdf}
-    qwer
+\begin{frame}{Basic Ideas}
+    The proof is structured as follows:
+    \uncover<2->{
+        \begin{enumerate}
+            \item<2-> A problem in computational geometry\uncover<5->{$\implies$ \emph{Finding dominating pairs}}
+            \item<3-> Computing products of matrices\uncover<6->{$\implies$ \emph{Sorting indices in sets}}
+            \item<4-> Combining the two ideas\uncover<7->{$\implies$ \emph{Splitting matrices and multiplying them efficiently}}
+        \end{enumerate}
+    }
+\end{frame}
+
+\begin{frame}{Dominating Pairs}
+    \begin{alertblock}{Dominating Pair}
+        \only<1, 2>{
+            Let $\mathfrak{M}_1, \mathfrak{M}_2$ be (finite) subsets of $\mathbb{R}^d$ with $d \in \mathbb{N}$.
+            Then a \emph{dominating pair} is defined to be a tuple $(p, q) \in \mathfrak{M}_1 \times \mathfrak{M}_2$ such that it holds
+            \[
+                \forall k = 1, \dots, d: p_k \leq q_k,
+            \]
+            where $p_k$, and $q_k$ are the $k$-th coordinate of $p$, and $q$ respectively.
+        }
+        \only<3->{
+            \begin{figure}
+                \begin{tikzpicture}[scale=0.75, auto, swap]
+                    \foreach \pos / \name in {%
+                        {(1, 1)/a}, {(4.5, 3.5)/b}%
+                    }%
+                        \node[redpoint] (\name) at \pos {};
+
+                    \foreach \pos / \name in {%
+                        {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
+                    }%
+                        \node[bluepoint] (\name) at \pos {};
+
+                    \only<4>{
+                        \foreach \source / \dest in {%
+                            B/a, C/a,%
+                            C/b%
+                        }%
+                            \path[dominates] (\source) -- (\dest);
+                    }
+
+                    \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
+                    \node[barlabel, rotate=90] (labely) at (-0.75, 3) {Coordinate 1};
+
+                    \node[ghost] (bound1) at (0, 0) {};
+                    \node[ghost] (bound2) at (6, 6) {};
+
+                    % border
+                    \node[draw,fit=(bound1) (bound2)] (border) {};
+                \end{tikzpicture}
+            \end{figure}
+        }
+    \end{alertblock}
+    \only<2>{
+        \begin{block}{Note}
+            This implies that for any dominating pair, the first point will always be the one with smaller coordinates.
+            This can, to a certain degree, be seen as an ``ordering'' of $\mathfrak{M}_1$, and $\mathfrak{M}_2$.
+        \end{block}
+    }
+\end{frame}
+
+\begin{frame}{Lemma 2.1\autocite{Chan2007}}
+    \begin{lemma}\label{lem:dom_pairs}
+        Let $\mathbb{P} \subset \mathbb{R}^d$ be a set of red or blue points, partitioned into $\mathbb{P}_{red}$ and $\mathbb{P}_{blue}$ such that $n = \abs{\mathbb{P}_{red}} + \abs{\mathbb{P}_{blue}}$, and $\varepsilon \in \interval[open]{0}{1}$.
+        Then we can find all $k$ dominating pairs in a time of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + k \right)$, where we define $c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}$.
+    \end{lemma}
+\end{frame}
+
+\begin{frame}{Matrix Products}
+    \begin{alertblock}{Min-Plus/Distance Product}
+        We define the \emph{min-plus} or \emph{distance product} as the operator
+        \[
+            \otimes : \mathbb{R}^{n \times d} \times \mathbb{R}^{d \times m} \rightarrow \mathbb{R}^{n \times m},\qquad
+            {\left( A \otimes B \right)}_{i, j} := \min\limits_{k \in \{ 1, \dots, d \}} a_{i, k} + b_{k, j}.
+        \]
+    \end{alertblock}
+
+    \only<2->{
+        \begin{columns}
+            \begin{column}{.53\linewidth}
+                \begin{exampleblock}{Computing Distances}
+                    This product is useful, because it mimics the computation of shortest distances:
+                    \begin{figure}
+                        \begin{minipage}{.8\linewidth}
+                            \begin{algorithm}[H]
+                                \If{$d(a, c) > d(a, b) + d(b, c)$}{
+                                    $d(a, c) := d(a, b) + d(b, c)$
+                                }
+                            \end{algorithm}
+                        \end{minipage}
+                    \end{figure}
+                \end{exampleblock}
+            \end{column}
+            \begin{column}{.4\linewidth}
+                \begin{figure}
+                    \begin{tikzpicture}[scale=0.95, auto, swap]
+                        \foreach \pos / \name in {%
+                            {(0, 0)/a}, {(5, 0)/c}, {(2.5, 2)/b}%
+                        }%
+                            \node[vertex] (\name) at \pos {$\name$};
+            
+                        \foreach \source / \dest / \weight in {%
+                            a/b/3, a/c/7, b/c/2%
+                        }%
+                            \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+
+                        \foreach \vertex / \fr in {a/3, c/3}%
+                            \path<\fr-> node[selected vertex] at (\vertex) {$\vertex$};
+
+                        \foreach \vertex / \fr in {a/4, b/4, c/4}%
+                            \path<\fr-> node[selected vertex] at (\vertex) {$\vertex$};
+
+                        \only<3>{
+                            \begin{pgfonlayer}{background}
+                                \path<+->[selected edge] (a.center) -- (c.center);
+                            \end{pgfonlayer}
+                        }
+
+                        \only<4>{
+                            \begin{pgfonlayer}{background}
+                                \foreach \source / \dest in {a/b, b/c}
+                                    \path<+->[selected edge] (\source.center) -- (\dest.center);
+                            \end{pgfonlayer}
+                        }
+                    \end{tikzpicture}
+                \end{figure}
+            \end{column}
+        \end{columns}
+    }
+\end{frame}
+
+\begin{frame}{Lemma 3.1\footnote[1]{\cite{Chan2007}}}
+    \begin{theorem}\label{thm:sub_mat_mul}
+        Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
+
+        Here, $\varepsilon$ and $c_\varepsilon$ are the same variables as in Lemma~\ref{lem:dom_pairs}.
+    \end{theorem}
+\end{frame}
+
+\begin{frame}{Splitting Quadratic Matrices}
+    \textbf{Q:} How do we go about multiplying two matrices efficiently?
+
+    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{\footnote[2]{\cite[Section~6.2]{Aho1974}}}}
+
+    \uncover<3->{
+        \begin{columns}
+            \begin{column}{.45\linewidth}
+                \begin{align*}
+                    C &= A B \\
+                    \uncover<4->{
+                        \begin{pmatrix}
+                            C_1 & C_2 \\
+                            C_3 & C_4
+                        \end{pmatrix}
+                        &=
+                        \begin{pmatrix}
+                            A_1 & A_2 \\
+                            A_3 & A_4
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            B_1 & B_2 \\
+                            B_3 & B_4
+                        \end{pmatrix}\\
+                    }
+                \end{align*}
+            \end{column}
+            \begin{column}{.5\linewidth}
+                \uncover<5->{
+                        $\implies 
+                        \left\{
+                            \begin{aligned}
+                                C_1 &= A_1 B_1 + A_2 B_3 \\
+                                C_2 &= A_1 B_2 + A_2 B_4 \\
+                                C_3 &= A_3 B_1 + A_4 B_3 \\
+                                C_4 &= A_3 B_2 + A_4 B_4 \\
+                            \end{aligned}
+                        \right.$
+                }
+            \end{column}
+        \end{columns}
+    }
+\end{frame}
+
+\begin{frame}{Splitting Matrices}
+    \begin{columns}
+        \begin{column}{.45\linewidth}
+            \begin{align*}
+                C &= A B \\
+                \uncover<2->{
+                    &=
+                    \begin{pmatrix}
+                        A_1 & A_2 & \cdots & A_d
+                    \end{pmatrix}
+                    \begin{pmatrix}
+                        B_1 \\
+                        B_2 \\
+                        \vdots \\
+                        B_d
+                    \end{pmatrix} \\
+                }
+                \uncover<3->{
+                    &= \sum\limits_{i = 1}^d A_i B_i
+                }
+            \end{align*}
+        \end{column}
+        \begin{column}{.5\linewidth}
+            \uncover<2->{
+                \begin{figure}
+                    \begin{tikzpicture}
+                        \matrix[hsupermatrix]{
+                            \node[vsubmatrix] (a1) {A_1}; \& \node[vsubmatrix] (a2) {A_2}; \& \cdots \& \node[vsubmatrix] (ad) {A_d}; \\
+                        };
+                    \end{tikzpicture}
+                \end{figure}
+                \begin{figure}
+                    \begin{tikzpicture}
+                        \matrix[vsupermatrix]{
+                            \node[hsubmatrix] (b1) {B_1}; \\ \node[hsubmatrix] (b2) {B_2}; \\ \vdots \\ \node[hsubmatrix] (bd) {B_d}; \\
+                        };
+                    \end{tikzpicture}
+                \end{figure}
+            }
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Theorem 3.2\footnote[1]{\cite{Chan2007}} \only<2>{\& Corollary 3.3\footnotemark[1]}}
+    \begin{theorem}\label{thm:mat_mul}
+        Given any two matrices $A, B \in \mathbb{R}^{n \times n}$ we can compute their min-plus (distance) product in a time of $\mathcal{O}\left( n^3 / \log(n) \right)$.
+    \end{theorem}
+
+    \uncover<2>{
+        \begin{corollary}\label{cor:apsp_subcubic}
+            We can solve the all pairs shortest paths problem for a graph with $\abs{V} = n$ nodes in $\mathcal{O}\left( n^3 / \log(n) \right)$ time.
+        \end{corollary}
+    }
 \end{frame}
