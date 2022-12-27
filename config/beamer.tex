@@ -4,7 +4,6 @@ wide,
 xcolor={table},
 mygreen,
 hyperref={colorlinks=false},
-handout,
 tikz]
 {beamer}
 \usepackage[T1]{fontenc}
@@ -17,25 +16,43 @@ tikz]
 \usepackage{listings}
 \usepackage{qrcode}
 
-\usepackage{verbatim}
 \usepackage{csquotes}
 \usepackage{pgfplots}
 \usepackage{pgfpages}
 \usepackage{tikz}
 \usepackage{svg}
-\usetikzlibrary{spy, arrows, shapes}
+\usetikzlibrary{spy, arrows, arrows.meta, shapes, shapes.multipart, fit, matrix}
 \usepgfplotslibrary{dateplot}
 
 % tikzstyles for graphs
-\tikzstyle{vertex}=[circle,fill=black!25,minimum size=20pt,inner sep=0pt]
-\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{vertex} = [circle, fill=black!25, minimum size=20pt, inner sep=0pt]
+\tikzstyle{edge} = [draw, thick, -]
 \tikzstyle{weight} = [font=\small]
 \tikzstyle{selected vertex} = [vertex, fill=red!24]
+\tikzstyle{selected edge} = [draw,line width=5pt,-,red!50]
+
+% tikzstyles for plotting
+\tikzstyle{redpoint} = [circle, fill=red, minimum size=5pt, inner sep=0pt]
+\tikzstyle{bluepoint} = [circle, fill=blue, minimum size=5pt, inner sep=0pt]
+\tikzstyle{dominates} = [draw, thick, -Stealth]
+\tikzstyle{divides} = [draw, thick, dash pattern=on 5pt off 2pt on 1pt off 2pt]
+\tikzstyle{points} = [draw, -Stealth]
+\tikzstyle{ghost} = [draw=none]
+\tikzstyle{barlabel} = [rectangle, behind path]
+
+% tikzstyles for matrices
+\tikzstyle{vsubmatrix} = [rectangle, fill=black!25, minimum width=10pt, minimum height=50pt]
+\tikzstyle{hsupermatrix} = [matrix of math nodes, ampersand replacement=\&, column sep=1mm, left delimiter=(, right delimiter=)]
+\tikzstyle{hsubmatrix} = [rectangle, fill=black!25, minimum width=50pt, minimum height=10pt]
+\tikzstyle{vsupermatrix} = [matrix of math nodes, ampersand replacement=\&, row sep=1mm, left delimiter=(, right delimiter=)]
 
 \usepackage{multicol}
 \usepackage{hyperref}
 \usepackage{makecell}
 \usepackage{soul}
+
+\usepackage[backend=biber, style=verbose, doi=false, isbn=false, url=false]{biblatex}
+\addbibresource{pres.bib}
 
 \definecolor{Petrol}{HTML}{066F4F}
 \definecolor{Red}{HTML}{B11002}
@@ -70,6 +87,20 @@ tikz]
 \definecolor{fbblau}{HTML}{3078AB}
 \definecolor{mediumgray}{gray}{.65}
 \definecolor{blackberry}{rgb}{0.53, 0.0, 0.25}
+% ===========================================================
+
+% ===========================================================
+\usepackage{amsmath}
+\setbeamertemplate{theorems}[numbered]
+\usepackage{amssymb}
+\usepackage{interval}
+\intervalconfig{soft open fences}
+
+\newcommand{\abs}[2][]{\left\lvert#2\right\rvert_{#1}}
+% ===========================================================
+
+% ===========================================================
+\usepackage[noline, noend]{algorithm2e}
 % ===========================================================
 
 \newcommand{\hyper}[1]{\bet{\underline{\smash{#1}}}}
