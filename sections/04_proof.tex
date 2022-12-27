@@ -1,5 +1,132 @@
 \section{Proof}
 
-\begin{frame}{asdf}
-    qwer
+\begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}\footnote[1]{\cite[Lemma~2.1]{Chan2007}}}
+    \only<1,2>{
+        \setcounter{theorem}{0}
+        \begin{lemma}
+            Let $\mathbb{P} \subset \mathbb{R}^d$ be a set of red or blue points, partitioned into $\mathbb{P}_{red}$ and $\mathbb{P}_{blue}$ such that $n = \abs{\mathbb{P}_{red}} + \abs{\mathbb{P}_{blue}}$, and $\varepsilon \in \interval[open]{0}{1}$.
+            Then we can find all $k$ dominating pairs in a time of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + k \right)$, where we define $c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}$.
+        \end{lemma}
+
+        \uncover<2->{
+            \begin{exampleblock}{Assumption}
+                All palues are presorted by the $d$-th coordinate using a linear-time median-finding algorithm.
+            \end{exampleblock}
+        }
+    }
+
+    \only<3-10>{
+        \emph{Idea: Divide and Conquer!}
+        
+        \uncover<4->{
+            \only<4>{
+                We split each set $\mathbb{P}_{red}$, $\mathbb{P}_{blue}$ along the median $d$-th coordinate into two sets each:
+                \[
+                    \mathbb{P}_{red} \mapsto \mathbb{P}_{red, left}, \mathbb{P}_{red, right} \qquad \mathbb{P}_{blue} \mapsto \mathbb{P}_{blue, left}, \mathbb{P}_{blue, right}
+                \]
+                such that it holds for all $p \in \mathbb{P}_{red}, q \in \mathbb{P}_{blue}$:
+                \[
+                    p \in
+                    \begin{cases}
+                        \mathbb{P}_{red, left}, & p_d \leq m_d \\
+                        \mathbb{P}_{red, right}, & else
+                    \end{cases}
+                    \qquad
+                    q \in
+                    \begin{cases}
+                        \mathbb{P}_{blue, left}, & q_d \leq m_d \\
+                        \mathbb{P}_{blue, right}, & else
+                    \end{cases}
+                \]
+                
+                Here, $m_d$ denote the median $d$-th coordinate for $\mathbb{P}_{red} \cup \mathbb{P}_{blue}$.
+            }
+            
+            \only<5-7>{
+                \begin{figure}
+                    \begin{tikzpicture}[scale=0.6, auto, swap]
+                        \only<5>{
+                            \foreach \pos / \name in {%
+                                {(1, 1)/a}, {(4.5, 3.5)/b}%
+                            }%
+                                \node[redpoint] (\name) at \pos {};
+        
+                            \foreach \pos / \name in {%
+                                {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
+                            }%
+                                \node[bluepoint] (\name) at \pos {};
+                        }
+
+                        \only<6>{
+                            \foreach \pos / \name in {%
+                                {(1, 1)/a}, {(4.5, 3.5)/b}%
+                            }%
+                                \node[redpoint] (\name) at \pos {};
+
+                            \node[barlabel] (labelleft) at (-4, 5.5) {$\mathbb{P}_{red, left}$};
+                            \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{red, right}$};
+                        }
+    
+                        \only<7>{
+                            \foreach \pos / \name in {%
+                                {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
+                            }%
+                                \node[bluepoint] (\name) at \pos {};
+
+                            \node[barlabel] (labelleft) at (-4, 5.5) {$\mathbb{P}_{blue, left}$};
+                            \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{blue, right}$};
+                        }
+
+                        \only<6, 7>{
+                            \node[ghost] (hook1) at (3, -.5) {};
+                            \node[ghost] (hook2) at (3, 6.5) {};
+
+                            \path[divides] (hook1) -- (hook2);
+
+                            \node[ghost] (lefttarget) at (.5, 5.5) {};
+                            \node[ghost] (righttarget) at (5.5, 5.5) {};
+
+                            \path[points] (labelleft) -- (lefttarget);
+                            \path[points] (labelright) -- (righttarget);
+                        }
+    
+                        \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
+                        \node[barlabel, rotate=90] (labely) at (-0.75, 3) {Coordinate 1};
+    
+                        \node[ghost] (bound1) at (0, 0) {};
+                        \node[ghost] (bound2) at (6, 6) {};
+    
+                        % border
+                        \node[draw,fit=(bound1) (bound2)] (border) {};
+                    \end{tikzpicture}
+                \end{figure}
+            }
+            
+            \only<8-10>{
+                We solve the dominating pairs problem on the sets
+                \[
+                    \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \qquad \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}, \qquad \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}.
+                \]
+                (For the first $d - 1$ coordinates for the third set.)
+
+                \uncover<9, 10>{
+                    We do not consider $\mathbb{P}_{red, right} \cup \mathbb{P}_{blue, left}$, because $\forall p \in \mathbb{P}_{red, right}, q \in \mathbb{P}_{blue, left}: q_d \leq m_d \leq p_d$.
+                    Hence no $q$ can never dominate any $p$.
+                }
+
+                \uncover<10>{
+                    We stop dividing if the number of points left to consider is $1$; we output all pairs of red and blue points if the number of dimensions left is $0$.
+                }
+            }
+
+            % TODO: think about if we need more figures here, that explain the termination conditions...
+        }
+    }
+
+    \only<11->{
+        Without the output costs of $\mathcal{O}\left( k \right)$, we get the recurrence relation
+        \[
+            T_d(n) \leq 2 T_d\left( \frac{n}{2} \right) + T_{d - 1}(n) + \mathcal{O}(n).
+        \]
+    }
 \end{frame}
