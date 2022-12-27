@@ -27,80 +27,19 @@
                         h/i/2, h/j/2%
                     }%
                         \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
-                \end{tikzpicture}
-            \end{figure}
-        \end{column}
-        \begin{column}{0.2\textwidth}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Single Source Shortest Paths}
-    \begin{columns}
-        \begin{column}{0.8\textwidth}
-            \begin{figure}
-                \begin{tikzpicture}[scale=0.65, auto, swap]
-                    \foreach \pos / \name in {%
-                        {(8, 9)/a}, {(14, 9)/b},%
-                        {(-1, 6)/c}, {(5, 6)/d}, {(11, 6)/e},%
-                        {(8, 3)/f}, {(14, 3)/g}, {(2, 3)/i},%
-                        {(-1, 0)/h}, {(11, 0)/j}%
-                    }%
-                        \node[vertex] (\name) at \pos {$\name$};
         
-                    \foreach \source / \dest / \weight in {%
-                        a/b/2, a/c/1, a/d/10, a/e/3,%
-                        b/g/1,%
-                        c/h/2, c/i/3,%
-                        d/f/3, d/i/2,%
-                        e/f/12, e/g/1,%
-                        f/j/2,%
-                        h/i/2, h/j/2%
-                    }%
-                        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
-        
+                    \only<2->{
                     \foreach \vertex / \fr in {f/1}%
                         \path<\fr-> node[selected vertex] at (\vertex) {$\vertex$};
+                    }
                 \end{tikzpicture}
             \end{figure}
         \end{column}
         \begin{column}{0.2\textwidth}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Single Source Shortest Paths}
-    \begin{columns}
-        \begin{column}{0.8\textwidth}
-            \begin{figure}
-                \begin{tikzpicture}[scale=0.65, auto, swap]
-                    \foreach \pos / \name in {%
-                        {(8, 9)/a}, {(14, 9)/b},%
-                        {(-1, 6)/c}, {(5, 6)/d}, {(11, 6)/e},%
-                        {(8, 3)/f}, {(14, 3)/g}, {(2, 3)/i},%
-                        {(-1, 0)/h}, {(11, 0)/j}%
-                    }%
-                        \node[vertex] (\name) at \pos {$\name$};
-        
-                    \foreach \source / \dest / \weight in {%
-                        a/b/2, a/c/1, a/d/10, a/e/3,%
-                        b/g/1,%
-                        c/h/2, c/i/3,%
-                        d/f/3, d/i/2,%
-                        e/f/12, e/g/1,%
-                        f/j/2,%
-                        h/i/2, h/j/2%
-                    }%
-                        \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
-        
-                    \foreach \vertex / \fr in {f/1}%
-                        \path<\fr-> node[selected vertex] at (\vertex) {$\vertex$};
-                \end{tikzpicture}
-            \end{figure}
-        \end{column}
-        \begin{column}{0.2\textwidth}
+            \only<3>{
             $\implies \begin{pmatrix}7 \\ 9 \\ 6 \\ 3 \\ 10 \\ 0 \\ 10 \\ 4 \\ 5 \\ 2\end{pmatrix}$
             $\begin{matrix}a \\ b \\ c \\ d \\ e \\ f \\ g \\ h \\ i \\ j\end{matrix}$
+            }
         \end{column}
     \end{columns}
 \end{frame}
