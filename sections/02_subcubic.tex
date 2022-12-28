@@ -1,5 +1,70 @@
 \section{APSP Algorithms with Subcubic Runtime}
 
-\begin{frame}{asdf}
-    qwer
+\begin{frame}{Subcubic Runtimes\footnote[1]{\cite[Section~1]{Chan2007}}}
+    \begin{columns}
+        \begin{column}{.7\linewidth}
+            \begin{figure}
+                \includegraphics[keepaspectratio, width=.8\linewidth]{imgs/runtime_comparison}
+            \end{figure}
+        \end{column}
+        \begin{column}{.3\linewidth}
+            \only<1>{
+                \begin{center}
+                    Small improvements only!
+                \end{center}
+            }
+            \only<2>{
+                \begin{alertblock}{Floyd-Warshall (1962)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( n^3 \right)
+                    \end{aligned}$
+                \end{alertblock}
+            }
+            \only<3>{
+                \begin{alertblock}{Fredman (1976)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( n^3 {\left[ \frac{\log(\log(n))}{\log(n)} \right]}^{\frac{1}{3}} \right)
+                    \end{aligned}$
+                \end{alertblock}
+                
+                \begin{alertblock}{Takaoka (1992)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( n^3 \sqrt{\frac{\log(\log(n))}{\log(n)}} \right)
+                    \end{aligned}$
+                \end{alertblock}
+                
+                \begin{alertblock}{Dobosiewizc (1990)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( \frac{n^3}{\sqrt{\log(n)}} \right)
+                    \end{aligned}$
+                \end{alertblock}
+            }
+            \only<4>{
+                \begin{alertblock}{Han (2004)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( n^3 {\left[ \frac{\log(\log(n))}{\log(n)} \right]}^{\frac{5}{7}} \right)
+                    \end{aligned}$
+                \end{alertblock}
+                
+                \begin{alertblock}{Takaoka (2005)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( n^3 \frac{{\log(\log(n))}^2}{\log(n)} \right)
+                    \end{aligned}$
+                \end{alertblock}
+                
+                \begin{alertblock}{Zwick (2004)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( n^3 \frac{\sqrt{\log(\log(n))}}{\log(n)} \right)
+                    \end{aligned}$
+                \end{alertblock}
+            }
+            \only<5>{
+                \begin{alertblock}{Chan (2007)}
+                    $\begin{aligned}
+                        \mathcal{O}\left( \frac{n^3}{\log(n)} \right)
+                    \end{aligned}$
+                \end{alertblock}
+            }
+        \end{column}
+    \end{columns}
 \end{frame}
