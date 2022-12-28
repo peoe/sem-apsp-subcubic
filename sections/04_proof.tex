@@ -130,7 +130,7 @@
 
                 $(B)$: Subproblem where d-th coordinate does not matter. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
 
-                $(C)$: Time to split current point set about the median.\only<12->{\footnote[3]{\cite[Section~2.3.2]{Preparata1985}}}
+                $(C)$: Time to split current point set about the median.\only<12->{\footnote[2]{\cite[Section~2.3.2]{Preparata1985}}}
             }
         
             \uncover<13>{
@@ -243,7 +243,7 @@
         Thus we especially get that $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
         Applying the definition of $X_{\tilde{k}}$, we also get $a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k} + b_{k, j}$.
         This means that $a_{i, \tilde{k}} + b_{\tilde{k}, j} = a_{i, k} + b_{k, j}$.
-        To break this tie, we can w.l.o.g. assume $k < \tilde{k}$, which would result in $(i, j) \not\in X_{\tilde{k}}$.
+        To break this tie, we can w.l.o.g.\ assume $k < \tilde{k}$, which would result in $(i, j) \not\in X_{\tilde{k}}$.
 
         \uncover<8->{
             Now assume that there would exist an index pair $(i, j)$ that is contained in none of the $X_k$.
@@ -310,13 +310,17 @@
     \only<7->{
         We want to assure $\begin{aligned}\frac{n^3}{d} > c_\varepsilon^d n^{2 + \varepsilon}\end{aligned}$.
 
-        \uncover<7->{
-            The choice of $d = \tilde{c} \log(n)$ is useful, where $\tilde{c}$ is sufficiently small and depending on $\varepsilon$, because we then get
-            \[
-                \mathcal{O}\left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right).
-            \]
+        \uncover<8->{
+            The choice of $d = \tilde{c} \log(n)$ is useful, where $\tilde{c}$ is sufficiently small and depending on $\varepsilon$.
 
-            One possible choice is $\varepsilon \approx 0.38, c_\varepsilon \approx 4.32, d \approx 0.42 \log(n)$\footnotemark[1]. \qed{}
+            We then get
+            $\begin{aligned}
+                \mathcal{O}\left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right)
+            \end{aligned}$. \qed{}
+        }
+
+        \uncover<9>{
+            One possible choice is $\varepsilon \approx 0.38, c_\varepsilon \approx 4.32, d \approx 0.42 \log(n)$\footnotemark[1].
         }
     }
 \end{frame}
