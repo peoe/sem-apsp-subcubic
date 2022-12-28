@@ -2,13 +2,11 @@
 
 \begin{frame}{Basic Ideas}
     The proof is structured as follows:
-    \uncover<2->{
-        \begin{enumerate}
-            \item<2-> A problem in computational geometry\uncover<5->{$\implies$ \emph{Finding dominating pairs}}
-            \item<3-> Computing products of matrices\uncover<6->{$\implies$ \emph{Sorting indices in sets}}
-            \item<4-> Combining the two ideas\uncover<7->{$\implies$ \emph{Splitting matrices and multiplying them efficiently}}
-        \end{enumerate}
-    }
+    \begin{enumerate}
+        \item<1-> A problem in computational geometry\uncover<4->{$\implies$ \emph{Finding dominating pairs}}
+        \item<2-> Computing products of matrices\uncover<5->{$\implies$ \emph{Sorting indices in sets}}
+        \item<3-> Combining the two ideas\uncover<6->{$\implies$ \emph{Multiplying matrices efficiently}}
+    \end{enumerate}
 \end{frame}
 
 \begin{frame}{Dominating Pairs}
@@ -54,7 +52,7 @@
             \end{figure}
         }
     \end{alertblock}
-    \only<2>{
+    \uncover<2>{
         \begin{block}{Note}
             This implies that for any dominating pair, the first point will always be the one with smaller coordinates.
             This can, to a certain degree, be seen as an ``ordering'' of $\mathfrak{M}_1$, and $\mathfrak{M}_2$.
@@ -78,7 +76,7 @@
         \]
     \end{alertblock}
 
-    \only<2->{
+    \uncover<2->{
         \begin{columns}
             \begin{column}{.53\linewidth}
                 \begin{exampleblock}{Computing Distances}
@@ -143,9 +141,8 @@
 \begin{frame}{Splitting Quadratic Matrices}
     \textbf{Q:} How do we go about multiplying two matrices efficiently?
 
-    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{\footnote[2]{\cite[Section~6.2]{Aho1974}}}}
+    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{ (Strassen's Method\footnote[2]{\cite[Section~6.2]{Aho1974}})}}
 
-    % TODO: redo this part, because this is just Strassen's method! we want Aho Section 5.9 Theorem 5.7!!!!!
     \uncover<3->{
         \begin{columns}
             \begin{column}{.45\linewidth}
@@ -185,47 +182,56 @@
     }
 \end{frame}
 
-\begin{frame}{Splitting Matrices}
+\begin{frame}{Multipyling Matrices and Computing their Closure\footnote{\cite[Section~5.6--5.9]{Aho1974}}}
+    \begin{alertblock}{Problem}
+        Strassen's method does not work for closed semirings.\footnote[1]{\cite{Chan2007}}
+        However we want to work with the min-plus product which induces a closed semiring.\footnote{\cite[Example~5.9]{Aho1974}}
+    \end{alertblock}
+
+    \uncover<2->{
+        We can instead make use of the closure of the matrix defined as $\begin{aligned}[t]A^* := \sum\limits_{i = 0}^\infty A^i\end{aligned}$.
+    }
+
+    \uncover<3->{
+        It can then be shown that
+        \begin{theorem}
+            Under some conditions on the computational time needed to multiply two square matrices and the time needed to compute the closure of a square matrix, both times are of the same order.
+        \end{theorem}
+    }
+
+    \uncover<4>{
+        This can then be related to the APSP problem via the closure under the min-plus product.\only<4>{\footnote{\cite[Section~5.9, Corollary~2]{Aho1974}}}
+    }
+\end{frame}
+
+\begin{frame}{Multiplying Matrices\footnote[1]{\cite{Chan2007}}}
+    We will make use of splitting matrices into intermediaries whilst avoiding Strassen's method (although they ressemble each other closely):
     \begin{columns}
         \begin{column}{.45\linewidth}
             \begin{align*}
-                C &= A B \\
-                \uncover<2->{
-                    &=
-                    \begin{pmatrix}
-                        A_1 & A_2 & \cdots & A_d
-                    \end{pmatrix}
-                    \begin{pmatrix}
-                        B_1 \\
-                        B_2 \\
-                        \vdots \\
-                        B_d
-                    \end{pmatrix} \\
-                }
-                \uncover<3->{
-                    &= \sum\limits_{i = 1}^d A_i B_i
-                }
+                A =
+                \begin{tikzpicture}[scale=.9, baseline]
+                    \matrix[hsupermatrix]{
+                        \node[vsubmatrix] (a1) {A_1}; \& \node[vsubmatrix] (a2) {A_2}; \& \cdots \& \node[vsubmatrix] (ad) {A_d}; \\
+                    };
+                \end{tikzpicture}
             \end{align*}
         \end{column}
-        \begin{column}{.5\linewidth}
-            \uncover<2->{
-                \begin{figure}
-                    \begin{tikzpicture}
-                        \matrix[hsupermatrix]{
-                            \node[vsubmatrix] (a1) {A_1}; \& \node[vsubmatrix] (a2) {A_2}; \& \cdots \& \node[vsubmatrix] (ad) {A_d}; \\
-                        };
-                    \end{tikzpicture}
-                \end{figure}
-                \begin{figure}
-                    \begin{tikzpicture}
-                        \matrix[vsupermatrix]{
-                            \node[hsubmatrix] (b1) {B_1}; \\ \node[hsubmatrix] (b2) {B_2}; \\ \vdots \\ \node[hsubmatrix] (bd) {B_d}; \\
-                        };
-                    \end{tikzpicture}
-                \end{figure}
-            }
+        \begin{column}{.45\linewidth}
+            \begin{align*}
+                B =
+                \begin{tikzpicture}[scale=.9, baseline]
+                    \matrix[vsupermatrix]{
+                        \node[hsubmatrix] (b1) {B_1}; \\ \node[hsubmatrix] (b2) {B_2}; \\ \vdots \\ \node[hsubmatrix] (bd) {B_d}; \\
+                    };
+                \end{tikzpicture}
+            \end{align*}
         \end{column}
     \end{columns}
+
+    $\begin{aligned}
+        \implies \left( C = A \otimes B \iff c_{i, j} = \min\limits_{l = 1, \dots, d} {\left( A_l \otimes B_l \right)}_{i, j} \right)
+    \end{aligned}$
 \end{frame}
 
 \begin{frame}{Theorem 3.2\footnote[1]{\cite{Chan2007}} \only<2>{\& Corollary 3.3\footnotemark[1]}}
@@ -235,7 +241,7 @@
 
     \uncover<2>{
         \begin{corollary}\label{cor:apsp_subcubic}
-            We can solve the all pairs shortest paths problem for a graph with $\abs{V} = n$ nodes in $\mathcal{O}\left( n^3 / \log(n) \right)$ time.
+            We can solve the all pairs shortest paths problem for a graph $G = (V, E)$ with $\abs{V} = n$ nodes in $\mathcal{O}\left( n^3 / \log(n) \right)$ time.
         \end{corollary}
     }
 \end{frame}
