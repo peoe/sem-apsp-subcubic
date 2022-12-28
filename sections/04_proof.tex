@@ -1,4 +1,4 @@
-\section{Proof}
+\section{Proofs}
 
 \begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}\footnote[1]{\cite[Lemma~2.1]{Chan2007}}}
     \only<1,2>{
@@ -116,8 +116,6 @@
                     We stop dividing if the number of points left to consider is $1$; we output all pairs of red and blue points if the number of dimensions left is $0$.
                 }
             }
-
-            % TODO: think about if we need more figures here, that explain the termination conditions...
         }
     }
     \only<11-15>{
@@ -126,12 +124,14 @@
             T_d(n) \leq \underbrace{2 T_d\left( \frac{n}{2} \right)}_{(A)} + \underbrace{T_{d - 1}(n)}_{(B)} + \underbrace{\mathcal{O}(n)}_{(C)}.
         \]
 
-        \only<12-13>{
-            $(A)$: Two subproblems for half of the data each. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}$
+        \only<11-13>{
+            \uncover<12->{
+                $(A)$: Two subproblems for half of the data each. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}$
 
-            $(B)$: Subproblem where d-th coordinate does not matter. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
+                $(B)$: Subproblem where d-th coordinate does not matter. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
 
-            $(C)$: Time to split current point set about the median.\footnote[3]{\cite[Section~2.3.2]{Preparata1985}}
+                $(C)$: Time to split current point set about the median.\only<12->{\footnote[3]{\cite[Section~2.3.2]{Preparata1985}}}
+            }
         
             \uncover<13>{
                 From the termination criteria we get
@@ -198,21 +198,27 @@
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}\footnote[1]{\cite[Lemma~3.1]{Chan2007}}}
-    \only<1>{
+    \only<1, 2>{
         \setcounter{theorem}{1}
         \begin{lemma}
             Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, and $\varepsilon \in \interval[open]{0}{1}, \begin{aligned}c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}\end{aligned}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
         \end{lemma}
-        % TODO: add remark about how we break ties in such a case!
+        
+        \uncover<2>{
+            \begin{exampleblock}{Note}
+                Ties such as $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$ are considered to be ``$<$'' if $k \leq \tilde{k}$.
+                In the paper this is written as $k < \tilde{k}$ under the assumption that $\tilde{k} = 1, \dots, k - 1, k + 1, \dots, d$.
+            \end{exampleblock}
+        }
     }
-    \only<2-4>{
+    \only<3-5>{
         Consider $A$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{n, d}$, and $B$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{d, n}$.
         We want to compute the pairs
         \begin{align*}
             X_k &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \} \\
              &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j} \}.
         \end{align*}
-        \uncover<3->{
+        \uncover<4->{
             This effectively amounts to computing all dominant pairs between the sets
             \begin{align*}
                 \mathcal{A}_k &:= {\left\{ (a_{i, k} - a_{i, 1}), (a_{i, k} - a_{i, 2}), \dots, (a_{i, k} - a_{i, d}) \right\}}_{i = 1}^{n}, \text{and} \\
@@ -221,36 +227,35 @@
             where $\mathcal{A}_k$ takes the role of red points and $\mathcal{B}_k$ acts as the set of blue points.
         }
 
-        \uncover<4>{
+        \uncover<5>{
             By Lemma~\ref{lem:dom_pairs}, this takes an effort of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right)$.
         }
     }
-    \only<5>{
+    \only<6>{
         The penultimate step is to compute that
         \begin{align*}
             \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right),
         \end{align*}
         leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
     }
-    \only<6->{
+    \only<7->{
         Suppose an index pair $(i, j)$ were to be included in $X_k$, and in $X_{\tilde{k}}$, with $k \neq \tilde{k}$.
         Thus we especially get that $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
         Applying the definition of $X_{\tilde{k}}$, we also get $a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k} + b_{k, j}$.
         This means that $a_{i, \tilde{k}} + b_{\tilde{k}, j} = a_{i, k} + b_{k, j}$.
         To break this tie, we can w.l.o.g. assume $k < \tilde{k}$, which would result in $(i, j) \not\in X_{\tilde{k}}$.
 
-        \uncover<7->{
+        \uncover<8->{
             Now assume that there would exist an index pair $(i, j)$ that is contained in none of the $X_k$.
             Then the condition $\forall k = 1, \dots, d: \forall \tilde{k} = 1, \dots, d: a_{i, k} + b_{k, j} > a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
             But obviously for $k = \tilde{k}$ we have ``$=$''.
         }
 
-        \uncover<8>{
+        \uncover<9>{
             This shows that aggregating over all $X_k$ counts every index pair exactly once.
             $\implies \begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2 \implies \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$. \qed{}
         }
     }
-    % TODO: add note on breaking ties to retrieve the shortest path after we have computed its length!
 \end{frame}
 
 \begin{frame}{Proof of Theorem~\ref{thm:mat_mul}\footnote[1]{\cite[Theorem~3.2]{Chan2007}}}
@@ -260,7 +265,75 @@
             Given any two matrices $A, B \in \mathbb{R}^{n \times n}$ we can compute their min-plus (distance) product in a time of $\mathcal{O}\left( n^3 / \log(n) \right)$.
         \end{theorem}
     }
+    \only<2>{
+        We recall the idea of splitting matrices to multiply them:
+
+        \begin{columns}
+            \begin{column}{.2\linewidth}
+                \begin{figure}
+                    \begin{tikzpicture}
+                        \matrix[hsupermatrix]{
+                            \node[vsubmatrix] (a1) {A_1}; \& \node[vsubmatrix] (a2) {A_2}; \& \cdots \& \node[vsubmatrix] (ad) {A_d}; \\
+                        };
+                    \end{tikzpicture}
+                \end{figure}
+            \end{column}
+            \begin{column}{.2\linewidth}
+                \begin{figure}
+                    \begin{tikzpicture}
+                        \matrix[vsupermatrix]{
+                            \node[hsubmatrix] (b1) {B_1}; \\ \node[hsubmatrix] (b2) {B_2}; \\ \vdots \\ \node[hsubmatrix] (bd) {B_d}; \\
+                        };
+                    \end{tikzpicture}
+                \end{figure}
+            \end{column}
+        \end{columns}
+
+        $\implies$ Strassen; relation between matrix multiplication and matrix closure.
+    }
+    \only<3-6>{
+        We split our matrices $A$ and $B$ into $\begin{aligned}\frac{n}{d}\end{aligned}$ blocks, that is $\begin{aligned}\forall i = 1, \dots, \frac{n}{d}: A_i \in \mathbb{R}^{n \times \frac{n}{d}}, B_i \in \mathbb{R}^{\frac{n}{d} \times n}\end{aligned}$.
+        (If necessary we round $\begin{aligned}\frac{n}{d}\end{aligned}$ to the closest integer and adjust the number of blocks accordingly.)
+
+        \uncover<4->{
+            We then compute the distance products $A_i \otimes B_i$ for all $\begin{aligned}i = 1, \dots, \frac{n}{d}\end{aligned}$, and set the product to be defined by the element-wise minimum, i.e.\ $\begin{aligned}[t]c_{i, j} := \min\limits_{l = 1, \dots, \frac{n}{d}} {\left( A_l \otimes B_l \right)}_{i, j}\end{aligned}$, where $i, j = 1, \dots, n$.
+        }
+
+        \uncover<5->{
+            By Lemma~\ref{lem:sub_mat_mul}, this procedure requires $\begin{aligned}\mathcal{O}\left( \frac{n}{d} \left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right) \right) = \mathcal{O} \left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right)\end{aligned}$ time.
+        }
+
+        \uncover<6->{
+            It now only remains to choose the constant $d$.
+        }
+    }
+    \only<7->{
+        We want to assure $\begin{aligned}\frac{n^3}{d} > c_\varepsilon^d n^{2 + \varepsilon}\end{aligned}$.
+
+        \uncover<7->{
+            The choice of $d = \tilde{c} \log(n)$ is useful, where $\tilde{c}$ is sufficiently small and depending on $\varepsilon$, because we then get
+            \[
+                \mathcal{O}\left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right).
+            \]
+
+            One possible choice is $\varepsilon \approx 0.38, c_\varepsilon \approx 4.32, d \approx 0.42 \log(n)$\footnotemark[1]. \qed{}
+        }
+    }
+\end{frame}
+
+\begin{frame}{Proof of Corollary~\ref{cor:apsp_subcubic}\footnote[1]{\cite[Corollary~3.3]{Chan2007}}}
+    \only<1>{
+        \setcounter{theorem}{3}
+        \begin{corollary}
+            We can solve the all pairs shortest paths problem for a graph $G = (V, E)$ with $\abs{V} = n$ nodes in $\mathcal{O}\left( n^3 / \log(n) \right)$ time.
+        \end{corollary}
+    }
     \only<2->{
-        adsf
+        We consider $A$ and $B$ to be the matrices defined by $\begin{aligned}d(i, j) := \begin{cases}
+            w_{i, j}, &\exists e \in E: e = (i, j) \\
+            \infty, &else
+        \end{cases}\end{aligned}$.
+
+        The corollary then follows by applying Theorem~\ref{thm:mat_mul}. \qed{}
     }
 \end{frame}
