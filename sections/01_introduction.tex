@@ -1,14 +1,30 @@
 \section{Introduction to APSP}
 
-\begin{frame}{Single Source Shortest Paths}
-    asdf % definition
+\begin{frame}{Shortest Paths Problems\footnote{\cite[Section~24]{Cormen2001}}}
+    Consider a possibly directed graph $G = (V, E)$ with weights $w \in E'$.
+    We say that a path $\tilde{p} = (e_1, e_2, \dots, e_n), e_1 = (a, \cdot), e_n = (\cdot, b)$ is a \emph{shortest path} from a vertex $a$ to a vertex $b$, iff
+    \[
+        \tilde{p} = \argmax\limits_{p\text{ path from }a\text{ to }b} w(p),
+    \]
+    where $\begin{aligned}[t]w(p) = \sum\limits_{i = 1}^n w(e_i)\end{aligned}$.
+
+    \uncover<2->{
+        \begin{alertblock}{Variants}
+            \begin{itemize}
+                \item<2-> Single Pair Shortest Paths Problems (Fix both origin and target vertices $a$ and $b$)
+                \item<3-> Single Destination Shortest Paths Problems (Fix target vertex $b$)
+                \item<4-> Single Source Shortest Paths Problems (Fix origin vertex $a$)
+                \item<5-> All Pairs Shortest Paths Problems
+            \end{itemize}
+        \end{alertblock}
+    }
 \end{frame}
 
-\begin{frame}{Single Source Shortest Paths}
+\begin{frame}{Single Source Shortest Paths (SSSP)\footnote[1]{\cite[Section~24]{Cormen2001}}}
     \begin{columns}
         \begin{column}{0.8\textwidth}
             \begin{figure}
-                \begin{tikzpicture}[scale=0.65, auto, swap]
+                \begin{tikzpicture}[scale=0.6, auto, swap]
                     \foreach \pos / \name in {%
                         {(8, 9)/a}, {(14, 9)/b},%
                         {(-1, 6)/c}, {(5, 6)/d}, {(11, 6)/e},%
@@ -42,4 +58,109 @@
             }
         \end{column}
     \end{columns}
+\end{frame}
+
+\begin{frame}{Solving SSSP\footnote[1]{\cite[Section~24]{Cormen2001}}}
+    \only<1>{
+        \begin{exampleblock}{Assumption}
+            We assume that the graph $G$ contains no negative weight cycles.
+
+            Here a negative weight cycle refers to a path $p = (e_1, \dots, e_n)$ such that $e_1 = (a, \cdot), e_n = (\cdot, a)$ and $w(p) < 0$.
+            If we are looking for a shortest path containing the vertex $a$, including a negative weight cycle always reduces the weight of the total path. \Lightning{}
+        \end{exampleblock}
+    }
+    \only<2->{
+        Among others, the \emph{Bellman-Ford} algorithm solves the SSSP problem:
+
+        \begin{algorithm}[H]
+            \KwData{Starting vertex $a$}
+            Initialize $d(a) = 0, d(v) = \infty \,\forall v \in V \setminus \{ a \}$\;
+            \ForEach{$v \in V \setminus \{ a \}$}{
+                \ForEach{$e = (u, v) \in E$}{
+                    \If{$d(v) > d(u) + w(e)$}{
+                        $d(v) = d(u) + w(e)$
+                    }
+                }
+            }
+        \end{algorithm}
+
+        \uncover<3->{
+            \begin{exampleblock}{Note}
+                It is easy to keep track of each nodes predecessor to later recover the shortest path to any given vertex.
+
+                \uncover<4>{
+                    Bellman-Ford can also check for the existence of negative weight cycles.\footnote[2]{\cite[Section~24.1]{Cormen2001}}
+                }
+            \end{exampleblock}
+        }
+    }
+\end{frame}
+
+\begin{frame}{All Pairs Shortest Paths (APSP)\footnote[1]{\cite[Section~25.1]{Cormen2001}}}
+    \only<1, 2>{
+        The \emph{All Pairs Shortest Paths} problem can be naively solved by applying Bellman-Ford to every vertex in $G$.
+        However faster alternatives are available, such as making use of \emph{repeated squaring}.
+        
+        \uncover<2>{
+            To illustrate:
+            \begin{align*}
+                L_1 &= W \\
+                L_2 &= W \cdot W \\
+                L_4 &= W^2 \cdot W^2 \\
+                &\vdots \\
+                L_{2^{\lceil \log(n - 1) \rceil}} &= W^{2^{\lceil \log(n - 1) \rceil - 1}} \cdot W^{2^{\lceil \log(n - 1) \rceil - 1}}
+            \end{align*}
+        }
+    }
+    \only<3, 4>{
+        \begin{algorithm}[H]
+            \KwData{Initialized weight matrix $W$}
+            $L_1 = W, m = 1$\;
+            \While{$m < n - 1$}{
+                Consider $L_{m}$ to have entries $l_{i, j}$\;
+                Consider $L_{2 m}$ to be a new $n \times n$ matrix with entries $l'_{i, j}$\;
+                \For{$i = 1, \dots, n$}{
+                    \For{$j = 1, \dots, n$}{
+                        $l_{i, j} = \infty$\;
+                        \For{$k = 1, \dots, n$}{
+                            $l_{i, j} = \min \{ l'_{i, j}, l_{i, k} + l_{k, j} \}$
+                        }
+                    }
+                }
+                $m = 2m$\;
+            }
+        \end{algorithm}
+
+        \uncover<4>{
+            This takes a time of $\mathcal{O}\left( n^3 \log(n) \right)$.
+        }
+    }
+    \only<5->{
+        \only<5,6>{
+            Omitting the squared matrix approach and directly calculating the updates on the matrix, we obtain the \emph{Floyd-Warshall} algorithm.
+            This only takes $\mathcal{O}\left( n^3 \right)$.
+        }
+
+        \uncover<6->{
+            \begin{algorithm}[H]
+                \KwData{Initialized weight matrix $W$}
+                $D_0 = W$ with entries $d_{i, j}$\;
+                \For{$k = 1, \dots, n$}{
+                    Consider $D_{k - 1}$ to have entries $d_{i, j}$\;
+                    Consider $D_{k}$ to be a new $n \times n$ matrix with entries $d'_{i, j}$\;
+                    \For{$i = 1, \dots, n$}{
+                        \For{$j = 1, \dots, n$}{
+                            $d'_{i, j} = \min \{ d_{i, j}, d_{i, k} + d_{k, j} \}$\;
+                        }
+                    }
+                }
+            \end{algorithm}
+        }
+
+        \only<7>{
+            \begin{exampleblock}{Note}
+                It is relatively easy to keep track of a vertex' predecessor when updating the weights, making it possible to retrieve the shortest path after runtime.
+            \end{exampleblock}
+        }
+    }
 \end{frame}
