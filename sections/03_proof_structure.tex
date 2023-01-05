@@ -1,11 +1,11 @@
-\section{Structure of the Proof}
+\section{Structure of the Proofs}
 
 \begin{frame}{Basic Ideas}
     The proof is structured as follows:
     \begin{enumerate}
-        \item<1-> A problem in computational geometry\uncover<4->{$\implies$ \emph{Finding dominating pairs}}
-        \item<2-> Computing products of matrices\uncover<5->{$\implies$ \emph{Sorting indices in sets}}
-        \item<3-> Combining the two ideas\uncover<6->{$\implies$ \emph{Multiplying matrices efficiently}}
+        \item<1-> A problem in computational geometry $\implies$ \emph{Finding dominating pairs}
+        \item<2-> Computing products of matrices $\implies$ \emph{Sorting indices in sets}
+        \item<3-> Combining the two ideas $\implies$ \emph{Multiplying matrices efficiently}
     \end{enumerate}
 \end{frame}
 
@@ -182,10 +182,10 @@
     }
 \end{frame}
 
-\begin{frame}{Multipyling Matrices and Computing their Closure\footnote{\cite[Section~5.6--5.9]{Aho1974}}}
+\begin{frame}{Multipyling Matrices and Computing their Closure\footnote[3]{\cite[Section~5.6--5.9]{Aho1974}}}
     \begin{alertblock}{Problem}
         Strassen's method does not work for closed semirings.\footnote[1]{\cite{Chan2007}}
-        However we want to work with the min-plus product which induces a closed semiring.\footnote{\cite[Example~5.9]{Aho1974}}
+        However we want to work with the min-plus product which induces a closed semiring.\footnote[2]{\cite[Example~5.9]{Aho1974}}
     \end{alertblock}
 
     \uncover<2->{
@@ -194,13 +194,13 @@
 
     \uncover<3->{
         It can then be shown that
-        \begin{theorem}
+        \begin{theorem*}
             Under some conditions on the computational time needed to multiply two square matrices and the time needed to compute the closure of a square matrix, both times are of the same order.
-        \end{theorem}
+        \end{theorem*}
     }
 
     \uncover<4>{
-        This can then be related to the APSP problem via the closure under the min-plus product.\only<4>{\footnote{\cite[Section~5.9, Corollary~2]{Aho1974}}}
+        This can then be related to the APSP problem via the closure under the min-plus product.\only<4>{\footnote[4]{\cite[Section~5.9, Corollary~2]{Aho1974}}}
     }
 \end{frame}
 
@@ -241,7 +241,7 @@
 
     \uncover<2>{
         \begin{corollary}\label{cor:apsp_subcubic}
-            We can solve the all pairs shortest paths problem for a graph $G = (V, E)$ with $\abs{V} = n$ nodes in $\mathcal{O}\left( n^3 / \log(n) \right)$ time.
+            We can solve the all pairs shortest paths problem for a graph $G = (V, E)$ with $\abs{V} = n$ vertices in $\mathcal{O}\left( n^3 / \log(n) \right)$ time.
         \end{corollary}
     }
 \end{frame}

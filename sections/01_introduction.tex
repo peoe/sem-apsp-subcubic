@@ -4,20 +4,20 @@
     Consider a possibly directed graph $G = (V, E)$ with weights $w \in E'$.
     We say that a path $\tilde{p} = (e_1, e_2, \dots, e_n), e_1 = (a, \cdot), e_n = (\cdot, b)$ is a \emph{shortest path} from a vertex $a$ to a vertex $b$, iff
     \[
-        \tilde{p} = \argmax\limits_{p\text{ path from }a\text{ to }b} w(p),
+        \tilde{p} = \argmin\limits_{p\text{ path from }a\text{ to }b} w(p),
     \]
     where $\begin{aligned}[t]w(p) = \sum\limits_{i = 1}^n w(e_i)\end{aligned}$.
+\end{frame}
 
-    \uncover<2->{
-        \begin{alertblock}{Variants}
-            \begin{itemize}
-                \item<2-> Single Pair Shortest Paths Problems (Fix both origin and target vertices $a$ and $b$)
-                \item<3-> Single Destination Shortest Paths Problems (Fix target vertex $b$)
-                \item<4-> Single Source Shortest Paths Problems (Fix origin vertex $a$)
-                \item<5-> All Pairs Shortest Paths Problems
-            \end{itemize}
-        \end{alertblock}
-    }
+\begin{frame}{Shortest Paths Problems\footnote{\cite[Section~24]{Cormen2001}}}
+    \begin{alertblock}{Variants}
+        \begin{itemize}
+            \item<1-> Single Pair Shortest Paths Problems (Fix both origin and target vertices $a$ and $b$)
+            \item<2-> Single Destination Shortest Paths Problems (Fix target vertex $b$)
+            \item<3-> Single Source Shortest Paths Problems (Fix origin vertex $a$)
+            \item<4-> All Pairs Shortest Paths Problems
+        \end{itemize}
+    \end{alertblock}
 \end{frame}
 
 \begin{frame}{Single Source Shortest Paths (SSSP)\footnote[1]{\cite[Section~24]{Cormen2001}}}
@@ -65,7 +65,7 @@
         \begin{exampleblock}{Assumption}
             We assume that the graph $G$ contains no negative weight cycles.
 
-            Here a negative weight cycle refers to a path $p = (e_1, \dots, e_n)$ such that $e_1 = (a, \cdot), e_n = (\cdot, a)$ and $w(p) < 0$.
+            Here a \emph{negative weight cycle} refers to a path $p = (e_1, \dots, e_n)$ such that $e_1 = (a, \cdot), e_n = (\cdot, a)$ and $w(p) < 0$.
             If we are looking for a shortest path containing the vertex $a$, including a negative weight cycle always reduces the weight of the total path. \Lightning{}
         \end{exampleblock}
     }
@@ -84,14 +84,18 @@
             }
         \end{algorithm}
 
-        \uncover<3->{
+        \only<3-4>{
             \begin{exampleblock}{Note}
-                It is easy to keep track of each nodes predecessor to later recover the shortest path to any given vertex.
+                It is easy to keep track of each vertex' predecessor to later recover the shortest path to any given vertex.
 
                 \uncover<4>{
                     Bellman-Ford can also check for the existence of negative weight cycles.\footnote[2]{\cite[Section~24.1]{Cormen2001}}
                 }
             \end{exampleblock}
+        }
+
+        \only<5>{
+            Bellman-Ford requires $\mathcal{O}\left( \abs{V} \abs{E} \right)$ time, which trivially amounts to $\mathcal{O}(n^3)$.
         }
     }
 \end{frame}
@@ -121,9 +125,9 @@
                 Consider $L_{2 m}$ to be a new $n \times n$ matrix with entries $l'_{i, j}$\;
                 \For{$i = 1, \dots, n$}{
                     \For{$j = 1, \dots, n$}{
-                        $l_{i, j} = \infty$\;
+                        $l'_{i, j} = \infty$\;
                         \For{$k = 1, \dots, n$}{
-                            $l_{i, j} = \min \{ l'_{i, j}, l_{i, k} + l_{k, j} \}$
+                            $l'_{i, j} = \min \{ l_{i, j}, l_{i, k} + l_{k, j} \}$
                         }
                     }
                 }

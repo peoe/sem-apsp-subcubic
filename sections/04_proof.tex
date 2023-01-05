@@ -118,7 +118,7 @@
             }
         }
     }
-    \only<11-15>{
+    \only<11-16>{
         Without the output costs of $\mathcal{O}\left( k \right)$, we get the recurrence relation
         \[
             T_d(n) \leq \underbrace{2 T_d\left( \frac{n}{2} \right)}_{(A)} + \underbrace{T_{d - 1}(n)}_{(B)} + \underbrace{\mathcal{O}(n)}_{(C)}.
@@ -141,7 +141,13 @@
             }
         }
 
-        \only<14->{
+        \only<14>{
+            A first solution to this equation is that $T_d(n) = \mathcal{O}\left( n {\log(n)}^d \right)$, yielding an algorithmic runtime of $\mathcal{O}\left( n {\log(n)}^d + k \right)$. (Additional logarithmic factors can be safed by handling the cases $d = 1$ and $d = 2$ independently.\footnotemark[1]{})
+
+            However, we can do better\dots
+        }
+
+        \only<15->{
             Let $b$ be fixed, and define $T'(N) := \max \left\{ T_k(i) \,|\, i = 1, \dots, n; k = 1, \dots, d: b^k i \leq N \right\}$.
             
             Substituting into the previous reccurence formula thus yields for some constant $c$:
@@ -149,76 +155,84 @@
                 T'(N) \leq 2 T'\left( \frac{N}{2} \right) + T'\left( \frac{N}{b} \right) + cN.
             \]
             
-            \uncover<15>{
+            \uncover<16>{
                 $\implies$ What does this reccurence evaluate to and how do we need to choose $b$?
             }
         }
     }
-    \only<16-19>{
+    \only<17-20>{
         \[
             T'(N) \leq 2 T'\left( \frac{N}{2} \right) + T'\left( \frac{N}{b} \right) + cN
         \]
 
-        \uncover<17->{
+        \uncover<18->{
             By guessing that $T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right)$, we get
             \begin{align*}
                 T'(N) &\leq 2 \tilde{c} \left( {\left[ \frac{N}{2} \right]}^{1 + \varepsilon} - \frac{N}{2} \right) + \tilde{c} \left( {\left[ \frac{N}{b} \right]}^{1 + \varepsilon} - \frac{N}{b} \right) + cN \\
-                \uncover<18->{
+                \uncover<19->{
                      &= \tilde{c} \left( \frac{2}{2^{1 + \varepsilon}} N^{1 + \varepsilon} - N \right) + \tilde{c} \left( \frac{1}{b^{1 + \varepsilon}} N^{1 + \varepsilon} - \frac{1}{b} N \right) + cN \\
-                     \uncover<19->{
-                         &\overset{(A)}{=} \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \underbrace{\frac{\tilde{c}}{b} N}_{\leq \tilde{c} N} + cN \overset{(B)}{=} \tilde{c} \left( N^{1 + \varepsilon} - N \right),
+                     \uncover<20->{
+                         &\overset{(A)}{\leq} \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \frac{\tilde{c}}{b} N + cN \overset{(B)}{\leq} \tilde{c} \left( N^{1 + \varepsilon} - N \right),
                      }
                 }
             \end{align*}
         }
     }
-    \only<20->{
-        If $(A)$: $\begin{aligned}1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}}\end{aligned}$, and $(B)$: $c \leq \tilde{c}$ are fulfilled:
-        \only<20-21>{
-            \[
-                T'(N) \overset{(A)}{\leq} \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \underbrace{\frac{\tilde{c}}{b} N}_{\leq \tilde{c} N} + cN \overset{(B)}{=} \tilde{c} \left( N^{1 + \varepsilon} - N \right),
-            \]
-        }
-        \only<21>{
-            \begin{align*}
-                1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} &\iff b^{1 + \varepsilon} = b^{1 + \varepsilon} \frac{1}{2^\varepsilon} + 1 \iff -1 = \frac{b^{1 + \varepsilon}}{2^\varepsilon} - b^{1 + \varepsilon} \\
-                &\iff -1 = \frac{1 - 2^\varepsilon}{2^\varepsilon} b^{1 + \varepsilon} \iff b^{1 + \varepsilon} = \frac{2^\varepsilon}{2^\varepsilon - 1} = c_\varepsilon
-            \end{align*}
-        }
-        \only<22->{
-            \begin{align*}
-                T'(N) &= \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right) \\
-                \implies T_d(n) &= \mathcal{O}\left( {\left( b^d n \right)}^{1 + \varepsilon} \right) = \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} \right),
-            \end{align*}
-            because $T'(N) := \max \left\{ T_k(i) \,|\, i = 1, \dots, n; k = 1, \dots, d: b^k i \leq N \right\}$. 
-            
-            Finally, outputing all $k$ dominating pairs requires $\mathcal{O}\left( k \right)$ time. \qed{}
-        }
+    \only<21>{
+        If $(A)$: $\begin{aligned}1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}}\end{aligned}$, and $(B)$: $c \leq \frac{\tilde{c}}{b}$ are fulfilled:
+        \[
+            T'(N) \overset{(A)}{\leq} \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \frac{\tilde{c}}{b} N + cN \overset{(B)}{=} \tilde{c} \left( N^{1 + \varepsilon} - N \right),
+        \]
+    }
+    \only<22>{
+        In $(A)$ we get:
+        \begin{align*}
+            1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} &\iff b^{1 + \varepsilon} = b^{1 + \varepsilon} \frac{1}{2^\varepsilon} + 1 \iff -1 = \frac{b^{1 + \varepsilon}}{2^\varepsilon} - b^{1 + \varepsilon} \\
+            &\iff -1 = \frac{1 - 2^\varepsilon}{2^\varepsilon} b^{1 + \varepsilon} \iff b^{1 + \varepsilon} = \frac{2^\varepsilon}{2^\varepsilon - 1} =: c_\varepsilon.
+        \end{align*}
+    }
+    \only<23->{
+        If $(A)$: $\begin{aligned}1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}}\end{aligned}$, and $(B)$: $c \leq \frac{\tilde{c}}{b}$ are fulfilled:
+        \begin{align*}
+            T'(N) &= \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right) \\
+            \implies T_d(n) &= \mathcal{O}\left( {\left( b^d n \right)}^{1 + \varepsilon} \right) = \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} \right),
+        \end{align*}
+        because $T'(N) := \max \left\{ T_k(i) \,|\, i = 1, \dots, n; k = 1, \dots, d: b^k i \leq N \right\}$. 
+        
+        Finally, outputing all $k$ dominating pairs requires $\mathcal{O}\left( k \right)$ time. \qed{}
     }
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}\footnote[1]{\cite[Lemma~3.1]{Chan2007}}}
-    \only<1, 2>{
+    \only<1>{
         \setcounter{theorem}{1}
         \begin{lemma}
             Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, and $\varepsilon \in \interval[open]{0}{1}, \begin{aligned}c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}\end{aligned}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
         \end{lemma}
+    }
+    \only<2, 3>{
+        \uncover<2->{
+            \begin{exampleblock}{Reminder}
+                We compute $C = A \otimes B$ elementwise through $c_{i, j} = \min\limits_k a_{i, k} + b_{k, j}$.
+            \end{exampleblock}
+        }
         
-        \uncover<2>{
+        \uncover<3>{
             \begin{exampleblock}{Note}
-                Ties such as $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$ are considered to be ``$<$'' if $k \leq \tilde{k}$.
-                In the paper this is written as $k < \tilde{k}$ under the assumption that $\tilde{k} = 1, \dots, k - 1, k + 1, \dots, d$.
+                We need to evaluate the inequality $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
+
+                Ties such as $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$ are considered to be ``$<$'' if $k < \tilde{k}$.
             \end{exampleblock}
         }
     }
-    \only<3-5>{
-        Consider $A$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{n, d}$, and $B$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{d, n}$.
+    \only<4-6>{
+        Consider $A$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{n, d}$, and $B$ to have entries ${\left( b_{i, j} \right)}_{i, j = 1}^{d, n}$.
         We want to compute the pairs
         \begin{align*}
             X_k &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \} \\
              &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j} \}.
         \end{align*}
-        \uncover<4->{
+        \uncover<5->{
             This effectively amounts to computing all dominant pairs between the sets
             \begin{align*}
                 \mathcal{A}_k &:= {\left\{ (a_{i, k} - a_{i, 1}), (a_{i, k} - a_{i, 2}), \dots, (a_{i, k} - a_{i, d}) \right\}}_{i = 1}^{n}, \text{and} \\
@@ -227,11 +241,11 @@
             where $\mathcal{A}_k$ takes the role of red points and $\mathcal{B}_k$ acts as the set of blue points.
         }
 
-        \uncover<5>{
+        \uncover<6>{
             By Lemma~\ref{lem:dom_pairs}, this takes an effort of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right)$.
         }
     }
-    \only<6>{
+    \only<7>{
         \begin{exampleblock}{Note}
             It is possible to recover the shortest paths from the construction of these $X_k$s.
         \end{exampleblock}
@@ -242,22 +256,68 @@
         \end{align*}
         leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
     }
-    \only<7->{
+    \only<8-12>{
         Suppose an index pair $(i, j)$ were to be included in $X_k$, and in $X_{\tilde{k}}$, with $k \neq \tilde{k}$.
-        Thus we especially get that $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
-        Applying the definition of $X_{\tilde{k}}$, we also get $a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k} + b_{k, j}$.
-        This means that $a_{i, \tilde{k}} + b_{\tilde{k}, j} = a_{i, k} + b_{k, j}$.
-        To break this tie, we can w.l.o.g.\ assume $k < \tilde{k}$, which would result in $(i, j) \not\in X_{\tilde{k}}$.
 
-        \uncover<8->{
-            Now assume that there would exist an index pair $(i, j)$ that is contained in none of the $X_k$.
-            Then the condition $\forall k = 1, \dots, d: \forall \tilde{k} = 1, \dots, d: a_{i, k} + b_{k, j} > a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
-            But obviously for $k = \tilde{k}$ we have ``$=$''.
+        \uncover<9->{
+            Recall the definition of $X_k$: 
+            \[
+                X_k = \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \}.
+            \]
+
+            Thus we get that $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$, because $(i, j) \in X_k$.
         }
 
-        \uncover<9>{
-            This shows that aggregating over all $X_k$ counts every index pair exactly once.
-            $\implies \begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2 \implies \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$. \qed{}
+        \uncover<10->{
+            Applying the definition of $X_{\tilde{k}}$, we then also get $a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k} + b_{k, j}$.
+        }
+
+        \uncover<11->{
+            This means that $a_{i, \tilde{k}} + b_{\tilde{k}, j} = a_{i, k} + b_{k, j}$.
+
+            To break this tie, we can w.l.o.g.\ assume $k < \tilde{k}$, which would result in $(i, j) \not\in X_{\tilde{k}}$.
+        }
+
+        \uncover<12>{
+            $\implies$ Every index pair $(i, j)$ can only be included in at most one $X_k$.
+        }
+    }
+    \only<13-17>{
+        Now assume that there would exist an index pair $(i, j)$ that is contained in none of the $X_k$.
+        (Recall $X_k = \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \}$.)
+        
+        \uncover<14->{
+            This is equivalent to the condition that
+            \[
+                \forall k = 1, \dots, d: \exists k' = 1, \dots, d: a_{i, k} + b_{k, j} > a_{i, k'} + b_{k', j}.
+            \]
+        }
+
+        \uncover<15->{
+            Because of the finite set we can choose $\hat{k} := \argmin\limits_{l = 1, \dots, d} a_{i, l} + b_{l, j}$.
+        }
+
+        \uncover<16->{
+            Hence, choosing $k = \hat{k}$ yields $\forall k' = 1, \dots, d: a_{i, k} + b_{k, j} = a_{i, \hat{k}} + b_{\hat{k}, j} \leq a_{i, k'} + b_{k', j}$. \Lightning{}
+        }
+        
+        \uncover<17>{
+            $\implies$ Every index pair $(i, j)$ has to be included in one $X_k$.
+        }
+    }
+    \only<18->{
+        \begin{alertblock}{Recall}
+            Every index pair $(i, j)$ can only be included in at most one $X_k$.
+    
+            Every index pair $(i, j)$ has to be included in one $X_k$.
+        \end{alertblock}
+        
+        $\implies$ Over all $X_k, k = 1, \dots, d$, every index pair $(i, j)$ is encountered exactly once.
+
+        \uncover<19>{
+            $\implies \begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$
+
+            $ \implies \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ \qed{}
         }
     }
 \end{frame}
@@ -296,8 +356,8 @@
         $\implies$ Strassen; relation between matrix multiplication and matrix closure.
     }
     \only<3-6>{
-        We split our matrices $A$ and $B$ into $\begin{aligned}\frac{n}{d}\end{aligned}$ blocks, that is $\begin{aligned}\forall i = 1, \dots, \frac{n}{d}: A_i \in \mathbb{R}^{n \times \frac{n}{d}}, B_i \in \mathbb{R}^{\frac{n}{d} \times n}\end{aligned}$.
-        (If necessary we round $\begin{aligned}\frac{n}{d}\end{aligned}$ to the closest integer and adjust the number of blocks accordingly.)
+        We split our matrices $A$ and $B$ into $\begin{aligned}\frac{n}{d}\end{aligned}$ blocks, that is $\begin{aligned}\forall i = 1, \dots, \frac{n}{d}: A_i \in \mathbb{R}^{n \times d}, B_i \in \mathbb{R}^{d \times n}\end{aligned}$ for some fixed $d$.
+        (If necessary we round $\begin{aligned}\frac{n}{d}\end{aligned}$ and adjust the number of blocks accordingly.)
 
         \uncover<4->{
             We then compute the distance products $A_i \otimes B_i$ for all $\begin{aligned}i = 1, \dots, \frac{n}{d}\end{aligned}$, and set the product to be defined by the element-wise minimum, i.e.\ $\begin{aligned}[t]c_{i, j} := \min\limits_{l = 1, \dots, \frac{n}{d}} {\left( A_l \otimes B_l \right)}_{i, j}\end{aligned}$, where $i, j = 1, \dots, n$.
@@ -315,15 +375,21 @@
         We want to assure $\begin{aligned}\frac{n^3}{d} > c_\varepsilon^d n^{2 + \varepsilon}\end{aligned}$.
 
         \uncover<8->{
-            The choice of $d = \tilde{c} \log(n)$ is useful, where $\tilde{c}$ is sufficiently small and depending on $\varepsilon$.
+            The choice of $d = \tilde{c} \log(n)$ for $\tilde{c}$ sufficiently small and depending on $\varepsilon$ is useful because
+            \begin{itemize}
+                \item $C^{D \log(n)} \sim n^D$ grows polynomially, whereas e.\ g.
+                \item<9-> $C^n$ grows grows exponentially.
+            \end{itemize}
+        }
 
+        \uncover<9->{
             We then get
             $\begin{aligned}
                 \mathcal{O}\left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right)
             \end{aligned}$. \qed{}
         }
 
-        \uncover<9>{
+        \uncover<10>{
             One possible choice is $\varepsilon \approx 0.38, c_\varepsilon \approx 4.32, d \approx 0.42 \log(n)$\footnotemark[1].
         }
     }
@@ -338,7 +404,7 @@
     }
     \only<2->{
         We consider $A$ and $B$ to be the matrices defined by $\begin{aligned}d(i, j) := \begin{cases}
-            w_{i, j}, &\exists e \in E: e = (i, j) \\
+            w(e), &\exists e \in E: e = (i, j) \\
             \infty, &else
         \end{cases}\end{aligned}$.
 
