@@ -66,7 +66,8 @@
 
         Here a \emph{negative weight cycle} refers to a path $p = (e_1, \dots, e_n)$ such that $e_1 = (a, \cdot), e_n = (\cdot, a)$ and $w(p) < 0$.
 
-        If we are looking for a shortest path containing from a vertex $u$ to a vertex $v$, including a negative weight cycle always reduces the weight of the total path. \Lightning{}
+        If we are looking for a shortest path containing from a vertex $u$ to a vertex $v$, including a negative weight cycle always reduces the weight of the total path.
+        Especially, the $\argmin$ in the definition of a shortest path no longer exists, making itself invalid. \Lightning{}
     \end{exampleblock}
 \end{frame}
 
@@ -100,20 +101,40 @@
     }
 \end{frame}
 
-\begin{frame}{All Pairs Shortest Paths (APSP)\footnote[1]{\cite[Section~25.1]{Cormen2001}}}
+\begin{frame}{All Pairs Shortest Paths (APSP)\only<1>{\footnote[1]{\cite[Section~25.1]{Cormen2001}}}}
     The \emph{All Pairs Shortest Paths} problem can be naively solved by applying Bellman-Ford to every vertex in $G$.
     However faster alternatives are available, such as making use of \emph{repeated squaring}.
     
-    \uncover<2>{
-        % TODO: add same computation for simple matrix multiplication
+    \uncover<2->{
         To illustrate:
-        \begin{align*}
-            L_1 &= W \\
-            L_2 &= W \cdot W \\
-            L_4 &= W^2 \cdot W^2 \\
-            &\vdots \\
-            L_{2^{\lceil \log(n - 1) \rceil}} &= W^{2^{\lceil \log(n - 1) \rceil - 1}} \cdot W^{2^{\lceil \log(n - 1) \rceil - 1}}
-        \end{align*}
+        \begin{columns}
+            \begin{column}{.39\textwidth}
+                \begin{align*}
+                    L_1 &= W \\
+                    L_2 &= W \cdot W = W^2 \\
+                    L_3 &= W^2 \cdot W \\
+                    &\vdots \\
+                    L_n &= W^{n - 1} \cdot W
+                \end{align*}
+            \end{column}
+            \begin{column}{.59\textwidth}
+                \only<3->{
+                    \begin{align*}
+                        L_1 &= W \\
+                        L_2 &= W \cdot W \\
+                        L_4 &= W^2 \cdot W^2 \\
+                        &\vdots \\
+                        L_{2^{\lceil \log(n - 1) \rceil}} &= W^{2^{\lceil \log(n - 1) \rceil - 1}} \cdot W^{2^{\lceil \log(n - 1) \rceil - 1}}
+                    \end{align*}
+                }
+            \end{column}
+        \end{columns}
+    }
+
+    \uncover<4>{
+        \begin{exampleblock}{Note}
+            The only relevant property of the matrix product $\cdot$ here is the fact that it preserves the quadratic matrix structure!
+        \end{exampleblock}
     }
 \end{frame}
 
