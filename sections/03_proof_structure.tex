@@ -1,4 +1,4 @@
-\section{Structure of the Proofs}
+\section{Connecting Computational Geometry and Matrix Multiplication}
 
 \begin{frame}{Basic Ideas}
     The proof is structured as follows:
@@ -7,9 +7,28 @@
         \item<2-> Computing products of matrices $\implies$ \emph{Sorting indices in sets}
         \item<3-> Combining the two ideas $\implies$ \emph{Multiplying matrices efficiently}
     \end{enumerate}
+
+    \uncover<4->{
+        \begin{figure}
+            \begin{tikzpicture}[scale=.55]
+                \node[barlabel] (compgeom) at (0, 3) {CG};
+                \uncover<5->{
+                    \node[barlabel] (matmul) at (3, 3) {MM};
+                    \path[dominates] (compgeom) -- (matmul);
+                }
+                \uncover<6->{
+                    \node[barlabel] (apsp) at (3, 0) {APSP};
+                    \path[dominates] (matmul) -- (apsp);
+                }
+                \uncover<7->{
+                    \path[dominates] (compgeom) -- (apsp);
+                }
+            \end{tikzpicture}
+        \end{figure}
+    }
 \end{frame}
 
-\begin{frame}{Dominating Pairs}
+\begin{frame}{Dominating Pairs\only<1>{\footnote[1]{\cite{Chan2007}}}}
     \begin{alertblock}{Dominating Pair}
         \only<1, 2>{
             Let $\mathfrak{M}_1, \mathfrak{M}_2$ be (finite) subsets of $\mathbb{R}^d$ with $d \in \mathbb{N}$.
@@ -60,7 +79,7 @@
     }
 \end{frame}
 
-\begin{frame}{Lemma 2.1\autocite{Chan2007}}
+\begin{frame}{Lemma 2.1\footnote[1]{\cite{Chan2007}}}
     \begin{lemma}\label{lem:dom_pairs}
         Let $\mathbb{P} \subset \mathbb{R}^d$ be a set of red or blue points, partitioned into $\mathbb{P}_{red}$ and $\mathbb{P}_{blue}$ such that $n = \abs{\mathbb{P}_{red}} + \abs{\mathbb{P}_{blue}}$, and $\varepsilon \in \interval[open]{0}{1}$.
         Then we can find all $k$ dominating pairs in a time of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + k \right)$, where we define $c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}$.
@@ -68,7 +87,7 @@
 \end{frame}
 
 \begin{frame}{Matrix Products}
-    \begin{alertblock}{Min-Plus/Distance Product}
+    \begin{alertblock}{Min-Plus/Distance Product\only<1>{\footnote[1]{\cite{Chan2007}}}}
         We define the \emph{min-plus} or \emph{distance product} as the operator
         \[
             \otimes : \mathbb{R}^{n \times d} \times \mathbb{R}^{d \times m} \rightarrow \mathbb{R}^{n \times m},\qquad
@@ -141,7 +160,7 @@
 \begin{frame}{Splitting Quadratic Matrices}
     \textbf{Q:} How do we go about multiplying two matrices efficiently?
 
-    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{ (Strassen's Method\footnote[2]{\cite[Section~6.2]{Aho1974}})}}
+    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{ (Strassen's Method\only<2>{\footnote[1]{\cite[Section~6.2]{Aho1974}}})}}
 
     \uncover<3->{
         \begin{columns}
@@ -182,10 +201,10 @@
     }
 \end{frame}
 
-\begin{frame}{Multipyling Matrices and Computing their Closure\footnote[3]{\cite[Section~5.6--5.9]{Aho1974}}}
+\begin{frame}{Multipyling Matrices and Computing their Closure}
     \begin{alertblock}{Problem}
-        Strassen's method does not work for closed semirings.\footnote[1]{\cite{Chan2007}}
-        However we want to work with the min-plus product which induces a closed semiring.\footnote[2]{\cite[Example~5.9]{Aho1974}}
+        Strassen's method does not work for closed semirings.\only<1>{\footnote[1]{\cite{Chan2007}}}
+        However we want to work with the min-plus product which induces a closed semiring.\only<1>{\footnote[2]{\cite[Example~5.9]{Aho1974}}}
     \end{alertblock}
 
     \uncover<2->{
@@ -195,12 +214,12 @@
     \uncover<3->{
         It can then be shown that
         \begin{theorem*}
-            Under some conditions on the computational time needed to multiply two square matrices and the time needed to compute the closure of a square matrix, both times are of the same order.
+            Under some conditions on the computational time needed to multiply two square matrices and the time needed to compute the closure of a square matrix, both times are of the same order.\only<3>{\footnote[1]{\cite[Section~5.9]{Aho1974}}}
         \end{theorem*}
     }
 
     \uncover<4>{
-        This can then be related to the APSP problem via the closure under the min-plus product.\only<4>{\footnote[4]{\cite[Section~5.9, Corollary~2]{Aho1974}}}
+        This can then be related to the APSP problem via the closure under the min-plus product.\only<4>{\footnote[1]{\cite[Section~5.9, Corollary~2]{Aho1974}}}
     }
 \end{frame}
 
