@@ -29,54 +29,57 @@
 \end{frame}
 
 \begin{frame}{Dominating Pairs\only<1>{\footnote[1]{\cite{Chan2007}}}}
-    \begin{alertblock}{Dominating Pair}
-        \only<1, 2>{
-            Let $\mathfrak{M}_1, \mathfrak{M}_2$ be (finite) subsets of $\mathbb{R}^d$ with $d \in \mathbb{N}$.
-            Then a \emph{dominating pair} is defined to be a tuple $(p, q) \in \mathfrak{M}_1 \times \mathfrak{M}_2$ such that it holds
-            \[
-                \forall k = 1, \dots, d: p_k \leq q_k,
-            \]
-            where $p_k$, and $q_k$ are the $k$-th coordinate of $p$, and $q$ respectively.
-        }
-        \only<3->{
-            \begin{figure}
-                \begin{tikzpicture}[scale=0.75, auto, swap]
-                    \foreach \pos / \name in {%
-                        {(1, 1)/a}, {(4.5, 3.5)/b}%
-                    }%
-                        \node[redpoint] (\name) at \pos {};
-
-                    \foreach \pos / \name in {%
-                        {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
-                    }%
-                        \node[bluepoint] (\name) at \pos {};
-
-                    \only<4>{
-                        \foreach \source / \dest in {%
-                            B/a, C/a,%
-                            C/b%
-                        }%
-                            \path[dominates] (\source) -- (\dest);
-                    }
-
-                    \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
-                    \node[barlabel, rotate=90] (labely) at (-0.75, 3) {Coordinate 1};
-
-                    \node[ghost] (bound1) at (0, 0) {};
-                    \node[ghost] (bound2) at (6, 6) {};
-
-                    % border
-                    \node[draw,fit=(bound1) (bound2)] (border) {};
-                \end{tikzpicture}
-            \end{figure}
-        }
+    \begin{alertblock}{Dominating Pairs}
+        Let $\mathbb{P}_{red}, \mathbb{P}_{blue}$ be (finite) subsets of $\mathbb{R}^d$ with $d \in \mathbb{N}$.
+        Then a \emph{dominating pair} is defined to be a tuple $(p, q) \in \mathfrak{M}_1 \times \mathfrak{M}_2$ such that it holds
+        \[
+            \forall k = 1, \dots, d: p_k \leq q_k,
+        \]
+        where $p_k$, and $q_k$ are the $k$-th coordinate of $p$, and $q$ respectively.
     \end{alertblock}
-    \uncover<2>{
-        \begin{block}{Note}
-            This implies that for any dominating pair, the first point will always be the one with smaller coordinates.
-            This can, to a certain degree, be seen as an ``ordering'' of $\mathfrak{M}_1$, and $\mathfrak{M}_2$.
+    \uncover<2->{
+        \begin{block}{Notes}
+            The choice of the names ``red'' and ``blue'' is arbitrary.
+
+            \uncover<3>{
+                This implies that for any dominating pair, the first point will always be the one with smaller coordinates.
+                This can, to a certain degree, be seen as an ``ordering'' of $\mathbb{P}_{red}$, and $\mathbb{P}_{blue}$.
+            }
         \end{block}
     }
+\end{frame}
+
+\begin{frame}{Dominating Pairs}
+    \begin{figure}
+        \begin{tikzpicture}[scale=0.75, auto, swap]
+            \foreach \pos / \name in {%
+                {(1, 1)/a}, {(4.5, 3.5)/b}%
+            }%
+                \node[redpoint] (\name) at \pos {};
+
+            \foreach \pos / \name in {%
+                {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
+            }%
+                \node[bluepoint] (\name) at \pos {};
+
+            \only<2>{
+                \foreach \source / \dest in {%
+                    B/a, C/a,%
+                    C/b%
+                }%
+                    \path[dominates] (\source) -- (\dest);
+            }
+
+            \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
+            \node[barlabel, rotate=90] (labely) at (-0.75, 3) {Coordinate 1};
+
+            \node[ghost] (bound1) at (0, 0) {};
+            \node[ghost] (bound2) at (6, 6) {};
+
+            % border
+            \node[draw,fit=(bound1) (bound2)] (border) {};
+        \end{tikzpicture}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Lemma 2.1\footnote[1]{\cite{Chan2007}}}
