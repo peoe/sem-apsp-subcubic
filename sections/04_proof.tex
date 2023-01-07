@@ -197,8 +197,59 @@
             T_d(1) = \mathcal{O}\left( 1 \right), \qquad T_0(n) = \mathcal{O}\left( n \right).
         \]
     }
+\end{frame}
 
-    % TODO: add images here to explain the degenerated case "all red points are left, all blue points are right"
+\begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}}
+    \[
+        T_d(n) \leq 2 T_d\left( \frac{n}{2} \right) + {\color{Red}T_{d - 1}(n)} + \mathcal{O}(n)?
+    \]
+    
+    \uncover<2->{
+        \begin{figure}
+            \centering
+            \begin{tikzpicture}[scale=0.6, auto, swap]
+                \foreach \pos / \name in {%
+                    {(1, 1)/a}, {(2, 3)/b}%
+                }%
+                    \node[redpoint] (\name) at \pos {};
+                    
+                \foreach \pos / \name in {%
+                    {(4, 2)/A}, {(5, 5)/B}%
+                }%
+                    \node[bluepoint] (\name) at \pos {};
+
+                \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
+                \node[barlabel, rotate=90] (labely) at (-0.75, 3) {Coordinate 1};
+
+                \node[ghost] (bound1) at (0, 0) {};
+                \node[ghost] (bound2) at (6, 6) {};
+
+                \node[ghost] (middlehook1) at (2.6, 6) {};
+                \node[ghost] (middlehook2) at (3.4, 0) {};
+
+                % splitter, alpha highlights and set labels
+                \uncover<3->{
+                    \node[ghost] (hook1) at (3, -.5) {};
+                    \node[ghost] (hook2) at (3, 6.5) {};
+                    \path[divides] (hook1) -- (hook2);
+
+                    \node[fill=red, fill opacity=.2, fit=(bound1) (middlehook1)] (redleft) {};
+                    \node[fill=blue, fill opacity=.2, fit=(middlehook2) (bound2)] (blueright) {};
+
+                    \node[barlabel] (labelleft) at (-4, 5.5) {$\mathbb{P}_{red, left}$};
+                    \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{blue, right}$};
+                    \node[ghost] (lefttarget) at (.5, 5.5) {};
+                    \node[ghost] (righttarget) at (5.5, 5.5) {};
+    
+                    \path[points] (labelleft) -- (lefttarget);
+                    \path[points] (labelright) -- (righttarget);
+                }
+
+                % border
+                \node[draw, fit=(bound1) (bound2)] (border) {};
+            \end{tikzpicture}
+        \end{figure}
+    }
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}}
