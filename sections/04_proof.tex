@@ -184,9 +184,9 @@
     \]
 
     \uncover<2->{
-        $(A)$: Two subproblems for half of the data each. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}$
+        $(A)$: Two subproblems for half of the data each. $\leadsto \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}$
 
-        $(B)$: Subproblem where d-th coordinate does not matter. $\rightsquigarrow \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
+        $(B)$: Subproblem where d-th coordinate does not matter. $\leadsto \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
 
         $(C)$: Time to split current point set about the median.\only<2->{\footnote[1]{\cite[Section~2.3.2]{Preparata1985}}}
     }
@@ -198,7 +198,27 @@
         \]
     }
 
-    % TODO: add images in here to make the terms more clear!
+    % TODO: add images here to explain the degenerated case "all red points are left, all blue points are right"
+\end{frame}
+
+\begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}}
+    \[
+        T_0(n) = \mathcal{O}\left( n \right)?
+    \]
+
+    ``If $d = 0$, we just output all pairs of red and blue points.''\only<1>{\footnote[1]{\cite[Lemma~2.1]{Chan2007}}}
+
+    \uncover<2->{
+        $\leadsto$ Output: $n^2$ pairs in the worst case \uncover<3->{$\implies T_0(n) = \mathcal{O}\left( n^2 \right)$}
+    }
+
+    \uncover<4->{
+        $\leadsto$ Output: (\texttt{Pairs}, $\mathbb{P}_{red, left}$, $\mathbb{P}_{blue, right}$) in $\mathcal{O}(n)$\uncover<5->{, but postprocessing necessary later on!}
+    }
+
+    \uncover<6>{
+        $\implies$ At some point we have to compute upto $\mathcal{O} \left( n^2 \right)$\dots
+    }
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}}
@@ -256,7 +276,7 @@
     \uncover<2->{
         If $(A)$: $\begin{aligned}1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}}\end{aligned}$, and $(B)$: $c \leq \frac{\tilde{c}}{b}$ are fulfilled we get
         \[
-            T'(N) \leq \tilde{c} N^{1 + \varepsilon} - \tilde{c} N \uncover<3->{\implies T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} \right).}
+            T'(N) \leq \tilde{c} N^{1 + \varepsilon} - \tilde{c} N \uncover<3->{\implies T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right).}
         \]
     }
 
@@ -268,7 +288,7 @@
 \begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}}
     If $(A)$: $\begin{aligned}1 = \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}}\end{aligned}$, and $(B)$: $c \leq \frac{\tilde{c}}{b}$ are fulfilled we get
     \[
-        T'(N) \leq \tilde{c} N^{1 + \varepsilon} - \tilde{c} N \implies T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} - N \right).
+        T'(N) \leq \tilde{c} N^{1 + \varepsilon} - \tilde{c} N \implies T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right).
     \]
 
     In $(A)$ we get $\begin{aligned}[t]
@@ -440,7 +460,7 @@
         \end{column}
     \end{columns}
 
-    $\implies$ Strassen; relation between matrix multiplication and matrix closure.
+    $\implies$ Strassen is not applicable here --- we need to make use of the relation between matrix multiplication and matrix closure.
 \end{frame}
 
 \begin{frame}{Proof of Theorem~\ref{thm:mat_mul}}
