@@ -48,11 +48,18 @@
                     \foreach \vertex / \fr in {f/1}%
                         \path<\fr-> node[selected vertex] at (\vertex) {$\vertex$};
                     }
+
+                    \only<4->{
+                        \begin{pgfonlayer}{background}
+                            \foreach \source / \dest in {f/j, j/h, h/c, c/a}
+                                \path<+->[selected edge] (\source.center) -- (\dest.center);
+                        \end{pgfonlayer}
+                    }
                 \end{tikzpicture}
             \end{figure}
         \end{column}
         \begin{column}{0.2\textwidth}
-            \only<3>{
+            \only<3->{
             $\implies \begin{pmatrix}7 \\ 9 \\ 6 \\ 3 \\ 10 \\ 0 \\ 10 \\ 4 \\ 5 \\ 2\end{pmatrix}$
             $\begin{matrix}a \\ b \\ c \\ d \\ e \\ f \\ g \\ h \\ i \\ j\end{matrix}$
             }
