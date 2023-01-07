@@ -152,6 +152,60 @@
     }
 \end{frame}
 
+\begin{frame}{Matrix Products}
+    \begin{alertblock}{Min-Plus/Distance Product\only<1>{\footnote[1]{\cite{Chan2007}}}}
+        We define the \emph{min-plus} or \emph{distance product} as the operator
+        \[
+            \otimes : \mathbb{R}^{n \times d} \times \mathbb{R}^{d \times m} \rightarrow \mathbb{R}^{n \times m},\qquad
+            {\left( A \otimes B \right)}_{i, j} := \min\limits_{k \in \{ 1, \dots, d \}} a_{i, k} + b_{k, j}.
+        \]
+    \end{alertblock}
+
+    \uncover<2->{
+        \begin{figure}
+            \begin{tikzpicture}[auto, swap]
+                \foreach \pos / \name in {%
+                    {(0, 0)/a}, {(2, 2)/b}, {(5, 2)/c}, {(7, 0)/d}%
+                }%
+                    \node[vertex] (\name) at \pos {$\name$};
+
+                \foreach \source / \dest / \weight in {%
+                    a/b/3, b/c/4, c/d/2%
+                }%
+                    \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+                
+                \only<3-6>{
+                    \begin{pgfonlayer}{background}
+                        \path<+->[selected dashed edge] (a.center) -- node[weight] {?} (d.center);
+                    \end{pgfonlayer}
+                }
+
+                \only<4>{
+                    \begin{pgfonlayer}{background}
+                        \foreach \source / \dest in {a/b, b/c}
+                            \path<+->[selected edge] (\source.center) -- (\dest.center);
+                    \end{pgfonlayer}
+                }
+
+                \only<5->{
+                    \path[dashed edge] (a) -- node[weight] {$7$} (c);
+                }
+
+                \only<6>{
+                    \begin{pgfonlayer}{background}
+                        \foreach \source / \dest in {a/c, c/d}
+                            \path<+->[selected edge] (\source.center) -- (\dest.center);
+                    \end{pgfonlayer}
+                }
+
+                \only<7>{
+                    \path[dashed edge] (a) -- node[weight] {$9$} (d);
+                }
+            \end{tikzpicture}
+        \end{figure}
+    }
+\end{frame}
+
 \begin{frame}{Lemma 3.1\footnote[1]{\cite{Chan2007}}}
     \begin{lemma}\label{lem:sub_mat_mul}
         Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, and $\varepsilon \in \interval[open]{0}{1}, \begin{aligned}c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}\end{aligned}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
@@ -215,10 +269,7 @@
     }
 
     \uncover<3->{
-        It can then be shown that
-        \begin{theorem*}
-            Under some conditions on the computational time needed to multiply two square matrices and the time needed to compute the closure of a square matrix, both times are of the same order.\only<3>{\footnote[1]{\cite[Section~5.9]{Aho1974}}}
-        \end{theorem*}
+        It can then be shown that under some conditions on the computational time needed to multiply two square matrices and the time needed to compute the closure of a square matrix, both times are of the same order.\only<3>{\footnote[1]{\cite[Section~5.9]{Aho1974}}}
     }
 
     \uncover<4>{
