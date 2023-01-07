@@ -154,7 +154,7 @@
 
 \begin{frame}{Lemma 3.1\footnote[1]{\cite{Chan2007}}}
     \begin{lemma}\label{lem:sub_mat_mul}
-        Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
+        Given two matrices $A \in \mathbb{R}^{n \times d}, B \in \mathbb{R}^{d \times n}$, and $\varepsilon \in \interval[open]{0}{1}, \begin{aligned}c_\varepsilon := \frac{2^\varepsilon}{2^\varepsilon - 1}\end{aligned}$, we can compute their min-plus product $A \otimes B$ in $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$ time.
 
         Here, $\varepsilon$ and $c_\varepsilon$ are the same variables as in Lemma~\ref{lem:dom_pairs}.
     \end{lemma}
