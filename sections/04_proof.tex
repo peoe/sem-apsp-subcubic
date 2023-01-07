@@ -316,27 +316,39 @@
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}}
+    \begin{exampleblock}{Note}
+        We need to evaluate the inequality $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
+
+        Ties such as $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$ are considered to be ``$<$'' if $k < \tilde{k}$.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}}
     \begin{exampleblock}{Reminder}
         We compute $C = A \otimes B$ elementwise through $c_{i, j} = \min\limits_k a_{i, k} + b_{k, j}$.
     \end{exampleblock}
-        
-    \uncover<2>{
-        \begin{exampleblock}{Note}
-            We need to evaluate the inequality $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
 
-            Ties such as $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$ are considered to be ``$<$'' if $k < \tilde{k}$.
-        \end{exampleblock}
+    \uncover<2->{
+        Consider $A$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{n, d}$, and $B$ to have entries ${\left( b_{i, j} \right)}_{i, j = 1}^{d, n}$.
+        We want to compute the pairs
+        \[
+            X_k &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \}
+        \]
+    }
+
+    \uncover<3->{
+        After computing these $X_k$, we can then set $C = A \otimes B$ elementwise as follows:
+
+        For $(i, j) \in X_K$ we set $c_{i, j} = a_{i, k} + b_{k, j}$.
     }
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}}
-    Consider $A$ to have entries ${\left( a_{i, j} \right)}_{i, j = 1}^{n, d}$, and $B$ to have entries ${\left( b_{i, j} \right)}_{i, j = 1}^{d, n}$.
-    We want to compute the pairs
     \begin{align*}
         X_k &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \} \\
-            &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j} \}.
+            \uncover<2->{&= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j} \}}
     \end{align*}
-    \uncover<2->{
+    \uncover<3->{
         This effectively amounts to computing all dominant pairs between the sets
         \begin{align*}
             \mathcal{A}_k &:= {\left\{ (a_{i, k} - a_{i, 1}), (a_{i, k} - a_{i, 2}), \dots, (a_{i, k} - a_{i, d}) \right\}}_{i = 1}^{n}, \text{and} \\
@@ -345,21 +357,24 @@
         where $\mathcal{A}_k$ takes the role of red points and $\mathcal{B}_k$ acts as the set of blue points.
     }
 
-    \uncover<3>{
+    \uncover<4>{
         By Lemma~\ref{lem:dom_pairs}, this takes an effort of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right)$.
     }
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}}
     \begin{exampleblock}{Note}
-        It is possible to recover the shortest paths from the construction of these $X_k$s.
+        It is possible to recover the shortest paths from the construction of the $X_k$s.
+        We will see more on this later.
     \end{exampleblock}
 
-    The penultimate step is to compute that
-    \begin{align*}
-        \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right),
-    \end{align*}
-    leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
+    \uncover<2->{
+        The penultimate step is to compute that
+        \begin{align*}
+            \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right),
+        \end{align*}
+        leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
+    }
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}}
