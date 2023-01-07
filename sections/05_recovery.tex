@@ -1,0 +1,63 @@
+\section{Recovery of Shortest Paths and Setting Product Matrix Entries}
+
+\begin{frame}{Recovery of Shortest Paths}
+    We want to recover the shortest path from vertex $I$ to vertex $j$.
+    Consider $(i, j) \in X_k$.
+
+    \uncover<2->{
+        This means that the shortest path from $i$ to $j$ must go through $k$ because: $\forall k' = 1, \dots, n: w_{i, k} + w_{k, j} \leq w_{i, k'} + w_{k', j}$.
+
+        (\emph{Taking a path through any vertex other than $k$ increases the weight.})
+    }
+
+    \uncover<3->{
+        For neighbouring vertices, where the shortest path is the edge directly between them, we get that $(i, j) \in X_l$, with $l = \min \{ i, j \}$ because (assuming $i < j$): $\forall k' = 1, \dots, n: w_{i, i} + w_{i, j} \leq w_{i, k'} + w_{k', j}$.
+
+        (\emph{Direct shortest paths between neighbouring vertices $i$ and $j$ fall into $X_i$ or $X_j$.})
+    }
+\end{frame}
+
+\begin{frame}{Recovery of the Shortest Path}
+    \begin{algorithm}[H]
+        \KwData{The sets $X_k$, source vertex $i$, target vertex $j$}
+        \SetKwProg{myproc}{def}{}{}
+        \myproc{get\_shortest\_path($i, j$)}{
+            Set $k$ such that $(i, j) \in X_k$\;
+            \If{$k \not\in \{ i, j \}$}{
+                Set $\mathfrak{p} := \emph{get\_shortest\_path}(i, k) \oplus \emph{get\_shortest\_path}(k, j)$\;
+            }
+            \Else{
+                Return $\mathfrak{p} := (i, j)$\;
+            }
+        }
+    \end{algorithm}
+
+    With the assumption that $(a, \dots, b) \oplus (b, \dots, c) = (a, \dots, b, \dots, c)$.
+\end{frame}
+
+\begin{frame}{Setting the Product Matrix' Entries $c_{i, j}$\only<1>{\footnote[1]{\cite{Chan2007}}}}
+    Setting $c_{i, j} = a_{i, k} + b_{k, j}$ directly is not going to work due to random access constraints.\only<1>{\footnotemark[1]}
+
+    \uncover<2->{
+        Instead we consider a ``bucket'' $\mathcal{B}_i$ for every $i = 1, \dots, n$ and an additional ``slot'' matrix $S$ of dimension $n \times n$.
+    }
+
+    \uncover<3->{
+        For $(i, j) \in X_k$ we insert $(j, k)$ into $\mathcal{B}_i$ in $\mathcal{O}\left( n^2 \right)$ time.
+    }
+
+    \uncover<4->{
+        For every $i = 1, \dots, n$ we presort the bucket $\mathcal{B}_i$ with respect to the first index in $\mathcal{O}\left( n \log(n) \right)$ time.
+        (\emph{This corresponds to the $j$ from the index pairs above.})
+    }
+
+    \uncover<5->{
+        We then set the entry $s_{i, j}$ to $k$ for every $(j, k) \in \mathcal{B}_i$ in $\mathcal{O}\left( n^2 \right)$ time.
+    }
+
+    \uncover<6->{
+        Finally, we can set $c_{i, j} = a_{i, s_{i, j}} + b_{s_{i, j}, j}$ in $\mathcal{O}\left( n^2 \right)$ time.
+
+        In total, this results in $\mathcal{O}\left( 3 n^2 + n \log(n) \right) = \mathcal{O}\left( n^2 \right)$.
+    }
+\end{frame}
