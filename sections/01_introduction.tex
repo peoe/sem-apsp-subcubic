@@ -73,9 +73,13 @@
 
         Here a \emph{negative weight cycle} refers to a path $p = (e_1, \dots, e_n)$ such that $e_1 = (a, \cdot), e_n = (\cdot, a)$ and $w(p) < 0$.
 
-        If we are looking for a shortest path containing from a vertex $u$ to a vertex $v$, including a negative weight cycle always reduces the weight of the total path.
-        Especially, the $\argmin$ in the definition of a shortest path no longer exists, making itself invalid. \Lightning{}
+        \uncover<2->{
+            If we are looking for a shortest path containing from a vertex $u$ to a vertex $v$, including a negative weight cycle always reduces the weight of the total path.
+            Especially, the $\argmin$ in the definition of a shortest path no longer exists, making itself invalid. \Lightning{}
+        }
     \end{exampleblock}
+
+    \uncover<3->{\emph{Negative weight edges are of course allowed!}}
 \end{frame}
 
 \begin{frame}{Solving SSSP}
@@ -95,7 +99,7 @@
 
     \only<2-3>{
         \begin{exampleblock}{Note}
-            It is easy to keep track of each vertex' predecessor to later recover the shortest path to any given vertex.
+            It is easy to keep track of each vertex' predecessor to later recover the shortest path to any given vertex by setting the predecessor $p(v) = u$.
 
             \uncover<3>{
                 Bellman-Ford can also check for the existence of negative weight cycles.\only<3>{\footnote[1]{\cite[Section~24.1]{Cormen2001}}}
@@ -170,10 +174,8 @@
 \end{frame}
         
 \begin{frame}{All Pairs Shortest Paths (APSP)}
-    \only<1, 2>{
-        Omitting the squared matrix approach and directly calculating the updates on the matrix, we obtain the \emph{Floyd-Warshall} algorithm.
-        This only takes $\mathcal{O}\left( n^3 \right)$.
-    }
+    Omitting the squared matrix approach and directly calculating the updates on the matrix, we obtain the \emph{Floyd-Warshall} algorithm.
+    This only takes $\mathcal{O}\left( n^3 \right)$.
 
     \uncover<2->{
         \begin{algorithm}[H]
@@ -191,7 +193,7 @@
         \end{algorithm}
     }
 
-    \only<3>{
+    \uncover<3>{
         \begin{exampleblock}{Note}
             It is relatively easy to keep track of a vertex' predecessor when updating the weights, making it possible to retrieve the shortest path after runtime.
         \end{exampleblock}

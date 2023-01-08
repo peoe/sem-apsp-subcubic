@@ -10,7 +10,7 @@
 
 \begin{frame}{Proof of Lemma~\ref{lem:dom_pairs}}
     \begin{exampleblock}{Assumption}
-        All values are presorted by the $d$-th coordinate.
+        All values are presorted by the $d$ coordinates.
     \end{exampleblock}
 \end{frame}
 
@@ -20,7 +20,7 @@
     \uncover<1->{
         We split each set $\mathbb{P}_{red}$, $\mathbb{P}_{blue}$ along the median $d$-th coordinate into two sets each:
         \[
-            \mathbb{P}_{red} \mapsto \mathbb{P}_{red, left}, \mathbb{P}_{red, right} \qquad \mathbb{P}_{blue} \mapsto \mathbb{P}_{blue, left}, \mathbb{P}_{blue, right}
+            \mathbb{P}_{red} \leadsto \mathbb{P}_{red, left}, \mathbb{P}_{red, right} \qquad \mathbb{P}_{blue} \leadsto \mathbb{P}_{blue, left}, \mathbb{P}_{blue, right}
         \]
     }
     \uncover<2->{
@@ -47,54 +47,81 @@
     \emph{Idea: Divide and Conquer!}
     
     \begin{figure}
+        \centering
         \begin{tikzpicture}[scale=0.6, auto, swap]
-            \only<1, 2, 3>{
+            \only<1, 2>{
                 \foreach \pos / \name in {%
                     {(1, 1)/a}, {(4.5, 3.5)/b}%
                 }%
                     \node[redpoint] (\name) at \pos {};
             }
 
-            \only<1, 2, 4>{
+            \only<1, 2>{
                 \foreach \pos / \name in {%
                     {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
                 }%
                     \node[bluepoint] (\name) at \pos {};
             }
 
-            \only<3>{
+            % red left / right
+            \only<3, 4>{
                 \foreach \pos / \name in {%
                     {(3, 0.5)/A}, {(2, 3)/B}, {(5, 5)/C}%
                 }%
                     \node[bluepointalpha] (\name) at \pos {};
-
-                \node[barlabel] (labelleft) at (-4, 5.5) {$\mathbb{P}_{red, left}$};
-                \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{red, right}$};
             }
 
+            % red left plotting
+            \only<3>{
+                \node[redpoint] (a) at (1, 1) {};
+                \node[redpointalpha] (b) at (4.5, 3.5) {};
+                \node[barlabel] (labelleft) at (1.25, 5.75) {$\mathbb{P}_{red, left}$};
+                \node[fill=red, fill opacity=.1, fit=(bound1) (middlehook1)] (redleft) {};
+            }
+            
+            % red right plotting
             \only<4>{
+                \node[redpointalpha] (a) at (1, 1) {};
+                \node[redpoint] (b) at (4.5, 3.5) {};
+                \node[barlabel] (labelright) at (4.75, 5.75) {$\mathbb{P}_{red, right}$};
+                \node[fill=red, fill opacity=.1, fit=(middlehook2) (bound2)] (redright) {};
+            }
+
+            % blue left / right
+            \only<5, 6>{
                 \foreach \pos / \name in {%
                     {(1, 1)/a}, {(4.5, 3.5)/b}%
                 }%
                     \node[redpointalpha] (\name) at \pos {};
-
-                \node[barlabel] (labelleft) at (-4, 5.5) {$\mathbb{P}_{blue, left}$};
-                \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{blue, right}$};
             }
 
+            % blue left plotting
+            \only<5>{
+                \node[bluepoint] (A) at (3, 0.5) {};
+                \node[bluepoint] (B) at (2, 3) {};
+                \node[bluepointalpha] (C) at (5, 5) {};
+                \node[barlabel] (labelright) at (1.25, 5.75) {$\mathbb{P}_{blue, left}$};
+                \node[fill=blue, fill opacity=.1, fit=(bound1) (middlehook1)] (blueleft) {};
+            }
+
+            % blue right plotting
+            \only<6>{
+                \node[bluepointalpha] (A) at (3, 0.5) {};
+                \node[bluepointalpha] (B) at (2, 3) {};
+                \node[bluepoint] (C) at (5, 5) {};
+                \node[barlabel] (labelright) at (4.75, 5.75) {$\mathbb{P}_{blue, right}$};
+                \node[fill=blue, fill opacity=.1, fit=(middlehook2) (bound2)] (blueright) {};
+            }
+
+            % median division
             \only<2->{
                 \node[ghost] (hook1) at (3, -.5) {};
                 \node[ghost] (hook2) at (3, 6.5) {};
 
                 \path[divides] (hook1) -- (hook2);
-            }
-            
-            \only<3->{
-                \node[ghost] (lefttarget) at (.5, 5.5) {};
-                \node[ghost] (righttarget) at (5.5, 5.5) {};
 
-                \path[points] (labelleft) -- (lefttarget);
-                \path[points] (labelright) -- (righttarget);
+                \node[ghost] (middlehook1) at (2.6, 6) {};
+                \node[ghost] (middlehook2) at (3.4, 0) {};
             }
 
             \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
@@ -114,14 +141,17 @@
     \[
         \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, left}, \qquad \mathbb{P}_{red, right} \cup \mathbb{P}_{blue, right}, \qquad \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}.
     \]
-    (For the first $d - 1$ coordinates for the third set.)
 
     \uncover<2->{
+        For $\mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$ we only need to consider the first $d - 1$ coordinates.
+    }
+
+    \uncover<3->{
         We do not consider $\mathbb{P}_{red, right} \cup \mathbb{P}_{blue, left}$, because $\forall p \in \mathbb{P}_{red, right}, q \in \mathbb{P}_{blue, left}: q_d \leq m_d \leq p_d$.
         Hence no $q$ can never dominate any $p$.
     }
 
-    \uncover<3->{
+    \uncover<4->{
         We stop dividing if the number of points left to consider is $1$; we output all pairs of red and blue points if the number of dimensions left is $0$.
     }
 \end{frame}
@@ -137,13 +167,24 @@
         \begin{figure}
             \centering
             \begin{tikzpicture}[scale=0.6, auto, swap]
-                \only<2, 4>{\node[redpoint] (a) at (1, 1) {};}
-                \only<3>{\node[redpoint] (b) at (4.5, 3.5) {};}
+                \only<2, 4>{
+                    \node[redpoint] (a) at (1, 1) {};
+                    \node[redpointalpha] (b) at (4.5, 3.5) {};
+                }
+                \only<3>{
+                    \node[redpointalpha] (a) at (1, 1) {};
+                    \node[redpoint] (b) at (4.5, 3.5) {};
+                }
 
-                \only<3, 4>{\node[bluepoint] (C) at (5, 5) {};}
+                \only<3, 4>{
+                    \node[bluepointalpha] (A) at (3, 0.5) {};
+                    \node[bluepointalpha] (B) at (2, 3) {};
+                    \node[bluepoint] (C) at (5, 5) {};
+                }
                 \only<2>{
                     \node[bluepoint] (A) at (3, 0.5) {};
                     \node[bluepoint] (B) at (2, 3) {};
+                    \node[bluepointalpha] (C) at (5, 5) {};
                 }
 
                 \node[barlabel] (labelx) at (3, -0.75) {Coordinate 2};
@@ -162,12 +203,12 @@
 
                 % alpha highlights
                 \only<2, 4>{
-                    \node[fill=red, fill opacity=.2, fit=(bound1) (middlehook1)] (redleft) {};
-                    \only<2>{\node[fill=blue, fill opacity=.2, fit=(bound1) (middlehook1)] (blueleft) {};}
+                    \node[fill=red, fill opacity=.1, fit=(bound1) (middlehook1)] (redleft) {};
+                    \only<2>{\node[fill=blue, fill opacity=.1, fit=(bound1) (middlehook1)] (blueleft) {};}
                 }
                 \only<3, 4>{
-                    \node[fill=blue, fill opacity=.2, fit=(middlehook2) (bound2)] (blueright) {};
-                    \only<3>{\node[fill=red, fill opacity=.2, fit=(middlehook2) (bound2)] (redright) {};}
+                    \node[fill=blue, fill opacity=.1, fit=(middlehook2) (bound2)] (blueright) {};
+                    \only<3>{\node[fill=red, fill opacity=.1, fit=(middlehook2) (bound2)] (redright) {};}
                 }
 
                 % border
@@ -188,7 +229,7 @@
 
         $(B)$: Subproblem where d-th coordinate does not matter. $\leadsto \mathbb{P}_{red, left} \cup \mathbb{P}_{blue, right}$
 
-        $(C)$: Time to split current point set about the median.\only<2->{\footnote[1]{\cite[Section~2.3.2]{Preparata1985}}}
+        $(C)$: Time to split current point set about the median.\only<2>{\footnote[1]{\cite[Section~2.3.2]{Preparata1985}}}
     }
 
     \uncover<3>{
@@ -260,15 +301,11 @@
     ``If $d = 0$, we just output all pairs of red and blue points.''\only<1>{\footnote[1]{\cite[Lemma~2.1]{Chan2007}}}
 
     \uncover<2->{
-        $\leadsto$ Output: $n^2$ pairs in the worst case \uncover<3->{$\implies T_0(n) = \mathcal{O}\left( n^2 \right)$}
+        $\leadsto$ Output: $n^2$ pairs in the worst case \uncover<3->{$\implies T_0(n) = \mathcal{O}\left( n^2 \right)$ \Lightning{}}
     }
 
     \uncover<4->{
-        $\leadsto$ Output: (\texttt{Pairs}, $\mathbb{P}_{red, left}$, $\mathbb{P}_{blue, right}$) in $\mathcal{O}(n)$\uncover<5->{, but postprocessing necessary later on!}
-    }
-
-    \uncover<6>{
-        $\implies$ At some point we have to compute upto $\mathcal{O} \left( n^2 \right)$\dots
+        $\leadsto$ In the recurrence relation we're completely ignoring the output cost the pairs. \uncover<5>{$\implies \mathcal{O}(k)$}
     }
 \end{frame}
 
@@ -277,7 +314,7 @@
         T_d(n) \leq 2 T_d\left( \frac{n}{2} \right) + T_{d - 1}(n) + \mathcal{O}(n)
     \]
 
-    A first solution to this equation is that $T_d(n) = \mathcal{O}\left( n {\log(n)}^d \right)$, yielding an algorithmic runtime of $\mathcal{O}\left( n {\log(n)}^d + k \right)$. (Additional logarithmic factors can be safed by handling the cases $d = 1$ and $d = 2$ independently.\footnotemark[1]{})
+    A first solution to this equation is that $T_d(n) = \mathcal{O}\left( n {\log(n)}^d \right)$, yielding an algorithmic runtime of $\mathcal{O}\left( n {\log(n)}^d + k \right)$. (Additional logarithmic factors can be safed by handling the cases $d = 1$ and $d = 2$ independently.\footnote[1]{\cite{Chan2007}})
 
     However, we can do better\dots
 \end{frame}
@@ -370,7 +407,8 @@
     \begin{exampleblock}{Note}
         We need to evaluate the inequality $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$.
 
-        Ties such as $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$ are considered to be ``$<$'' if $k < \tilde{k}$.
+        For $k \neq \tilde{k}$ we need to break ties such as $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$ where ``$\leq$'' is fulfilled by ``$=$'' to obtain a uniquely defined minimum.
+        W are considered to be ``$<$'' if $k < \tilde{k}$.
     \end{exampleblock}
 \end{frame}
 
@@ -389,8 +427,9 @@
 
     \uncover<3->{
         After computing these $X_k$, we can then set $C = A \otimes B$ elementwise as follows:
-
-        For $(i, j) \in X_K$ we set $c_{i, j} = a_{i, k} + b_{k, j}$.
+        \[
+            (i, j) \in X_K \implies c_{i, j} = a_{i, k} + b_{k, j}
+        \]
     }
 \end{frame}
 
@@ -414,17 +453,17 @@
 \end{frame}
 
 \begin{frame}{Proof of Lemma~\ref{lem:sub_mat_mul}}
-    \begin{exampleblock}{Note}
-        It is possible to recover the shortest paths from the construction of the $X_k$s.
-        We will see more on this later.
-    \end{exampleblock}
+    The penultimate step is to compute that
+    \begin{align*}
+        \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right),
+    \end{align*}
+    leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
 
     \uncover<2->{
-        The penultimate step is to compute that
-        \begin{align*}
-            \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right),
-        \end{align*}
-        leaving only to compute that $\begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$.
+        \begin{exampleblock}{Note}
+            It is possible to recover the shortest paths from the construction of the $X_k$s.
+            We will see more on this later.
+        \end{exampleblock}
     }
 \end{frame}
 
@@ -467,7 +506,7 @@
     }
 
     \uncover<3->{
-        Because of the finite set we can choose $\hat{k} := \argmin\limits_{l = 1, \dots, d} a_{i, l} + b_{l, j}$.
+        Because the set $\{ 1, \dots, d \}$ is finite we can choose $\hat{k} := \argmin\limits_{m = 1, \dots, d} a_{i, m} + b_{m, j}$.
     }
 
     \uncover<4->{
@@ -530,11 +569,11 @@
 \end{frame}
 
 \begin{frame}{Proof of Theorem~\ref{thm:mat_mul}}
-    We split our matrices $A$ and $B$ into $\begin{aligned}\frac{n}{d}\end{aligned}$ blocks, that is $\begin{aligned}\forall l = 1, \dots, \frac{n}{d}: A_l \in \mathbb{R}^{n \times d}, B_l \in \mathbb{R}^{d \times n}\end{aligned}$ for some fixed $d$.
+    We split our matrices $A$ and $B$ into $\begin{aligned}\frac{n}{d}\end{aligned}$ blocks, that is $\begin{aligned}\forall m = 1, \dots, \frac{n}{d}: A_m \in \mathbb{R}^{n \times d}, B_m \in \mathbb{R}^{d \times n}\end{aligned}$ for some fixed $d$.
     (If necessary we round $\begin{aligned}\frac{n}{d}\end{aligned}$ and adjust the number of blocks accordingly.)
 
     \uncover<2->{
-        We then compute the distance products $A_i \otimes B_i$ for all $\begin{aligned}i = 1, \dots, \frac{n}{d}\end{aligned}$, and set the product to be defined by the element-wise minimum, i.e.\ $\begin{aligned}[t]c_{i, j} := \min\limits_{l = 1, \dots, \frac{n}{d}} {\left( A_l \otimes B_l \right)}_{i, j}\end{aligned}$, where $i, j = 1, \dots, n$.
+        We then compute the distance products $A_i \otimes B_i$ for all $\begin{aligned}i = 1, \dots, \frac{n}{d}\end{aligned}$, and set the product to be defined by the element-wise minimum, i.e.\ $\begin{aligned}[t]c_{i, j} := \min\limits_{m = 1, \dots, \frac{n}{d}} {\left( A_m \otimes B_m \right)}_{i, j}\end{aligned}$, where $i, j = 1, \dots, n$.
     }
 
     \uncover<3->{
@@ -550,22 +589,21 @@
     We want to assure $\begin{aligned}\frac{n^3}{d} > c_\varepsilon^d n^{2 + \varepsilon}\end{aligned}$.
 
     \uncover<2->{
-        The choice of $d = \tilde{c} \log(n)$ for $\tilde{c}$ sufficiently small and depending on $\varepsilon$ is useful because
-        \begin{itemize}
-            \item $C^{D \log(n)} \sim n^D$ grows polynomially, whereas e.\ g.
-            \item<3-> $C^n$ grows exponentially.
-        \end{itemize}
+        An obvious choice is a term like $d = n^{1 - \varepsilon}$, however this result in exponential growth:
+        \[
+            c_\varepsilon^d = c_\varepsilon^{n^{1 - \varepsilon}} \sim \mathfrak{c}^n \text{ \Lightning{}}
+        \]
+    }
+
+    \uncover<3->{
+        It is better to choose $d = \tilde{c} \log(n)$ with $\tilde{c}$ sufficiently small and depending on $\varepsilon$:
+        \[
+            c_\varepsilon^d = c_\varepsilon^{\tilde{c} \log(n)} \sim n^\mathfrak{c}
+        \]
     }
 
     \uncover<4->{
-        We then get
-        $\begin{aligned}
-            \mathcal{O}\left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right)
-        \end{aligned}$. \qed{}
-    }
-
-    \uncover<5>{
-        One possible choice is $\varepsilon \approx 0.38, c_\varepsilon \approx 4.32, d \approx 0.42 \log(n)$\footnotemark[1].
+        $\implies \mathcal{O}\left( c_\varepsilon^d n^{2 + \varepsilon} + \frac{n^3}{d} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right)$. \qed{}
     }
 \end{frame}
 
@@ -576,7 +614,7 @@
     \end{corollary}
 \end{frame}
 
-\begin{frame}{Proof of Theorem~\ref{cor:apsp_subcubic}}
+\begin{frame}{Proof of Corollary~\ref{cor:apsp_subcubic}}
     We consider $A$ and $B$ to be the matrices defined by $\begin{aligned}d(i, j) := \begin{cases}
         w(e), &\exists e \in E: e = (i, j) \\
         \infty, &else

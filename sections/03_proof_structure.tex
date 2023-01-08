@@ -8,30 +8,28 @@
         \item<3-> Combining the two ideas $\implies$ \emph{Multiplying matrices efficiently}
     \end{enumerate}
 
-    \uncover<4->{
-        \begin{figure}
-            \begin{tikzpicture}[scale=.55]
-                \node[barlabel] (compgeom) at (0, 3) {CG};
-                \uncover<5->{
-                    \node[barlabel] (matmul) at (3, 3) {MM};
-                    \path[dominates] (compgeom) -- (matmul);
-                }
-                \uncover<6->{
-                    \node[barlabel] (apsp) at (3, 0) {APSP};
-                    \path[dominates] (matmul) -- (apsp);
-                }
-                \uncover<7->{
-                    \path[dominates] (compgeom) -- (apsp);
-                }
-            \end{tikzpicture}
-        \end{figure}
-    }
+    \begin{figure}
+        \begin{tikzpicture}[scale=.55]
+            \node[barlabel] (compgeom) at (0, 3) {CG};
+            \uncover<2->{
+                \node[barlabel] (matmul) at (3, 3) {MM};
+                \path[dominates] (compgeom) -- (matmul);
+            }
+            \uncover<3->{
+                \node[barlabel] (apsp) at (3, 0) {APSP};
+                \path[dominates] (matmul) -- (apsp);
+            }
+            \uncover<4->{
+                \path[dominates] (compgeom) -- (apsp);
+            }
+        \end{tikzpicture}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Dominating Pairs\only<1>{\footnote[1]{\cite{Chan2007}}}}
     \begin{alertblock}{Dominating Pairs}
         Let $\mathbb{P}_{red}, \mathbb{P}_{blue}$ be (finite) subsets of $\mathbb{R}^d$ with $d \in \mathbb{N}$.
-        Then a \emph{dominating pair} is defined to be a tuple $(p, q) \in \mathfrak{M}_1 \times \mathfrak{M}_2$ such that it holds
+        Then a \emph{dominating pair} is defined to be a tuple $(p, q) \in \mathbb{P}_{red} \times \mathbb{P}_{blue}$ such that it holds
         \[
             \forall k = 1, \dots, d: p_k \leq q_k,
         \]
@@ -62,7 +60,7 @@
             }%
                 \node[bluepoint] (\name) at \pos {};
 
-            \only<2>{
+            \only<5->{
                 \foreach \source / \dest in {%
                     B/a, C/a,%
                     C/b%
@@ -76,8 +74,15 @@
             \node[ghost] (bound1) at (0, 0) {};
             \node[ghost] (bound2) at (6, 6) {};
 
+            % pareto fronts
+            \begin{pgfonlayer}{background}
+                \uncover<2>{\node[paretofront, fit=(bound1) (A.center)] (paretoA) {};}
+                \uncover<3>{\node[paretofront, fit=(bound1) (B.center)] (paretoB) {};}
+                \uncover<4>{\node[paretofront, fit=(bound1) (C.center)] (paretoC) {};}
+            \end{pgfonlayer}
+
             % border
-            \node[draw,fit=(bound1) (bound2)] (border) {};
+            \node[draw, fit=(bound1) (bound2)] (border) {};
         \end{tikzpicture}
     \end{figure}
 \end{frame}
@@ -153,7 +158,7 @@
 \end{frame}
 
 \begin{frame}{Matrix Products}
-    \begin{alertblock}{Min-Plus/Distance Product\only<1>{\footnote[1]{\cite{Chan2007}}}}
+    \begin{alertblock}{Min-Plus/Distance Product}
         We define the \emph{min-plus} or \emph{distance product} as the operator
         \[
             \otimes : \mathbb{R}^{n \times d} \times \mathbb{R}^{d \times m} \rightarrow \mathbb{R}^{n \times m},\qquad
@@ -217,7 +222,7 @@
 \begin{frame}{Splitting Quadratic Matrices}
     \textbf{Q:} How do we go about multiplying two matrices efficiently?
 
-    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{ (Strassen's Method\only<2>{\footnote[1]{\cite[Section~6.2]{Aho1974}}})}}
+    \uncover<2->{\textbf{A:} Split and multiply individually!\only<2->{ (Strassen's method\only<2>{\footnote[1]{\cite[Section~6.2]{Aho1974}}})}}
 
     \uncover<3->{
         \begin{columns}
@@ -242,8 +247,9 @@
                 \end{align*}
             \end{column}
             \begin{column}{.5\linewidth}
-                \uncover<5->{
-                        $\implies 
+                \[
+                    \uncover<5->{
+                        \implies 
                         \left\{
                             \begin{aligned}
                                 C_1 &= A_1 B_1 + A_2 B_3 \\
@@ -251,11 +257,42 @@
                                 C_3 &= A_3 B_1 + A_4 B_3 \\
                                 C_4 &= A_3 B_2 + A_4 B_4 \\
                             \end{aligned}
-                        \right.$
-                }
+                        \right.
+                    }
+                \]
             \end{column}
         \end{columns}
     }
+\end{frame}
+
+\begin{frame}{Splitting Quadratic Matrices}
+    \textbf{Q:} How do we go about multiplying two matrices efficiently?
+
+    \textbf{A:} Split and multiply individually! (Strassen's method)
+    
+    \begin{align*}
+        C &= A B \uncover<2->{&&M_1 = \left( A_2 - A_4 \right) \left( B_3 + B_4 \right)} \\
+        \begin{pmatrix}
+            C_1 & C_2 \\
+            C_3 & C_4
+        \end{pmatrix}
+        &=
+        \begin{pmatrix}
+            A_1 & A_2 \\
+            A_3 & A_4
+        \end{pmatrix}
+        \begin{pmatrix}
+            B_1 & B_2 \\
+            B_3 & B_4
+        \end{pmatrix} \uncover<2->{&&M_2 = \left( A_1 + A_4 \right) \left( B_1 + B_4 \right)} \\
+        \uncover<2->{
+            C_1 &= M_1 + M_2 - M_4 + M_6 &&M_3 = \left( A_1 - A_3 \right) \left( B_1 + B_2 \right) \\
+            C_2 &= M_4 + M_5 &&M_4 = \left( A_1 + A_2 \right) B_4 \\
+            C_3 &= M_6 + M_7 &&M_5 = A_1 \left( B_2 - B_3 \right) \\
+            C_4 &= M_2 - M_3 + M_5 - M_7 &&M_6 = A_4 \left( B_3 - B_1 \right) \\
+            &\phantom{{}} &&M_7 = \left( A_3 + A_4 \right) B_1 \\
+        }
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Multipyling Matrices and Computing their Closure}
@@ -303,7 +340,7 @@
     \end{columns}
 
     $\begin{aligned}
-        \implies \left( C = A \otimes B \iff c_{i, j} = \min\limits_{l = 1, \dots, d} {\left( A_l \otimes B_l \right)}_{i, j} \right)
+        \implies \left( C = A \otimes B \iff c_{i, j} = \min\limits_{m = 1, \dots, d} {\left( A_m \otimes B_m \right)}_{i, j} \right)
     \end{aligned}$
 \end{frame}
 

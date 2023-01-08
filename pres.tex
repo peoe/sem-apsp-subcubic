@@ -24,28 +24,28 @@
 \input{sections/04_proof.tex}
 \input{sections/05_recovery.tex}
 
-\begin{frame}{Summary}
+\section*{Summary \& Discussion}
+
+\begin{frame}{Summary \& Discussion}
     \begin{enumerate}
         \item Computing dominating pairs $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + k \right)$
-        \item<2-> Computing $A \otimes B$ for rectangular matrices $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$
-        \item<3-> Computing $A \otimes A$ for quadratic matrices $\begin{aligned}[t]\mathcal{O}\left( \frac{n^3}{\log(n)} \right)\end{aligned}$
-        \item<4-> Making the jump to APSP problems
+        \item Computing $A \otimes B$ for rectangular matrices $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$
+        \item Computing $A \otimes A$ for quadratic matrices $\begin{aligned}[t]\mathcal{O}\left( \frac{n^3}{\log(n)} \right)\end{aligned}$
+        \item Making the jump to APSP problems
     \end{enumerate}
 
-    \uncover<5->{
-        \begin{algorithm}[H]
-            \KwData{Weight matrix $W$}
-            Split $W$ into $W_1, \dots, W_{\frac{n}{d}}$\;
-            \For{$i = 1, \dots, \frac{n}{d}$}{
-                Compute the min-plus products $W_i \otimes W_i$\;
-                \Indp{}
-                Create the index sets $X_k$\;
-                Recover the product matrix' entries via bins/buckets\;
-                \Indm{}
-            }
-            Set the final shortest paths matrix elementwise from the $W_i \otimes W_i$\;
-        \end{algorithm}
-    }
+    \begin{algorithm}[H]
+        \KwData{Weight matrix $W$}
+        Split $W$ into $W_1, \dots, W_{\frac{n}{d}}$\;
+        \For{$i = 1, \dots, \frac{n}{d}$}{
+            Compute the min-plus products $W_i \otimes W_i$\;
+            \Indp{}
+            Create the index sets $X_k$\;
+            Recover the product matrix' entries via bins/buckets\;
+            \Indm{}
+        }
+        Set the final shortest paths matrix elementwise from the $W_i \otimes W_i$\;
+    \end{algorithm}
 \end{frame}
 
 \end{document}
