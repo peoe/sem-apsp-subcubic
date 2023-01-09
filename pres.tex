@@ -30,7 +30,7 @@
     \begin{enumerate}
         \item Computing dominating pairs $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + k \right)$
         \item Computing $A \otimes B$ for rectangular matrices $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$
-        \item Computing $A \otimes A$ for quadratic matrices $\begin{aligned}[t]\mathcal{O}\left( \frac{n^3}{\log(n)} \right)\end{aligned}$
+        \item Computing $A \otimes B$ for quadratic matrices $\begin{aligned}[t]\mathcal{O}\left( \frac{n^3}{\log(n)} \right)\end{aligned}$
         \item Making the jump to APSP problems
     \end{enumerate}
 
@@ -44,7 +44,7 @@
             Recover the product matrix' entries via bins/buckets\;
             \Indm{}
         }
-        Set the final shortest paths matrix elementwise from the $W_i \otimes W_i$\;
+        Set the final shortest paths matrix elementwise as the minimum over the $W_i \otimes W_i$\;
     \end{algorithm}
 \end{frame}
 

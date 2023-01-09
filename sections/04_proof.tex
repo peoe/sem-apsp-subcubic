@@ -147,7 +147,7 @@
     }
 
     \uncover<3->{
-        We do not consider $\mathbb{P}_{red, right} \cup \mathbb{P}_{blue, left}$, because $\forall p \in \mathbb{P}_{red, right}, q \in \mathbb{P}_{blue, left}: q_d \leq m_d \leq p_d$.
+        We do not consider $\mathbb{P}_{red, right} \cup \mathbb{P}_{blue, left}$, because $\forall p \in \mathbb{P}_{red, right}, q \in \mathbb{P}_{blue, left}: q_d \leq m_d < p_d$.
         Hence no $q$ can never dominate any $p$.
     }
 
@@ -171,7 +171,7 @@
                     \node[redpoint] (a) at (1, 1) {};
                     \node[redpointalpha] (b) at (4.5, 3.5) {};
                 }
-                \only<3>{
+                \only<3, 5>{
                     \node[redpointalpha] (a) at (1, 1) {};
                     \node[redpoint] (b) at (4.5, 3.5) {};
                 }
@@ -181,7 +181,7 @@
                     \node[bluepointalpha] (B) at (2, 3) {};
                     \node[bluepoint] (C) at (5, 5) {};
                 }
-                \only<2>{
+                \only<2, 5>{
                     \node[bluepoint] (A) at (3, 0.5) {};
                     \node[bluepoint] (B) at (2, 3) {};
                     \node[bluepointalpha] (C) at (5, 5) {};
@@ -209,6 +209,10 @@
                 \only<3, 4>{
                     \node[fill=blue, fill opacity=.1, fit=(middlehook2) (bound2)] (blueright) {};
                     \only<3>{\node[fill=red, fill opacity=.1, fit=(middlehook2) (bound2)] (redright) {};}
+                }
+                \only<5>{
+                    \node[fill=red, fill opacity=.1, fit=(middlehook2) (bound2)] (redright) {};
+                    \node[fill=blue, fill opacity=.1, fit=(bound1) (middlehook1)] (blueleft) {};
                 }
 
                 % border
@@ -274,8 +278,8 @@
                     \node[ghost] (hook2) at (3, 6.5) {};
                     \path[divides] (hook1) -- (hook2);
 
-                    \node[fill=red, fill opacity=.2, fit=(bound1) (middlehook1)] (redleft) {};
-                    \node[fill=blue, fill opacity=.2, fit=(middlehook2) (bound2)] (blueright) {};
+                    \node[fill=red, fill opacity=.1, fit=(bound1) (middlehook1)] (redleft) {};
+                    \node[fill=blue, fill opacity=.1, fit=(middlehook2) (bound2)] (blueright) {};
 
                     \node[barlabel] (labelleft) at (-4, 5.5) {$\mathbb{P}_{red, left}$};
                     \node[barlabel] (labelright) at (10, 5.5) {$\mathbb{P}_{blue, right}$};
@@ -349,7 +353,7 @@
                 &= \tilde{c} \left( \frac{2}{2^{1 + \varepsilon}} N^{1 + \varepsilon} - N \right) + \tilde{c} \left( \frac{1}{b^{1 + \varepsilon}} N^{1 + \varepsilon} - \frac{1}{b} N \right) + cN \\
             }
             \uncover<4->{
-                &\leq \left( \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} \right) \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \frac{\tilde{c}}{b} N + cN.
+                &< \left( \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} \right) \tilde{c} N^{1 + \varepsilon} - \tilde{c} N - \frac{\tilde{c}}{b} N + cN.
             }
         \end{align*}
     }
@@ -428,7 +432,7 @@
     \uncover<3->{
         After computing these $X_k$, we can then set $C = A \otimes B$ elementwise as follows:
         \[
-            (i, j) \in X_K \implies c_{i, j} = a_{i, k} + b_{k, j}
+            (i, j) \in X_k \implies c_{i, j} = a_{i, k} + b_{k, j}
         \]
     }
 \end{frame}
@@ -438,6 +442,7 @@
         X_k &= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \} \\
             \uncover<2->{&= \{ (i, j) \,|\, \forall k' = 1, \dots, d: a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j} \}}
     \end{align*}
+
     \uncover<3->{
         This effectively amounts to computing all dominant pairs between the sets
         \begin{align*}
@@ -525,7 +530,7 @@
         Every index pair $(i, j)$ has to be included in one $X_k$.
     \end{alertblock}
     
-    $\implies$ Over all $X_k, k = 1, \dots, d$, every index pair $(i, j)$ is encountered exactly once.
+    $\implies$ Over all (disjoint) $X_k, k = 1, \dots, d$, every index pair $(i, j)$ is encountered exactly once.
 
     \uncover<2>{
         $\implies \begin{aligned}\sum\limits_{k = 1}^d \abs{X_k}\end{aligned} = n^2$
@@ -615,7 +620,7 @@
 \end{frame}
 
 \begin{frame}{Proof of Corollary~\ref{cor:apsp_subcubic}}
-    We consider $A$ and $B$ to be the matrices defined by $\begin{aligned}d(i, j) := \begin{cases}
+    We consider $A$ and $B$ to be the matrices defined by $\begin{aligned}w_{i, j} := \begin{cases}
         w(e), &\exists e \in E: e = (i, j) \\
         \infty, &else
     \end{cases}\end{aligned}$.
