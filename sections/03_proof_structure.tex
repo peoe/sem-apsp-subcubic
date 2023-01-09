@@ -166,49 +166,47 @@
         \]
     \end{alertblock}
 
-    \uncover<2->{
-        \begin{figure}
-            \begin{tikzpicture}[auto, swap]
-                \foreach \pos / \name in {%
-                    {(0, 0)/a}, {(2, 2)/b}, {(5, 2)/c}, {(7, 0)/d}%
-                }%
-                    \node[vertex] (\name) at \pos {$\name$};
+    \begin{figure}
+        \begin{tikzpicture}[auto, swap]
+            \foreach \pos / \name in {%
+                {(0, 0)/a}, {(2, 2)/b}, {(5, 2)/c}, {(7, 0)/d}%
+            }%
+                \node[vertex] (\name) at \pos {$\name$};
 
-                \foreach \source / \dest / \weight in {%
-                    a/b/3, b/c/4, c/d/2%
-                }%
-                    \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
-                
-                \only<3-6>{
-                    \begin{pgfonlayer}{background}
-                        \path<+->[selected dashed edge] (a.center) -- node[weight] {?} (d.center);
-                    \end{pgfonlayer}
-                }
+            \foreach \source / \dest / \weight in {%
+                a/b/3, b/c/4, c/d/2%
+            }%
+                \path[edge] (\source) -- node[weight] {$\weight$} (\dest);
+            
+            \only<2-5>{
+                \begin{pgfonlayer}{background}
+                    \path<+->[selected dashed edge] (a.center) -- node[weight] {?} (d.center);
+                \end{pgfonlayer}
+            }
 
-                \only<4>{
-                    \begin{pgfonlayer}{background}
-                        \foreach \source / \dest in {a/b, b/c}
-                            \path<+->[selected edge] (\source.center) -- (\dest.center);
-                    \end{pgfonlayer}
-                }
+            \only<3>{
+                \begin{pgfonlayer}{background}
+                    \foreach \source / \dest in {a/b, b/c}
+                        \path<+->[selected edge] (\source.center) -- (\dest.center);
+                \end{pgfonlayer}
+            }
 
-                \only<5->{
-                    \path[dashed edge] (a) -- node[weight] {$7$} (c);
-                }
+            \only<4->{
+                \path[dashed edge] (a) -- node[weight] {$7$} (c);
+            }
 
-                \only<6>{
-                    \begin{pgfonlayer}{background}
-                        \foreach \source / \dest in {a/c, c/d}
-                            \path<+->[selected edge] (\source.center) -- (\dest.center);
-                    \end{pgfonlayer}
-                }
+            \only<5>{
+                \begin{pgfonlayer}{background}
+                    \foreach \source / \dest in {a/c, c/d}
+                        \path<+->[selected edge] (\source.center) -- (\dest.center);
+                \end{pgfonlayer}
+            }
 
-                \only<7>{
-                    \path[dashed edge] (a) -- node[weight] {$9$} (d);
-                }
-            \end{tikzpicture}
-        \end{figure}
-    }
+            \only<7>{
+                \path[dashed edge] (a) -- node[weight] {$9$} (d);
+            }
+        \end{tikzpicture}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Lemma 3.1\footnote[1]{\cite{Chan2007}}}

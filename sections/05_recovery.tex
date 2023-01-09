@@ -44,21 +44,19 @@
     }
 
     \uncover<3->{
-        For $(i, j) \in X_k$ we insert $(j, k)$ into $\mathcal{B}_i$ in $\mathcal{O}\left( n^2 \right)$ time.
+        For $(i, j) \in X_k$ we insert $(j, k)$ into $\mathcal{B}_i$.
     }
 
     \uncover<4->{
-        For every $i = 1, \dots, n$ we presort the bucket $\mathcal{B}_i$ with respect to the first index in $\mathcal{O}\left( n \log(n) \right)$ time.
+        For every $i = 1, \dots, n$ we presort the bucket $\mathcal{B}_i$ with respect to the first index.
         (\emph{This corresponds to the $j$ from the index pairs above.})
     }
 
     \uncover<5->{
-        We then set the entry $s_{i, j}$ to $k$ for every $(j, k) \in \mathcal{B}_i$ in $\mathcal{O}\left( n^2 \right)$ time.
+        We then set the entry $s_{i, j}$ to $k$ for every $(j, k) \in \mathcal{B}_i$.
     }
 
     \uncover<6->{
         Finally, we can set $c_{i, j} = a_{i, s_{i, j}} + b_{s_{i, j}, j}$ in $\mathcal{O}\left( n^2 \right)$ time.
-
-        In total, this results in $\mathcal{O}\left( 3 n^2 + n \log(n) \right) = \mathcal{O}\left( n^2 \right)$.
     }
 \end{frame}
