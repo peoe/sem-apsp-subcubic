@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Make LaTeX",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": "make",
+            "args": [
+                "all",
+		"-j"
+            ],
+            "problemMatcher": []
+        }
+    ],
+    "presentation": {
+        "reveal": "silent",
+        "clear": true
+    }
+}
