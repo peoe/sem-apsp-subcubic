@@ -1,0 +1,8 @@
+%        Date handling        %
+\usepackage{datetime}
+
+%        UK date        %
+% taken from https://tex.stackexchange.com/a/31142
+\newdateformat{UKvardate}{%
+\THEDAY\ \monthname[\THEMONTH], \THEYEAR}
+\UKvardate

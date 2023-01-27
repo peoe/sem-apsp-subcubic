@@ -1,0 +1,30 @@
+%        Tikz Styles        %
+\usepackage{tikz}
+\usetikzlibrary{spy, arrows, arrows.meta, shapes, shapes.multipart, fit, matrix}
+
+%        Graph Theory        %
+\tikzstyle{vertex} = [circle, fill=black!25, minimum size=20pt, inner sep=0pt]
+\tikzstyle{edge} = [draw, thick, -]
+\tikzstyle{weight} = [font=\small]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
+\tikzstyle{selected edge} = [draw, line width=5pt, -, red!50]
+\tikzstyle{selected dashed edge} = [draw, dashed, line width=5pt, -, red!50]
+\tikzstyle{dashed edge} = [draw, dashed, thick, -]
+\tikzstyle{paretofront} = [fill=black!15]
+
+%        Point Plotting        %
+\tikzstyle{redpoint} = [circle, fill=red, minimum size=5pt, inner sep=0pt]
+\tikzstyle{bluepoint} = [circle, fill=blue, minimum size=5pt, inner sep=0pt]
+\tikzstyle{redpointalpha} = [circle, draw=red, fill=red, minimum size=5pt, inner sep=0pt, circle, fill opacity=.2]
+\tikzstyle{bluepointalpha} = [circle, draw=blue, fill=blue, minimum size=5pt, inner sep=0pt, circle, fill opacity=.2]
+\tikzstyle{dominates} = [draw, thick, -Stealth]
+\tikzstyle{divides} = [draw, thick, dash pattern=on 5pt off 2pt on 1pt off 2pt]
+\tikzstyle{points} = [draw, -Stealth]
+\tikzstyle{ghost} = [draw=none]
+\tikzstyle{barlabel} = [rectangle, behind path]
+
+%        Matrices        %
+\tikzstyle{vsubmatrix} = [rectangle, fill=black!25, minimum width=10pt, minimum height=50pt]
+\tikzstyle{hsupermatrix} = [matrix of math nodes, ampersand replacement=\&, column sep=1mm, left delimiter=(, right delimiter=)]
+\tikzstyle{hsubmatrix} = [rectangle, fill=black!25, minimum width=50pt, minimum height=10pt]
+\tikzstyle{vsupermatrix} = [matrix of math nodes, ampersand replacement=\&, row sep=1mm, left delimiter=(, right delimiter=)]

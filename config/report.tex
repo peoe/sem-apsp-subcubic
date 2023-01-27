@@ -1,0 +1,24 @@
+\documentclass[
+tikz,
+hyperref={colorLinks=False}]
+{report}
+
+%        Encoding        %
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+%        Plotting        %
+\input{config/templates/tikz.tex}
+\input{config/templates/colors.tex}
+
+%        Document handling        %
+\usepackage{hyperref}
+\usepackage{soul} % hyphenation for underline etc
+\input{config/templates/date.tex}
+
+%        Math        %
+\input{config/templates/math.tex}
+
+%        Bibliography        %
+\usepackage[backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
