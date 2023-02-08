@@ -1,0 +1,22 @@
+name: LaTeX Build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  LatexBuild:
+    name: Build LaTeX using latexmk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Build LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: handout.tex
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: PDF
+          path: handout.pdf
