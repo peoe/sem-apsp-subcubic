@@ -1,7 +1,7 @@
 \documentclass[
 tikz,
 hyperref={colorLinks=False}]
-{report}
+{book}
 
 %        Encoding        %
 \usepackage[T1]{fontenc}
@@ -14,7 +14,12 @@ hyperref={colorLinks=False}]
 %        Document handling        %
 \usepackage{hyperref}
 \usepackage{soul} % hyphenation for underline etc
+\usepackage{setspace}
+\onehalfspacing{}
 \input{config/templates/date.tex}
+
+%        Tables        %
+\usepackage{tabularx}
 
 %        Math        %
 \input{config/templates/math.tex}
