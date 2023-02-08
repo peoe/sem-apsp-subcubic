@@ -11,9 +11,25 @@
             "command": "make",
             "args": [
                 "all",
-		"-j"
+		        "-j"
             ],
-            "problemMatcher": []
+            "problemMatcher": [],
+            "dependsOn": [
+                "Make Titlepage"
+            ],
+        },
+        {
+            "label": "Make Titlepage",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "command": "latexmk",
+            "args": [
+                "-pdf",
+                "config/titlepage/titlepage.tex"
+            ]
         }
     ],
     "presentation": {
