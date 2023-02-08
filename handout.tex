@@ -1,10 +1,15 @@
-\input{config/report.tex}
+\input{config/thesis.tex}
+
+\usepackage{pdfpages}
+\usepackage[a4paper, textwidth=15.75cm, textheight=23.4cm, marginratio={4:6,5:7}]{geometry}
+\usepackage[english]{babel}
+\usepackage{blindtext}
 
 \title{All Pairs Shortest Paths \\ with Real Weights in $\mathcal{O}\left( \frac{n^3}{\log(n)} \right)$ Time}
 \author{Peter Bernd Oehme}
 
 \begin{document}
-    \maketitle
+    \includepdf{titlepage.pdf}
 
     \pagenumbering{roman}
     \tableofcontents
@@ -16,4 +21,6 @@
     asdf~\cite{Chan2007}
 
     $\abs{3}$
+
+    \blindtext[25]
 \end{document}
