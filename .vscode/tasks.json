@@ -27,6 +27,7 @@
             },
             "command": "latexmk",
             "args": [
+                "-shell-escape",
                 "-pdf",
                 "config/titlepage/titlepage.tex"
             ]
