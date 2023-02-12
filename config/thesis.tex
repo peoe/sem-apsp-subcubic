@@ -18,11 +18,10 @@ openany % omit new pages after \part and \chapter
 \usepackage{hyperref}
 \usepackage{soul} % hyphenation for underline etc
 \usepackage{enumitem}
+\usepackage{csquotes}
 \usepackage{setspace}
 \onehalfspacing{}
 \input{config/templates/date.tex}
-
-%        Todo Notes        %
 \usepackage{todonotes}
 \newcommand{\itodo}[1]{\todo[inline]{#1}}
 
@@ -33,5 +32,5 @@ openany % omit new pages after \part and \chapter
 \input{config/templates/math.tex}
 
 %        Bibliography        %
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber, style=alphabetic]{biblatex}
 \addbibresource{bibliography.bib}
