@@ -1,3 +1,56 @@
 \chapter{Problem Setting}
 
-sssp, then apsp.
+\section{Finding Shortest Paths}
+
+Throughout this manuscript we assume $G = (V, E, \omega)$ to be a directed weighted graph.
+In particular we make use of the notations of
+\begin{itemize}
+    \item a set of \emph{vertices} $V \subseteq \bb{Z}$,
+    \item a set of \emph{edges} $E \subseteq \power{V}$, and
+    \item a \emph{weight mapping} $\omega \in E' = \{ \varphi: E \rightarrow \bb{R} \mid \varphi \text{ linear} \}$.
+\end{itemize}
+In combining multiple edges we define a path $p \in \fk{P}(G)$ to be a tuple of edges $(e_1, e_2, \dots, e_n)$ such that each subsequent pair of edges within the path are connected within the graph.
+This can be expressed through the condition $\forall i = 1, \dots, n - 1: e_i^{(2)} = e_{i + 1}^{(1)}$, where $e^{(1)}$ denotes the starting vertex and $e^{(2)}$ signifies the end vertex of the edge $e$.
+By identifying each edge with its two constituent vertices and keeping track of the number of total elements in the tuple we can equivalently write $p = (e_1, e_2, \dots, e_n) = (v_1, \dots, v_{n + 1})$, where $e_i = (v_i, v_{i + 1})$.
+For ease of notation we further denote the subset of all paths from a vertex $u \in V$ to a vertex $v \in V$ by
+\[
+    \fk{P}(G; u, v) \coloneqq \ISET{p \in \fk{P}(G)}{$p$ starts in $u$ and ends in $v$} \subseteq \fk{P}(G).
+\]
+For vertices $u, v, w \in V$ and related paths $p_1 = {(u_i)}_{i = 1}^n \in \fk{P}(G; u, v), p_2 = {(v_j)}_{j = 1}^m \in \fk{P}(G; v, w)$ we further define the \emph{concatenation}
+\[
+    p_1 \oplus p_2 \coloneqq (u_1, u_2, \dots, u_n = v_1, v_2, \dots, v_m).
+\]
+
+In applications of graph theory one often wants to find paths in a graph that satisfy certain properties.
+Our quantity of interest will be the \emph{weight} any path $p \in \fk{P}(G)$ on a weighted graph $G$ defined by
+\[
+    \omega(p) \coloneqq \omega\left( e_1 + e_2 + \cdots + e_n \right) = \sum\limits_{i = 1}^n \omega(e_i),
+\]
+where we applied the linearity of $\omega$ in the equality.
+In particular, we will try to find those paths which obtain the minimum weight possible between two vertices.
+These so-called \emph{shortest paths} are defined as
+\[
+    \SP_G(u, v) \coloneqq p^* = \argmin\limits_{p \in \fk{P}(G; u, v)} \omega(p).
+\]
+
+In general, the existence and uniqueness of a shortest path cannot be guaranteed.
+One example where the existence can never satisfied is a graph with two connected components $V_1, V_2$.
+Taking any nodes $u \in V_1, v \in V_2$, one can never find a path from $u$ to $v$, and vice versa.
+Such unconnected graphs can be dealt with by choosing an appropriate initialization in the shortest path finding algorithms.
+This, in practice, this never causes any problems.
+Much more problematic is the existence of \emph{negative weight cycles}, that is a path $c = (v_1, v_2, \dots, v_n), v_1 = v_n = a, a \in V$, with weight $\omega(c) < 0$.
+Suppose that for two vertices $u, v \in V$ the vertex $a$ from the negative weight cycle $c$ were reachable on a path $p = (u_1, u_2, \dots, u_{j - 1}, a, u_{j + 1}, \dots, u_n), u_1 = u, u_n = v$, for some $j \in \sset{1, \dots, n}$.
+Decomposing $p = (u_1, u_2, \dots, u_{j - 1}, a) \oplus (a, u_{j + 1}, \dots, u_n) \eqqcolon p_1 \oplus p_2$, we can now compute
+\[
+    \omega(p) = \omega(p_1) + \omega(p_2) > \omega(p_1) + \underbrace{\omega(c)}_{< 0} + \omega(p_2) = \omega(p_1 \oplus c \oplus p_2) > \omega(p_1) + \sum\limits_{i = 1}^\infty \omega(c) + \omega(p_2) = -\infty.
+\]
+Hence, by repeatedly traversing the negative weight cycle $c$ after reaching vertex $a$ we can decrease the total weight of the path from $u$ to $v$ to an arbitrarily small number.
+By this construction, there can be no shortest path from $u$ to $v$ although there clearly exists a path $p \in \fk{P}(G; u, v)$.
+
+\section{Single Source Shortest Paths Problems}
+
+\itodo{sssp}
+
+\section{All Pairs Shortest Paths Problems}
+
+\itodo{apsp}
