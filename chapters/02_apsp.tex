@@ -7,7 +7,7 @@ In particular we make use of the notations of
 \begin{itemize}
     \item a set of \emph{vertices} $V \subseteq \bb{Z}$,
     \item a set of \emph{edges} $E \subseteq \power{V}$, and
-    \item a \emph{weight mapping} $\omega \in E' = \{ \varphi: E \rightarrow \bb{R} \mid \varphi \text{ linear} \}$.
+    \item a \emph{weight mapping} $\omega \in E' = \ISET{\varphi: E \rightarrow \bb{R}}{$\varphi$ linear}$.
 \end{itemize}
 In combining multiple edges we define a path $p \in \fk{P}(G)$ to be a tuple of edges $(e_1, e_2, \dots, e_n)$ such that each subsequent pair of edges within the path are connected within the graph.
 This can be expressed through the condition $\forall i = 1, \dots, n - 1: e_i^{(2)} = e_{i + 1}^{(1)}$, where $e^{(1)}$ denotes the starting vertex and $e^{(2)}$ signifies the end vertex of the edge $e$.
@@ -34,7 +34,7 @@ These so-called \emph{shortest paths} are defined as
 \]
 
 In general, the existence and uniqueness of a shortest path cannot be guaranteed.
-One example where the existence can never satisfied is a graph with two connected components $V_1, V_2$.
+One example where the existence can never be satisfied is a graph with two connected components $V_1, V_2$.
 Taking any nodes $u \in V_1, v \in V_2$, one can never find a path from $u$ to $v$, and vice versa.
 Such unconnected graphs can be dealt with by choosing an appropriate initialization in the shortest path finding algorithms.
 This, in practice, this never causes any problems.
@@ -46,8 +46,58 @@ Decomposing $p = (u_1, u_2, \dots, u_{j - 1}, a) \oplus (a, u_{j + 1}, \dots, u_
 \]
 Hence, by repeatedly traversing the negative weight cycle $c$ after reaching vertex $a$ we can decrease the total weight of the path from $u$ to $v$ to an arbitrarily small number.
 By this construction, there can be no shortest path from $u$ to $v$ although there clearly exists a path $p \in \fk{P}(G; u, v)$.
+Concluding from this remark, we explicitly assume that our graph contains no negative weight cycles.
+This in fact does not prove a constraint on our weight function $\omega$ to only map to $\bb{R}_{\ge 0}$, but rather an abstract bound on the graphs we are about to consider further.
 
 \section{Single Source Shortest Paths Problems}
+
+With the elementary definition of a shortest path in hand we can now consider the general set of shortest paths problems, cf.~\cite[Chapter~24]{Cormen2001}.
+The obvious question is the number of degrees of freedom we consider when computing shortest paths.
+Instead of directly considering all possible vertex pairs $(u, v) \in V \times V$, we first reduce the problem of finding shortest paths to the following two cases:
+\begin{itemize}
+    \item Fixing the vertex at the start of the shortest path, we can get the class of so-called \emph{Single Source Shortest Paths Problems} (SSSPPs).
+    \item Choosing instead a fixed vertex as the target of the shortest path, we obtain \emph{Single Destination Shortest Paths Problems} (SDSPPs).
+\end{itemize}
+The connection to the more general problem is immediate and will be covered in more detail in the next section.
+Inherently, SSSPPs and SDSPPs both consider two similar subproblems, albeit from differing ends of the path.
+Here we will only consider SSSPPs in further detail, but analogous approaches can be taken to solve SDSPPs.
+
+\begin{definition}[Single Source Shortest Paths Problem]\label{def:ssspps}
+    Let $u \in V$ be fixed. Then the Single Source Shortest Paths Problem can be stated as
+    \begin{displayquote}
+        ``For all $v \in V$ find a shortest path $p = \SP_G(u, v)$ and its associated weight $\omega(p)$.''
+    \end{displayquote}
+\end{definition}
+
+At this point we have to pay our dues by explaining how we handle vertices for which no shortest path exists.
+Algorithmically, we can always initialize the weight of the current shortest path to $\infty$, or a very large value in practice.
+Thus, if no shortest path exists between any two vertices, we have a safe fallback value for the weight of the shortest path.
+Representatively, one can imagine a vector of real numbers storing the weights of the current estimate of the weight of the shortest paths from our starting vertex to every possible target vertex in the graph indexed by some ordering on the set of vertices.
+We note that the ordering of the vertices can be seen in our description of $V \subseteq \bb{Z}$ by indexing the vertices in accordance to the number representing them.
+
+Solving SSSPPs in an algorithmic manner will always require an update by a so-called \emph{relaxation step}.
+In this update step the algorithm compares the weights of paths from the starting vertex through an intermediate vertex to the target vertex and then updates the underlying weight vector accordingly.
+This step corresponds to checking if a path with a lower weight is possible by taking a detour through another vertex.
+Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; note that the source vertex is not explicitly mentioned, but instead implicitly given by the weight vector $w$.
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{.4\textwidth}
+        \begin{algorithm}[H]
+            \SetKwProg{Def}{def}{:}{}
+            \KwData{
+                Edge $e = (u, v)$, \\
+                estimate weight vector $w$
+            }
+            \Def{relax ($u, v, w$)}{
+                \If{$w(v) > w(u) + \omega(e)$}{
+                    $w(v) \coloneqq w(u) + \omega(e)$\;
+                }
+            }
+        \end{algorithm}
+    \end{minipage}
+    \caption{Relaxation step, adapted from~\cite[Chapter~24]{Cormen2001}}\label{alg:relaxation}
+\end{figure}
 
 \itodo{sssp}
 
