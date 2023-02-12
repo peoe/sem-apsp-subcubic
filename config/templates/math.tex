@@ -1,15 +1,22 @@
 %        Math imports        %
 
 %        Symbols        %
-\usepackage{marvosym} % lightning symbol
-\usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{amssymb}
+\usepackage{marvosym} % lightning symbol
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\fk}[1]{\mathfrak{#1}}
 
 %        Commands        %
 \usepackage{interval}
 \intervalconfig{soft open fences}
 
 \newcommand{\abs}[2][]{\left\lvert#2\right\rvert_{#1}}
+\newcommand{\power}[1]{\mathcal{P}\left(#1\right)}
+\newcommand{\sset}[1]{\left\{\,#1\,\right\}}
+\newcommand{\iset}[2]{\left\{\,#1\mid#2\,\right\}}
+\newcommand{\ISET}[2]{\iset{#1}{\text{#2}}}
 
 %        Operators        %
 \DeclareMathOperator*{\argmax}{arg\,max}

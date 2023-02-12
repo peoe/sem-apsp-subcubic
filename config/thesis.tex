@@ -1,6 +1,8 @@
 \documentclass[
 tikz,
-hyperref={colorLinks=False}]
+hyperref={colorLinks=False},
+openany % omit new pages after \part and \chapter
+]
 {book}
 
 %        Encoding        %
@@ -15,9 +17,14 @@ hyperref={colorLinks=False}]
 %        Document handling        %
 \usepackage{hyperref}
 \usepackage{soul} % hyphenation for underline etc
+\usepackage{enumitem}
 \usepackage{setspace}
 \onehalfspacing{}
 \input{config/templates/date.tex}
+
+%        Todo Notes        %
+\usepackage{todonotes}
+\newcommand{\itodo}[1]{\todo[inline]{#1}}
 
 %        Tables        %
 \usepackage{tabularx}
