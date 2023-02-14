@@ -63,7 +63,7 @@ Inherently, SSSPPs and SDSPPs both consider two similar subproblems, albeit from
 Here we will only consider SSSPPs in further detail, but analogous approaches can be taken to solve SDSPPs.
 
 \begin{definition}[Single Source Shortest Paths Problem]\label{def:ssspps}
-    Let $u \in V$ be fixed. Then the Single Source Shortest Paths Problem can be stated as
+    Let $u \in V$ be fixed. Then the Single Source Shortest Paths Problem on a graph $G$ can be stated as
     \begin{displayquote}
         ``For all $v \in V$ find a shortest path $p = \SP_G(u, v)$ and its associated weight $\omega(p)$.''
     \end{displayquote}
@@ -87,9 +87,9 @@ Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; not
             \SetKwProg{Def}{def}{:}{}
             \KwData{
                 Edge $e = (u, v)$, \\
-                estimate weight vector $w$
+                estimated weight vector $w$
             }
-            \Def{relax ($u, v, w$)}{
+            \Def{relax$(u, v, w)$}{
                 \If{$w(v) > w(u) + \omega(e)$}{
                     $w(v) \coloneqq w(u) + \omega(e)$\;
                 }
@@ -99,12 +99,111 @@ Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; not
     \caption{Relaxation step, adapted from~\cite[Chapter~24]{Cormen2001}}\label{alg:relaxation}
 \end{figure}
 
-\itodo{bellman-ford}
+This relaxation can now be used in the \emph{Bellman-Ford algorithm}, of which a pseudocode version can be found in Figure~\ref{alg:bellman-ford}.
+We progressively iterate over all vertices, and update the estimated weight vector with the relaxation step.
+At every step within the algorithm the estimated weight vector gives an upper bound on the weight of the shortest path from a starting vertex $s \in V$.
+The particular implementation here lacks a few features present in~\cite{Cormen2001}.
+These features are mainly twofold: keeping track of preceding vertices and checking for negative weight cycles.
+The former can be easily inserted into the relaxation step by keeping track of each vertices predecessor after a potential update; we omit this property here because the algorithm proposed by~\cite{Chan2007} uses a completely different mechanism which we will discuss in Section~\ref{sec:recovery}.
+In contrast, the latter feature is rendered obsolete thanks to our assumption of the absence of any negative weight cycles from our graph.
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{.4\textwidth}
+        \begin{algorithm}[H]
+            \KwData{
+                Starting vertex $s \in V$, \\
+                estimated weight vector $w$
+            }
+            \For{$i = 1, \dots, \abs{V} - 1$}{
+                \ForEach{$e = (u, v) \in E$}{
+                    $relax(u, v, w)$
+                }
+            }
+        \end{algorithm}
+    \end{minipage}
+    \caption{Bellman-Ford algorithm, adapted from~\cite[Section~24.1]{Cormen2001}}\label{alg:bellman-ford}
+\end{figure}
+
+Following~\cite{Cormen2001}, we calculate the computational complexity of the Bellman-Ford algorithm to be $\mathcal{O}(\abs{V} \cdot \abs{E})$.
+Bounding the number of graph vertices by a number $n \in \bb{N}$, we can further simplify the complexity to $\mathcal{O}(\abs{V} \cdot \abs{E}) = \mathcal{O}\left( n^3 \right)$.
+When considering more general shortest pairs problems with a naive approach derived from Bellman-Ford we will see that this complexity can be drastically improved.
 
 \section{All Pairs Shortest Paths Problems}
 
-\itodo{apsp}
+Instead of fixing any degrees of freedom for the start or the target vertices we can consider both to be arbitrarily chosen from $V$.
+This transforms the SSSPPs, and the SDSPPs respectively, into \emph{All Pairs Shortest Paths Problems} (APSPPs).
 
-\itodo{generalization of sssp}
+\begin{definition}[All Pairs Shortest Paths Problem]
+    The All Pairs Shortest Paths Problem on a graph $G$ can be stated as
+    \begin{displayquote}
+        ``For all pairs $(u, v) \in V \times V$ find a shortest path $p = \SP_G(u, v)$ and its weight $\omega(p)$.''
+    \end{displayquote}
+\end{definition}
 
-\itodo{better algorithm}
+If we consider APSPPs as plain generalizations of SSSPPs in the sense that we just solve an SSSPP for every starting vertex $u \in V$, we get an immediate solution to the overarching APSPP in Figure~\ref{alg:bellman-ford-apsp}.
+Computing the runtime for a graph with $\abs{V} = n \in \bb{N}$ we get $\mathcal{O}\left( n \cdot n^3 \right) = \mathcal{O}\left( n^4 \right)$.
+There are multiple well known improvements to be made to this algorithm.
+The first is related to graph structure and its algebraic representation through matrix multiplication yielding $\mathcal{O}\left( n^3 \log(n) \right)$.
+This approach exploits efficient matrix multiplication by application of appropriate matrix products and algebraic properties.
+However, we want to deal with the matrix-graph relation later on in Section~\ref{sec:dist-prod} to make a straightforward connection to the method proposed by~\cite{Chan2007}.
+Another improvement can be made by using the \emph{Floyd-Warshall algorithm}.
+That algorithm will be discussed in the remainder of this chapter.
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \begin{algorithm}[H]
+            \KwData{Estimated weight vectors ${(w_v)}_{v \in V}$}
+            \ForEach{$s \in V$}{
+                \For{$i = 1, \dots, \abs{V} - 1$}{
+                    \ForEach{$e = (u, v) \in E$}{
+                        $relax(u, v, w_s)$
+                    }
+                }
+            }
+        \end{algorithm}
+    \end{minipage}
+    \caption{Solving APSPPs using the Bellman-Ford algorithm}\label{alg:bellman-ford-apsp}
+\end{figure}
+
+The Floyd-Warshall algorithm in Figure~\ref{alg:floyd-warshall} operates directly on matrices.
+These matrices again consist of upper bounds on the weights of shortest paths.
+Connecting the set of vectors ${(w_v)}_{v \in V}$ in Figure~\ref{alg:bellman-ford-apsp} to a matrix is straightforward by indexing the vertices according to their superset $V \subseteq \bb{Z}$.
+For convenience sake we assume that all vertices are numbered using $1, 2, \dots, n$, that is instead of considering $V \subseteq \bb{Z}$ we instead consider them to be represented by consecutive natural numbers.
+We thus obtain a weight matrix $W \coloneqq {(w_{i, j})}_{i, j = 1}^{n, n}$.
+
+Initializing this weight matrix before the first iteration is apparent by the direct edges originating from every vertex, and the convention that a shortest path from $u \in V$ to itself incurs a weight of $0$.
+Observing the reasonability of this convention is immediate: Assuming the existence of a path $p = (u, u_1, u_2, \dots, u_n, u)$ with $\omega(p) < 0$, we notice that $p$ is a negative weight cycle and hence such a path cannot exist within our graph.
+The other matrix entries are initialized in the following manner:
+\[
+    w_{i, j} \coloneqq \begin{cases}
+        \omega(e), & e = (i, j) \in E \\
+        \infty, & e = (i, j) \not\in E.
+    \end{cases}
+\]
+
+To be able to recover shortest paths after runtime,\ \cite[Chapter~25]{Cormen2001} proposes to create a new weight matrix for every iteration.
+We will omit this additional notation here, because path recovery in~\cite{Chan2007} uses a completely different mechanism, as previously mentioned.
+This causes no problems with the algorithm, cf.~\cite[Exercise~25.4-5]{Cormen2001}.
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{.6\textwidth}
+        \begin{algorithm}[H]
+            \KwData{Estimated weight matrix $W = {(w_{i, j})}_{i, j = 1}^{n, n}$}
+            \For{$k = 1, \dots, n$}{
+                \For{$i = 1, \dots, n$}{
+                    \For{$j = 1, \dots, n$}{
+                        $w_{i, j} \coloneqq \min(w_{i, j}, w_{i, k} + w_{k, j})$
+                    }
+                }
+            }
+        \end{algorithm}
+    \end{minipage}
+    \caption{Floyd-Warshall algorithm, adapted from~\cite[Chapter~25]{Cormen2001}}\label{alg:floyd-warshall}
+\end{figure}
+
+The complexity now amounts to $\mathcal{O}\left( n^3 \right)$ because we just need to consider three \textbf{\texttt{for}} loops over $n$ elements each.
+This is much better than the naive $\mathcal{O}\left( n^4 \right)$, or even the improved $\mathcal{O}\left( n^3 \log(n) \right)$, but still separated by the result from~\cite{Chan2007} by another logarithmic factor.
+What change in methodology might yield this illusive logarithmic factor\textinterrobang{}
