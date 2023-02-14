@@ -204,6 +204,11 @@ This causes no problems with the algorithm, cf.~\cite[Exercise~25.4-5]{Cormen200
     \caption{Floyd-Warshall algorithm, adapted from~\cite[Chapter~25]{Cormen2001}}\label{alg:floyd-warshall}
 \end{figure}
 
+To further highlight the connection to the previous approach we take a look at the update of the weights in Figure~\ref{alg:floyd-warshall}.
+When compared to the relaxation comparison in Figure~\ref{alg:relaxation} there is a striking similarity representing the the check for a shorter path via an other intermediate vertex.
+This relation will be preserved when we have a look at the approach described in~\cite{Chan2007} because it is essential to all shortest paths problems.
+In particular, fast evaluation of this expression will play a considerable role when considering different arguments.
+
 The complexity now amounts to $\mathcal{O}\left( n^3 \right)$ because we just need to consider three \textbf{\texttt{for}} loops over $n$ elements each.
 This is much better than the naive $\mathcal{O}\left( n^4 \right)$, or even the improved $\mathcal{O}\left( n^3 \log(n) \right)$, but still separated by the result from~\cite{Chan2007} by another logarithmic factor.
 What change in methodology might yield this illusive logarithmic factor\textinterrobang{}
