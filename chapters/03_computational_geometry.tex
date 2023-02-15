@@ -65,9 +65,9 @@ We will now use this property to compute all dominating pairs.
     \end{itemize}
 
     The computational cost $T_d(n)$ obeys the recurrence
-    \[
+    \begin{equation}\label{eq:recurrence}
         T_d(n) \leq 2 T_d\left( \frac{n}{2} \right) + T_{d - 1}(n) + \mathcal{O}(n).
-    \]
+    \end{equation}
     The first summand describes the complexity of the subproblem where we consider the two sets $\bb{P}_{red, left} \cup \bb{P}_{blue, left}$ and $\bb{P}_{red, right} \cup \bb{P}_{blue, right}$ respectively.
     Both sets only contain $\frac{n}{2}$ points (up to some rounding error of course) because we split along the median coordinate, but these points are not presorted.
     The second summand corresponds to solving the problem for $\bb{P}_{red, left} \cup \bb{P}_{blue, right}$, which in contrast is always presorted by the $d$-th coordinate.
@@ -85,5 +85,52 @@ We will now use this property to compute all dominating pairs.
         \end{split}
     \]
     Then all $n$ points have to be considered because the $d$-th component coordinate was already appropriately ordering $\bb{P}_{red}$ and $\bb{R}_{blue}$.
-    Lastly, the constant $\mathcal{O}(n)$ summand arises when splitting all $n$ points along the median coordinate.
+    The constant $\mathcal{O}(n)$ summand arises when splitting all $n$ points along the median coordinate.
+    Lastly, the termination criteria give $T_d(1) = \mathcal{O}(1)$, and $T_0(n) = \mathcal{O}(n)$.
+
+    We conclude this proof by solving the recurrence relation.
+    The first step is substituting our complexity, and the second consists of guessing an appropriate solution to the inequality.
+    Let $b \in \bb{R} \setminus \sset{0}$ be fixed, the choice of which will be clarified later on.
+    Start by defining the substitution
+    \[
+        T'(N) \coloneqq \max \iset{T_d(n)}{\forall i = 1, \dots, d, k = 1, \dots, n: b^i k \leq N}.
+    \]
+    We observe the following relations:
+    \begin{itemize}
+        \item The inequality $T_d(n) \leq T'(N)$ is trivial.
+        \item Replacing $N \mapsto \frac{N}{2}$ amounts to computing $b^i \frac{k}{2} \leq \frac{N}{2}$ because $n$ is an upper bound of $k$, and the complexities can thus be bounded by $T_d\left( \frac{n}{2} \right) \leq T'\left( \frac{N}{2} \right)$.
+        \item Performing the similar multiplication with $\frac{1}{b}$ instead results in $\frac{b^i}{b} k = b^{i - 1} k \leq \frac{N}{b}$, yielding finally $T_{d - 1}(n) \leq T'\left( \frac{N}{b} \right)$ because the reduction in dimension $d - 1$ corresponds to the factor $b^{i - 1}$.
+        \item Evaluating $\mathcal{O}(n) = c n$ for some constant $c \in \bb{R}$ implies $c n \leq c N$ by definition.
+    \end{itemize}
+    Inserting all these terms into~\ref{eq:recurrence} we obtain the subsituted form
+    \begin{equation}
+        T'(N) \leq 2 T'\left( \frac{N}{2} \right) + T'\left( \frac{N}{b} \right) + c N.
+    \end{equation}
+    A reasonable guess for a solution to~\ref{eq:recurrence} is $T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} - N \right) = \mathcal{O}\left( N^{1 + \varepsilon} \right)$.
+    This can be verified by resolving the Landau notation for a constant $c' \in \bb{R}$, that is $T'(N) \leq c' \left( N^{1 + \varepsilon} - N \right)$.
+    We get
+    \begin{align*}
+        T'(N) &\leq 2 c' \left( {\left( \frac{N}{2} \right)}^{1 + \varepsilon} - \frac{N}{2} \right) + c' \left( {\left( \frac{N}{b} \right)}^{1 + \varepsilon} - \frac{N}{b} \right) + c N \\
+         &= c' \left( \frac{2}{2^{1 + \varepsilon}} N^{1 + \varepsilon} - N \right) + c' \left( \frac{1}{b^{1 + \varepsilon}} N^{1 + \varepsilon} - \frac{1}{b} N \right) \\
+         &= \left( \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} \right) c' N^{1 + \varepsilon} - c' N + \left( c - \frac{c'}{b} \right) N.
+    \end{align*}
+    To get the solution we desire, we formulate the constraints that $c'$ must be sufficiently large in order for $\frac{c'}{b} N$ to dominate $c N$, and $\frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} = 1$ must hold.
+    The second condition in particular lets us compute the previously arbitrary number $b$:
+    \[
+        \begin{split}
+            1 &= \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} \\
+            \iff b^{1 + \varepsilon} &= b^{1 + \varepsilon} \frac{1}{2^\varepsilon} + 1 \\
+            \iff -1 &= \frac{1 - 2^\varepsilon}{2^\varepsilon} b^{1 + \varepsilon}
+        \end{split}
+        \begin{split}
+            \iff 1 &= \frac{1}{2^\varepsilon} + \frac{1}{b^{1 + \varepsilon}} \\
+            \iff -1 &= \frac{b^{1 + \varepsilon}}{2^\varepsilon} - b^{1 + \varepsilon} \\
+            \iff b^{1 + \varepsilon} &= \frac{2^\varepsilon}{2^\varepsilon - 1} \eqqcolon c_\varepsilon.
+        \end{split}
+    \]
+    At last, we resubstitute and observe with $b^{1 + \varepsilon} = c_\varepsilon$:
+    \[
+        T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} \right) \implies T_d(n) = \mathcal{O}\left( {\left( b^d n \right)}^{1 + \varepsilon} \right) = \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} \right).
+    \]
+    The proof concludes by adding the output costs of $K$ dominating pairs to get $T_d(n) = \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + K \right)$.
 \end{proof}
