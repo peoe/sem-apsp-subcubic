@@ -1,14 +1,63 @@
 \chapter{Computing Matrix Products}
 
+The imperative aim of this chapter is to make the conceptual jump from computational geomemtry to the graph theoretic shortest paths problem.
+To this end, we discuss the distance product and algebraic relations of matrix products.
+Turning away from Algebra and towards Graph Theory, we will finally connect the loose ends we have introduced throughout this manuscript.
+
 \section{The Distance Product}\label{sec:dist-prod}
 
-\itodo{highlight connection to apsp}
+\itodo{mention closed semirings?}
 
-\itodo{mention relaxation step}
+We start off with the definition of the \emph{min-plus product}, equivalently known as the \emph{distance product} to which we will restrict ourselves.
+In~\cite[Chapter~25]{Cormen2001}, the distance product is inherently linked to the canon matrix product by replacement of agebraic operations, whereas~\cite{Chan2007} defines it as a consequence of the structure of APSPPs.
+In contrast to these two practically inferred definitions,\ \cite[Section~5.6]{Aho1974} rigourously constructs the distance product in an axiomatic fashion.
+We aim for the common ground of both practices: define the distance product mathematically sound, and skim off the relevant algorithmic properties.
 
-\section{Fast Computation}
+\begin{definition}[Distance Product]\label{def:distance-product}
+    The distance product $\otimes: R^{m \times n} \times R^{n \times k} \rightarrow R^{m \times k}$ is defined elementwise by
+    \[
+        \forall A \in R^{m \times n}, B \in R^{n \times k}, i = 1, 2, \dots, m, j = 1, 2, \dots, k: {\left( A \otimes B \right)}_{i, j} \coloneqq \min\limits_{\ell = 1, 2, \dots, n} a_{i, \ell} + b_{\ell, j}.
+    \]
+\end{definition}
 
-\itodo{mention Strassen and semirings}
+This product actually is a matrix product over a closed semiring on $R$ provided we consider quadratic matrices, a property that will be relevant in Section~\ref{sec:fast-matrix-products}.
+In theory,\ \cite[Example~5.9]{Aho1974} only states $R$ to be the set of nonnegative real numbers including $\infty$, but an extension to negative numbers bounded from below by an appropriately chosen constant is possible to allow for more general consideration.
+This remark only makes sense in the application to APSPPs when taking into account the assumption that no negative weight cycles may exist.
+
+The importance of this matrix product for solving an APSPP may not be apparent at first.
+To clarify, consider the weight update from the Floyd-Warshall algorithm (Figure~\ref{alg:floyd-warshall}):
+\[
+    w_{i, j} \coloneqq \min(w_{i, j}, w_{i, k} + w_{k, j}).
+\]
+Rewriting the first value in the minimum as $w_{i, j} = w_{i, i} + w_{i, j}$, or $w_{i, j} = w_{i, j} + w_{j, j}$ respectively, we notice we can rephrase our original relaxation step in terms of the distance product.
+This identification of the distance product to the relaxation should give ample explanation for the use of the distance product when tackling APSPPs.
+
+Besides the algorithmic intuition of relaxing weights during runtime using a matrix product, the distance product introduces another property which was already apparent in the algorithms mentioned so far, but does not follow immediately when looking at the abstract Definition~\ref{def:distance-product}.
+The \emph{closure} is an operator $*$ acting on elements of a closed semiring in some manner.
+In particular, for a closed semiring $S$ with the usual arithmetic operations of addition and multiplication, the closure of an element $a \in S$ is given by $a^* = \sum\limits_{i \in \bb{N}_{0}} a^i$, cf.~\cite[Section~5.6]{Aho1974}.
+The existence of such a closure is guaranteed by the inherent axiomatic properties of a closed semiring.
+Applying this construct to the distance product we observe that for some $N \in \bb{N}$ it holds that $\forall k > N: \bigotimes\limits_{i = 1}^k A = \bigotimes\limits_{i = 1}^N A$.
+In the heuristic algorithmic perspective this was already obvious: once we calculated all shortest paths within our graph, no further updates are possible, and therefore the weight matrix will no longer be updated.
+\itodo{SOURCE FOR CLOSURES!!!!}
+
+\section{Fast Computation of Matrix Products}\label{sec:fast-matrix-products}
+
+With the key to the method proposed in~\cite{Chan2007} in hand, we can now orient ourselves towards applying it in an efficient way, that is solve the question
+\begin{displayquote}
+    ``How do we quickly multiply two matrices using an underlying structure?''
+\end{displayquote}
+A very standard technique is \emph{Strassen's Matrix Multiplication Algorithm} (cf.~\cite[Section~6.2]{Aho1974}), which involves a split of both factor matrices into four blocks, and performing a set of algebraic operations on them.
+The result is a computation requiring only $\mathcal{O}\left( n^{\log(7)} \right)$ arithmetic operations, cf.~\cite[Theorem~6.1]{Aho1974}.
+However, the statement of this theorem poses the problem that this statement generally only holds when both matrices originate from a ring instead of the closed semiring which the distance product induces.
+We hence require another idea.
+
+\begin{theorem}[{Adapted from~\cite[Lemma~3.1]{Chan2007}}]\label{thm:rect-distance-product}
+    qwer
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:rect-distance-product}]
+    qwer
+\end{proof}
 
 \itodo{rectangular disection}
 
