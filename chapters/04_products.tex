@@ -1,12 +1,10 @@
 \chapter{Computing Matrix Products}
 
-The imperative aim of this chapter is to make the conceptual jump from computational geomemtry to the graph theoretic shortest paths problem.
-To this end, we discuss the distance product and algebraic relations of matrix products.
-Turning away from Algebra and towards Graph Theory, we will finally connect the loose ends we have introduced throughout this manuscript.
-
 \section{The Distance Product}\label{sec:dist-prod}
 
-\itodo{mention closed semirings?}
+The imperative aim of this chapter is to make a conceptual jump from computational geomemtry to the graph theoretic shortest paths problem.
+To this end, we discuss the distance product and algebraic relations of matrix products.
+Turning away from Algebra and towards Graph Theory, we will finally connect the loose ends we have introduced throughout this manuscript.
 
 We start off with the definition of the \emph{min-plus product}, equivalently known as the \emph{distance product} to which we will restrict ourselves.
 In~\cite[Chapter~25]{Cormen2001}, the distance product is inherently linked to the canon matrix product by replacement of agebraic operations, whereas~\cite{Chan2007} defines it as a consequence of the structure of APSPPs.
@@ -33,12 +31,11 @@ Rewriting the first value in the minimum as $w_{i, j} = w_{i, i} + w_{i, j}$, or
 This identification of the distance product to the relaxation should give ample explanation for the use of the distance product when tackling APSPPs.
 
 Besides the algorithmic intuition of relaxing weights during runtime using a matrix product, the distance product introduces another property which was already apparent in the algorithms mentioned so far, but does not follow immediately when looking at the abstract Definition~\ref{def:distance-product}.
-The \emph{closure} is an operator $*$ acting on elements of a closed semiring in some manner.
+The \emph{closure} is an abstract operator $*$ acting on elements of a closed semiring in some manner.
 In particular, for a closed semiring $S$ with the usual arithmetic operations of addition and multiplication, the closure of an element $a \in S$ is given by $a^* = \sum\limits_{i \in \bb{N}_{0}} a^i$, cf.~\cite[Section~5.6]{Aho1974}.
 The existence of such a closure is guaranteed by the inherent axiomatic properties of a closed semiring.
-Applying this construct to the distance product we observe that for some $N \in \bb{N}$ it holds that $\forall k > N: \bigotimes\limits_{i = 1}^k A = \bigotimes\limits_{i = 1}^N A$.
-In the heuristic algorithmic perspective this was already obvious: once we calculated all shortest paths within our graph, no further updates are possible, and therefore the weight matrix will no longer be updated.
-\itodo{SOURCE FOR CLOSURES!!!!}
+Interestingly, because $A^* = 0$ for the distance product, cf.~\cite[Example~5.10]{Aho1974}, the relaxation step can be directly expressed in terms of the closure, cf~\cite[Section~5.8]{Aho1974}.
+Most importantly,\ \cite[Section~5.9, Corollary~2]{Aho1974} connects the computational costs of matrix products to the costs of calculating the closure of a matrix, which we will use in the next section.
 
 \section{Fast Computation of Matrix Products}\label{sec:fast-matrix-products}
 
@@ -46,22 +43,127 @@ With the key to the method proposed in~\cite{Chan2007} in hand, we can now orien
 \begin{displayquote}
     ``How do we quickly multiply two matrices using an underlying structure?''
 \end{displayquote}
+
 A very standard technique is \emph{Strassen's Matrix Multiplication Algorithm} (cf.~\cite[Section~6.2]{Aho1974}), which involves a split of both factor matrices into four blocks, and performing a set of algebraic operations on them.
 The result is a computation requiring only $\mathcal{O}\left( n^{\log(7)} \right)$ arithmetic operations, cf.~\cite[Theorem~6.1]{Aho1974}.
 However, the statement of this theorem poses the problem that this statement generally only holds when both matrices originate from a ring instead of the closed semiring which the distance product induces.
-We hence require another idea.
+The method used in~\cite{Chan2007} nevertheless tackles the matrix multiplication by first splitting both factor matrices, where the important difference is the way we partition the matrix.
+While Strassen relies on creating four submatrices for fast multiplication, our use case of partitioning is the particular reason for introducing the $\frac{1}{\log(n)}$ factor in the total computational time.
+
+A heuristicly motivated consideration suggests that for APSPPs there exists a number $N \in \bb{N}$ such that $\forall k > N: \bigotimes\limits_{i = 1}^k W = \bigotimes\limits_{i = 1}^N W$.
+Intuitively, this means the estimated weight matrix of our graph will no longer receive any updates after a certain iteration, which is obviously the case when we have traversed all possible verteces from any one starting vertex within the graph.
+When optimizing the number of matrix multiplications performed we can thus deduce \emph{repeated squaring} for $N = 2^{\lceil \log(n - 1) \rceil}$:
+\begin{align*}
+    W^1 &= W, \\
+    W^2 &= W^1 \cdot W^1, \\
+    W^4 &= W^2 \cdot W^2, \\
+    &\phantom{=}\!\vdots \\
+    W^{2^{\lceil \log(n - 1) \rceil}} &= W^{2^{\lceil \log(n - 1) \rceil} - 1} \cdot W^{2^{\lceil \log(n - 1) \rceil} - 1}.
+\end{align*}
+This approach would do the trick in solving an APSPP, but the connection between computing matrix products and the closure of a matrix mentioned at the end of Section~\ref{sec:dist-prod} will yield a better result.
 
 \begin{theorem}[{Adapted from~\cite[Lemma~3.1]{Chan2007}}]\label{thm:rect-distance-product}
-    qwer
+    Let $A \in \bb{R}^{n \times d}, B \in \bb{R}^{d \times n}$ be two matrices, where we understand $R = \bb{R}$ in the sense suitable for the distance product.
+    Then $A \otimes B$ can be computed in a time of $\mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$.
 \end{theorem}
 
 \begin{proof}[Proof of Theorem~\ref{thm:rect-distance-product}]
+    The idea used in~\cite{Chan2007} exploits the structure of appropriately sorted sets, an idea akin to that presented in~\cite{Dobosiewicz2007}.
+    Proving the assertion manifests in two steps:
+    \begin{enumerate}
+        \item Define the sets and observe the connection to dominating pairs, and
+        \item calculate the cardinality of the sets in relation to the matrix sizes.
+    \end{enumerate}
+
+    Consider the matrices $A$ and $B$ to have the entries ${(a_{i, k})}_{i, k = 1}^{n, d}$ and ${(b_{k, j})}_{k, j = 1}^{d, n}$ respectively.
+    We start off by defining the sets of index pairs for each $k = 1, 2, \dots, d$
+    \[
+        X_k \coloneqq \iset{(i, j)}{\forall k' = 1, 2, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j}} \subseteq \sset{1, 2, \dots, n} \times \sset{1, 2, \dots, n}.
+    \]
+    By simple arithmetic manipulation we obtain the equivalence
+    \begin{equation}\label{eq:dominating-pair-inequality}
+        a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \iff a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j}.
+    \end{equation}
+    The right hand term portraits the connection to dominating pairs: for a fixed $k \in \sset{1, 2, \dots, d}$ consider the vectors $\fk{a}_i \coloneqq {(a_{i, k} - a_{i, k'})}_{k' = 1}^d$ and $\fk{b}_j \coloneqq {(b_{k', j} - b_{k, j})}_{k' = 1}^d$.
+    Therefore, computing the set $X_k$ for some fixed $k \in \sset{1, 2, \dots, d}$ is equivalent to finding all dominating pairs between the sets $\bb{P}_{red}^{(k)} = {\{ \fk{a}_i \}}_{i = 1}^n$ and $\bb{P}_{blue}^{(k)} = {\{ \fk{b}_j \}}_{j = 1}^n$.
+    Lemma~\ref{lem:dominating-pairs} thus gives a computational complexity of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right)$.
+    Summation over all indices $k = 1, 2, \dots, d$, the total time effort is equal to
+    \[
+        \sum\limits_{k = 1}^d \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) = \mathcal{O}\left( \sum\limits_{k = 1}^d \left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right) \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right).
+    \]
+
+    Compared to the proposition we only need to account for the sum $\sum\limits_{k = 1}^d \abs{X_k}$.
+    Taken literally, we want to count all index pairs and see there are exactly $n^2$ of them.
+    First, we need to make clear how we actually evaluate the ``$\leq$'' comparison when computing the dominating pairs.
+    In the worst case, it may hold that $a_{i, k} + b_{k, j} = a_{i, k'} + b_{k', j}$ for some $k' \in \sset{1, 2, \dots, d}$.
+    In an effort to reduce ambiguity of the minima, we apply the following tie-breaker:
+    \begin{displayquote}
+        If the inequality in~\ref{eq:dominating-pair-inequality} is not sharp, that is $\exists k' \in \sset{1, 2, \dots, n}: a_{i, k} + b_{k, j} = a_{i, k'} + b_{k', j}$, then we treat $a_{i, k} + b_{k, j}$ as smaller than $a_{i, k'} + b_{k', j}$ if $k$ is smaller than $k'$.
+    \end{displayquote}
+    We will prove that every index pair $(i, j) \in \sset{1, 2, \dots, n}^2$ is contained exactly once in $\bigcup\limits_{k = 1}^d X_k$:
+    \begin{enumerate}
+        \item %
+            Suppose an index pair $(i, j)$ is included in two different sets $X_k, X_{\tilde{k}}$ for $k \neq \tilde{k}$.
+            Then by definition of $X_k$, it holds that $\forall k' = 1, 2, \dots, d: a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j}$.
+            Especially, the inequality $a_{i, k} + b_{k, j} \leq a_{i, \tilde{k}} + b_{\tilde{k}, j}$ is true due to the special case $k' = \tilde{k}$.
+            Analogously, by the definition of $X_{\tilde{k}}$ we get $\forall k' = 1, 2, \dots, d: a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k'} + b_{k', j}$, as well as $a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k} + b_{k, j}$ for $k' = k$.
+            Both inequalities combined yield $a_{i, k} + b_{k, j} = a_{i, \tilde{k}} + b_{\tilde{k}, j}$, placing us firmly in the use case of the tie-breaking mechanism.
+            W.l.o.g.\ we can assume $k < \tilde{k}$, wherefore the tie-breaker considers the equality as ``$a_{i, k} + b_{k, j} < a_{i, \tilde{k}} + b_{\tilde{k}, j}$''.
+            This concludes that $(i, j) \not\in X_{\tilde{k}}$. \Lightning{}
+        \item %
+            Assume there exists some $(i, j)$ for which it holds $\forall k = 1, 2, \dots, d: (i, j) \not\in X_k$.
+            The pair can thus be characterized by the condition $\forall k = 1, 2, \dots, d: \exists k' = 1, 2, \dots, d: a_{i, k} + b_{k, j} > a_{i, k'} + b_{k', j}$.
+            Because the set $\sset{1, 2, \dots, d}$ is finite we can now choose $\tilde{k} \coloneqq \argmin\limits_{m = 1, 2, \dots, d} a_{i, m} + b_{m, j}$.
+            The index $\tilde{k}$ thus satisfies $\forall k' = 1, 2, \dots, d: a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k'} + b_{k', j}$, meaning that the index pair $(i, j)$ would have been included in $X_{\tilde{k}}$ in contradiction to the assumption. \Lightning{}
+    \end{enumerate}
+    In conclusion, it holds $\bigcup\limits_{k = 1}^d X_k = \sset{1, 2, \dots, d}^2 \implies \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$.
+\end{proof}
+
+Conceptually, we can now quickly multiply rectangular matrices.
+It is thus advantageous to split two original factor matrices $A, B \in \bb{R}^{n \times n}$ into $\ell \in \bb{N}$ rectangular blocks $A_i \in \bb{R}^{\frac{n}{\ell} \times n}, B_i \in \bb{R}^{n \times \frac{n}{\ell}}$ for $i = 1, 2, \dots, \ell$ (allowing for some slack in the dimension of the last block to compensate for rounding errors) such that $A$ and $B$ can be reconstructed as $A = \begin{pmatrix}
+        A_1^T, A_2^T, \dots, A_{\ell}^T
+    \end{pmatrix},
+    B = \begin{pmatrix}
+        B_1, B_2, \dots, B_{\ell}
+    \end{pmatrix}$.
+In the particular case of the distance product we can very easily multiply two rectangular blocks because of the following statement.
+
+\begin{lemma}[Computing Split Distance Products]\label{lem:split-distance-products}
+    Let $A$ and $B$ be matrices split into rectangular blocks as described above.
+    Then the distance product of $A$ and $B$ is defined elementwise as
+    \[
+        \forall i, j = 1, 2, \dots, n: {(A \otimes B)}_{i, j} = \min\limits_{m = 1, 2, \dots, \ell} {(A_m \otimes B_m)}_{i, j}.
+    \]
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:split-distance-products}]
+    We denote the entries of the blocks $A_m$ and $B_m$ for each $m = 1, 2, \dots, \ell$ by $a_{i, k}^{(m)}$ and $b_{k, j}^{(m)}$.
+    By applying the definition of the distance product it follows that
+    \[
+        {(A \otimes B)}_{i, j} \overset{def.}{=} \min\limits_{k = 1, 2, \dots, n} a_{i, k} + b_{k, j} = \min\limits_{m = 1, 2, \dots, \ell} \left( \min\limits_{k = 1, 2, \dots, \frac{n}{\ell}} a_{i, k}^{(m)} + b_{k, j}^{(m)} \right) \overset{def.}{=} \min\limits_{m = 1, 2, \dots, \ell} {(A_m \otimes B_m)}_{i, j},
+    \]
+    where the inner equation follows from the fact that the matrix split also partitions the indices of all matrix entries, which means that the first minimum exactly corresponds to the latter two minima.
+\end{proof}
+
+All that is left to do now is to bundle up all results and lay down how they apply to APSPPs in the end.
+We begin by incorporating the split distance product computation from Lemma~\ref{lem:split-distance-products} into the result from Theorem~\ref{thm:rect-distance-product}.
+Afterwards we finish by portraiting the runtime for the APSPP-solving algorithm.
+
+\begin{theorem}[{Adapted from~\cite[Theorem~3.2]{Chan2007}}]\label{thm:distance-product}
+    asdf
+\end{theorem}
+
+\begin{proof}[Proof ot Theorem~\ref{thm:distance-product}]
     qwer
 \end{proof}
 
-\itodo{rectangular disection}
+\begin{corollary}[{Adapted from~\cite[Corollary~3.3]{Chan2007}}]\label{cor:apsp-subcubic}
+    asdf
+\end{corollary}
 
-\itodo{prove fast multiplication via buckets}
+\begin{proof}[Proof of Corollary~\ref{cor:apsp-subcubic}]
+    qwer
+\end{proof}
 
 \section{Recovering Shortest Paths}\label{sec:recovery}
 
