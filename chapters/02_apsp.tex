@@ -89,7 +89,7 @@ Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; not
                 Edge $e = (u, v)$, \\
                 estimated weight vector $w$
             }
-            \Def{relax$(u, v, w)$}{
+            \Def{\emph{relax}$(u, v, w)$}{
                 \If{$w(v) > w(u) + \omega(e)$}{
                     $w(v) \coloneqq w(u) + \omega(e)$\;
                 }
@@ -129,7 +129,7 @@ Following~\cite{Cormen2001}, we calculate the computational complexity of the Be
 Bounding the number of graph vertices by a number $n \in \bb{N}$, we can further simplify the complexity to $\mathcal{O}(\abs{V} \cdot \abs{E}) = \mathcal{O}\left( n^3 \right)$.
 When considering more general shortest pairs problems with a naive approach derived from Bellman-Ford we will see that this complexity can be drastically improved.
 
-\section{All Pairs Shortest Paths Problems}
+\section{All Pairs Shortest Paths Problems}\label{sec:apspps}
 
 Instead of fixing any degrees of freedom for the start or the target vertices we can consider both to be arbitrarily chosen from $V$.
 This transforms the SSSPPs, and the SDSPPs respectively, into \emph{All Pairs Shortest Paths Problems} (APSPPs).
