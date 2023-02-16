@@ -120,11 +120,11 @@ This approach would do the trick in solving an APSPP, but the connection between
 \end{proof}
 
 Conceptually, we can now quickly multiply rectangular matrices.
-It is thus advantageous to split two original factor matrices $A, B \in \bb{R}^{n \times n}$ into $\ell \in \bb{N}$ rectangular blocks $A_i \in \bb{R}^{\frac{n}{\ell} \times n}, B_i \in \bb{R}^{n \times \frac{n}{\ell}}$ for $i = 1, 2, \dots, \ell$ (allowing for some slack in the dimension of the last block to compensate for rounding errors) such that $A$ and $B$ can be reconstructed as $A = \begin{pmatrix}
-        A_1^T, A_2^T, \dots, A_{\ell}^T
+It is thus advantageous to split two original factor matrices $A, B \in \bb{R}^{n \times n}$ into $\frac{n}{\ell} \in \bb{N}$ rectangular blocks (allowing for some slack to compensate for rounding errors) $A_i \in \bb{R}^{n \times \ell}, B_i \in \bb{R}^{\ell \times n}$ for $i = 1, 2, \dots, \frac{n}{\ell}$ such that $A$ and $B$ can be reconstructed as $A = \begin{pmatrix}
+        A_1^T, A_2^T, \dots, A_{\frac{n}{\ell}}^T
     \end{pmatrix},
     B = \begin{pmatrix}
-        B_1, B_2, \dots, B_{\ell}
+        B_1, B_2, \dots, B_{\frac{n}{\ell}}
     \end{pmatrix}$.
 In the particular case of the distance product we can very easily multiply two rectangular blocks because of the following statement.
 
@@ -132,15 +132,15 @@ In the particular case of the distance product we can very easily multiply two r
     Let $A$ and $B$ be matrices split into rectangular blocks as described above.
     Then the distance product of $A$ and $B$ is defined elementwise as
     \[
-        \forall i, j = 1, 2, \dots, n: {(A \otimes B)}_{i, j} = \min\limits_{m = 1, 2, \dots, \ell} {(A_m \otimes B_m)}_{i, j}.
+        \forall i, j = 1, 2, \dots, n: {(A \otimes B)}_{i, j} = \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} {(A_m \otimes B_m)}_{i, j}.
     \]
 \end{lemma}
 
 \begin{proof}[Proof of Lemma~\ref{lem:split-distance-products}]
-    We denote the entries of the blocks $A_m$ and $B_m$ for each $m = 1, 2, \dots, \ell$ by $a_{i, k}^{(m)}$ and $b_{k, j}^{(m)}$.
+    We denote the entries of the blocks $A_m$ and $B_m$ for each $m = 1, 2, \dots, \frac{n}{\ell}$ by $a_{i, k}^{(m)}$ and $b_{k, j}^{(m)}$.
     By applying the definition of the distance product it follows that
     \[
-        {(A \otimes B)}_{i, j} \overset{def.}{=} \min\limits_{k = 1, 2, \dots, n} a_{i, k} + b_{k, j} = \min\limits_{m = 1, 2, \dots, \ell} \left( \min\limits_{k = 1, 2, \dots, \frac{n}{\ell}} a_{i, k}^{(m)} + b_{k, j}^{(m)} \right) \overset{def.}{=} \min\limits_{m = 1, 2, \dots, \ell} {(A_m \otimes B_m)}_{i, j},
+        {(A \otimes B)}_{i, j} \overset{def.}{=} \min\limits_{k = 1, 2, \dots, n} a_{i, k} + b_{k, j} = \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} \left( \min\limits_{k = 1, 2, \dots, \ell} a_{i, k}^{(m)} + b_{k, j}^{(m)} \right) \overset{def.}{=} \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} {(A_m \otimes B_m)}_{i, j},
     \]
     where the inner equation follows from the fact that the matrix split also partitions the indices of all matrix entries, which means that the first minimum exactly corresponds to the latter two minima.
 \end{proof}
@@ -150,15 +150,36 @@ We begin by incorporating the split distance product computation from Lemma~\ref
 Afterwards we finish by portraiting the runtime for the APSPP-solving algorithm.
 
 \begin{theorem}[{Adapted from~\cite[Theorem~3.2]{Chan2007}}]\label{thm:distance-product}
-    asdf
+    Let $A, B \in \bb{R}^{n \times n}$ be two matrices.
+    Then we can compute their distance product in $\mathcal{O}\left( \frac{n^3}{\log(n)} \right)$ time.
 \end{theorem}
 
 \begin{proof}[Proof ot Theorem~\ref{thm:distance-product}]
-    qwer
+    Let $\ell \in \bb{N}$ be given; we will discuss the choice of this constant later in the proof.
+    Firstly, employ the matrix split discussed before Lemma~\ref{lem:split-distance-products}: for $m = 1, 2, \dots, \frac{n}{\ell}$ let $A_m \in \bb{R}^{n \times \ell}$ denote the rectangular blocks of $A$, and $B_m \in \bb{R}^{\ell \times n}$ those of $B$ respectively.
+    Secondly, we compute the rectangular distance products $A_m \otimes B_m$ for all $m = 1, 2, \dots, \frac{n}{\ell}$ according to Theorem~\ref{thm:rect-distance-product}.
+    The operation $A_m \otimes B_m$ needs to be carried out $\frac{n}{\ell}$ times, totaling up to a time effort of $\mathcal{O}\left( \frac{n}{\ell} \left( \ell c_\varepsilon^\ell n^{1 + \varepsilon} \right) \right) = \mathcal{O}\left( c_\varepsilon^\ell n^{2 + \varepsilon} + \frac{n^3}{\ell} \right)$.
+    Afterwards, the quadratic distance product $A \otimes B$ is calculated as detailed in Lemma~\ref{lem:split-distance-products}, which incurs a computational cost of $\mathcal{O}\left( \frac{n}{\ell} n^2 \right) = \mathcal{O}\left( \frac{n^3}{\ell} \right)$ because we need to take the minimum over $\frac{n}{\ell}$ matrices of size $n \times n$.
+    In combination, both steps thus amount to $\mathcal{O}\left( c_\varepsilon^\ell n^{2 + \varepsilon} + \frac{n^3}{\ell} \right)$ time.
+    To finish the proof we make a few observations with respect to the constant $\ell$:
+    \begin{itemize}
+        \item %
+            Choosing the obvious option $\ell \sim n$ gives us a nice term of $n^2$ in the $\frac{n^3}{\ell}$ part of the cost, the drawback however comes in the other summand.
+            We compute that $c_\varepsilon^n n^{2 + \varepsilon}$ grows exponentially, and will thus dominate the polynomial behaviour of $n^2$ in the long run.
+            Therefore, the naive choice results in a runtime worse than Floyd-Warshall.
+            Even less trivial variants like $\ell \sim n^{1 - \varepsilon}$ retain the exponential growth: $c_\varepsilon^{n^{1 - \varepsilon}}$, and are thus unsuited.
+        \item %
+            Checking the growth by picking a factor such that $\ell \sim C \log(n)$ for some sufficiently small constant $C \in \bb{R}_{> 0}$ on the other hand delivers our desired result.
+            We finally verify
+            \[
+                \mathcal{O}\left( c_\varepsilon^{C \log(n)} + \frac{n^3}{C \log(n)} \right) = \mathcal{O}\left( n^{2 + C + \varepsilon} + \frac{n^3}{\log(n)} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right).
+            \]
+    \end{itemize}
+    This finishes the proof.
 \end{proof}
 
 \begin{corollary}[{Adapted from~\cite[Corollary~3.3]{Chan2007}}]\label{cor:apsp-subcubic}
-    asdf
+    The All Pairs Shortest Paths Problem is solvable with a computational effort in the order of $\mathcal{O}\left( \frac{n^3}{\log(n)} \right)$ time.
 \end{corollary}
 
 \begin{proof}[Proof of Corollary~\ref{cor:apsp-subcubic}]
@@ -167,4 +188,56 @@ Afterwards we finish by portraiting the runtime for the APSPP-solving algorithm.
 
 \section{Recovering Shortest Paths}\label{sec:recovery}
 
-\itodo{recovery from buckets}
+All the way back in Section~\ref{sec:apspps} we mentioned that the recovery of the shortest paths found by the method described in~\cite{Chan2007} takes a fundamentally different form than in the cases of less involved approaches such as the generalization of Bellman-Ford or Floyd-Warshall.
+Whereas both more traditional methods as well as the idea discussed here involve a comparison related to the relaxation step, we can recover all shortest paths much more easily from the sets we constructed in Theorem~\ref{thm:rect-distance-product}.
+Noting that the tie-breaker introduced in the proof of Theorem~\ref{thm:rect-distance-product} ensures that the minima in the inequality used to define the $X_k, k = 1, 2, \dots, n$, are unique, we argue as follows:
+
+Firstly, the case where we seek a shortest path from a vertex $u \in V$, indexed by $i$ in $\bb{N}$, to itself can be trivially resolved.
+It is always true that $\forall k' = 1, 2, \dots, n: w_{i, i} + w_{i, i} \leq w_{i, k'} + w_{k', i}$ because otherwise a negative weight cycle would exist in the graph.
+Thus, the index pair $(i, i)$ will always be included in the set $X_i$.
+Highlighting the converse implication is unnecessary to reach the following equivalence:
+\begin{displayquote}
+    ``Iff there are no negative weight cycles, then $(i, i) \in X_i$ holds for all $i$.''
+\end{displayquote}
+
+Secondly, if we consider two neighbouring vertices indexed in $V$ by the natural numbers $i$ and $j$, such that $i \neq j$ and w.l.o.g.\ $i < j$, where the shortest path from vertex $i$ to vertex $j$ is the connecting edge $(i, j) \in E$, then the inequality $w_{i, i} + w_{i, j} \leq w_{i, k'} + w_{k', j}$ trivially holds for all $k' = 1, 2, \dots, n$.
+Therefore, the index pair $(i, j)$ is included in the set $X_i$.
+Vice versa, assuming again w.l.o.g.\ $i < j$, if it holds that $(i, j) \in X_i$, then the shortest path from vertex $i$ to vertex $j$ must consist of the direct edge $(i, j) \in E$.
+By defining $m \in \bb{N}$ to resolve our assumed ordering $i < j$, that is $m \coloneqq \min \{ i, j \}$, we have thusly observed an equivalence of shortest path existence and set inclusion:
+\begin{displayquote}
+    ``Iff neighbouring vertices have a direct shortest path, then $(i, j) \in X_m$.''
+\end{displayquote}
+
+Lastly, consider the more general case that the index pair $(i, j)$ is included in the set $X_k$ for some $k \in \sset{1, 2, \dots, n}$.
+By the usual inequality $\forall k' = 1, 2, \dots, n: w_{i, k} + w_{k, j} \leq w_{i, k'} + w_{k', j}$ we observe that any shortest path originating in the vertex $i \in V$ leading to the vertex $j \in V$ must pass through the intermediary $k \in V$.
+The converse analogously implies that if there is a shortest path between $i$ and $j$ which passes through $k$, then it must hold that $(i, j) \in X_k$.
+We thus arrive at the equivalence:
+\begin{displayquote}
+    ``Iff a shortest path from $i \in V$ to $j \in V$ passes through the vertex $j$, then $(i, j) \in X_k$.''
+\end{displayquote}
+
+These statements in combination give an idea how to reconstruct any existing shortest path between arbitrary vertices $i$ and $j$ in $V$ expressed in Figure~\ref{alg:recovery}.
+This algorithm has the trivial termination criterion that all $n^2$ possible index combinations have been concatenated into a single path, leaving no more possible edges to consider.
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{.9\textwidth}
+        \begin{algorithm}[H]
+            \KwData{
+                Index sets $X_k$ for $k = 1, 2, \dots, n$, starting vertex $i \in V$, target vertex $j \in V$
+            }
+            \SetKwProg{Def}{def}{:}{}
+            \Def{get\_shortest\_path$(i, j)$}{
+                Set $k$ such that $(i, j) \in X_k$\;
+                \If{$k \not\in \{ i, j \}$}{
+                    Set $\mathfrak{p} := $ \emph{get\_shortest\_path}$(i, k)$ $\oplus$ \emph{get\_shortest\_path}$(k, j)$\;
+                }
+                \Else{
+                    Set $\mathfrak{p} := (i, j)$\;
+                }
+                \Return{$\mathfrak{p}$}
+            }
+        \end{algorithm}
+    \end{minipage}
+    \caption{Recovery of shortest paths}\label{alg:recovery}
+\end{figure}
