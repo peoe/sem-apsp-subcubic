@@ -1,4 +1,4 @@
-\chapter{Problem Setting}
+\chapter{Problem Setting}\label{chap:problem-setting}
 
 \section{Finding Shortest Paths}
 
@@ -96,7 +96,7 @@ Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; not
             }
         \end{algorithm}
     \end{minipage}
-    \caption{Relaxation step, adapted from~\cite[Chapter~24]{Cormen2001}}\label{alg:relaxation}
+    \caption{Relaxation step, adapted from~\cite[Chapter~24]{Cormen2001}\label{alg:relaxation}}
 \end{figure}
 
 This relaxation can now be used in the \emph{Bellman-Ford algorithm}, of which a pseudocode version can be found in Figure~\ref{alg:bellman-ford}.
@@ -122,7 +122,7 @@ In contrast, the latter feature is rendered obsolete thanks to our assumption of
             }
         \end{algorithm}
     \end{minipage}
-    \caption{Bellman-Ford algorithm, adapted from~\cite[Section~24.1]{Cormen2001}}\label{alg:bellman-ford}
+    \caption{Bellman-Ford algorithm, adapted from~\cite[Section~24.1]{Cormen2001}\label{alg:bellman-ford}}
 \end{figure}
 
 Following~\cite{Cormen2001}, we calculate the computational complexity of the Bellman-Ford algorithm to be $\mathcal{O}(\abs{V} \cdot \abs{E})$.
@@ -164,7 +164,7 @@ That algorithm will be discussed in the remainder of this chapter.
             }
         \end{algorithm}
     \end{minipage}
-    \caption{Solving APSPPs using the Bellman-Ford algorithm}\label{alg:bellman-ford-apsp}
+    \caption{Solving APSPPs using the Bellman-Ford algorithm\label{alg:bellman-ford-apsp}}
 \end{figure}
 
 The Floyd-Warshall algorithm in Figure~\ref{alg:floyd-warshall} operates directly on matrices.
@@ -201,7 +201,7 @@ This causes no problems with the algorithm, cf.~\cite[Exercise~25.4-5]{Cormen200
             }
         \end{algorithm}
     \end{minipage}
-    \caption{Floyd-Warshall algorithm, adapted from~\cite[Chapter~25]{Cormen2001}}\label{alg:floyd-warshall}
+    \caption{Floyd-Warshall algorithm, adapted from~\cite[Chapter~25]{Cormen2001}\label{alg:floyd-warshall}}
 \end{figure}
 
 To further highlight the connection to the previous approach we take a look at the update of the weights in Figure~\ref{alg:floyd-warshall}.
