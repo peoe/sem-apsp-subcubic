@@ -1,6 +1,4 @@
 \documentclass[
-tikz,
-hyperref={colorLinks=False},
 openany % omit new pages after \part and \chapter
 ]
 {book}
@@ -15,7 +13,10 @@ openany % omit new pages after \part and \chapter
 \input{config/templates/images.tex}
 
 %        Document handling        %
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    pdftitle={All Pairs Shortest Paths with Real Weights in O(n 3/log(n)) Time}
+}
 \usepackage{soul} % hyphenation for underline etc
 \usepackage{enumitem}
 \usepackage{csquotes}
