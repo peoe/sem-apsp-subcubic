@@ -1,5 +1,32 @@
 \chapter{Summary}
 
-\itodo{highlight slow progression of ideas in the past}
+During the preceding chapters we have seen how to acheive a solution to APSPPs in $\mathcal{O}\left( \frac{n^3}{\log(n)} \right)$ time by considering first a problem in Computational Geometry and later circling back to distance products and APSPPs.
+This result presents but one point in a long series of algorithmic improvements.
+Previous works have already been showcased in the introductory part of this manuscript.
+What is left is the question of advances made after the~\cite{Chan2007} paper.
+During the research for this seminar, there were mainly two directly related works for solving APSPPs.
 
-\itodo{highlight progression after the paper, see~\cite{Han2008, Chan2010}}
+First off, there is~\cite{Han2008}.
+In this publication, a bound of $\mathcal{O}\left( n^3 {\frac{\log^{\frac{5}{4}}(\log(n))}{\log^{\frac{5}{4}}(n)}} \right)$ is obtained.
+The author deviates from the approach described in this manuscript in two significant ways:
+\begin{enumerate}
+    \item %
+        The matrices for which the distance product is computed are split in both matrix dimensions.
+        In contrast, the procedure described in~\cite{Chan2007} only split the matrix in one matrix dimension, yielding ``longer'' rectangular matrix blocks when compared to~\cite{Han2008}.
+    \item %
+        Instead of appropriate index sets and their relation to dominating pairs, a lookup table is computed before assembling the final distance product.
+        This approach in particular may be more illustrative compared to the set method when trying to realize the final reduction, but as tradeoff lacks the underlying geometric connection.
+\end{enumerate}
+Within this paper it is pointed out that further improvements employing tabulation and bit-parallelism could be hard to come by, cf.~\cite[Section~6]{Han2008}.
+
+Secondly, there is a follow-up result in~\cite{Chan2010}.
+This is noticable in the fact that the author once more uses ``long'' rectangular matrix blocks, but replaces the geometric subproblem of computing dominating pairs by thinking in terms of \emph{cuttings}.
+Proceeding thusly, the distance product is actually computed in subquadratic time by operating on compressed lists and matrices to reduce word size and word count.
+In addition to the theoretical result,\ \cite[Table~1.1]{Chan2010} contains a nice display of the runtime progression, which begins with Dijkstra and Floyd-Warshal in the late 1950s and early 1960s, and ends at in 2007 with~\cite{Chan2010}.
+In the conclusion, there is also mention of~\cite{Yuster2009}, which improves the runtime from $\mathcal{O}\left( n^{2.844} \right)$ to $\mathcal{O}\left( n^{2.842} \right)$.
+Impressive!
+
+All in all, the progress made since the Floyd-Warshall algorithm has been both slow, and few and far between.
+Evolution of methods has essentially boiled down to exchanging small parts of procedures or obtaining slightly better bounds on known results.
+Applications of these results, and relaxations to other similar problems, have however been been used in fields such as Shortest Paths Problems with Differential Privacy~\cite{Chen2022}, or even far off areas such as Quantum Computing in Transportation Modelling~\cite{Cooper2022}.
+With the importance of APSPPs in Graph Theory and real world problems it is unlikely the desire for even better algorithms will sieze soon.
