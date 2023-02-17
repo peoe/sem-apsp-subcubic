@@ -1,6 +1,6 @@
 @book{Aho1974,
    abstract = {With this text, you gain an understanding of the fundamental concepts of algorithms, the very heart of computer science. It introduces the basic data structures and programming techniques often used in efficient algorithms. Covers use of lists, pushdown stacks, queues, trees, and graphs. Later chapters go into sorting, searching and graphing algorithms, the stringmatching algorithms, and the Schonhage-Strassen integer multiplication algorithm. Provides numerous graded exercises at the end of each chapter.},
-   author = {Alfred V Aho and John E. Hopcroft and Jeffrey D. Ullman},
+   author = {Alfred V. Aho and John E. Hopcroft and Jeffrey D. Ullman},
    city = {Reading, Mass.},
    isbn = {0201000296},
    publisher = {Addison-Wesley Pub. Co},
@@ -39,6 +39,47 @@
    volume = {39},
    url = {http://www.siam.org/journals/sicomp/39-5/71990.html},
    year = {2010},
+}
+@article{Chen2022,
+   abstract = {We revisit the problem of privately releasing the all-pairs shortest path
+distances of a weighted undirected graph up to low additive error, which was
+first studied by Sealfon [Sea16]. In this paper, we improve significantly on
+Sealfon's results, both for arbitrary weighted graphs and for bounded-weight
+graphs on $n$ nodes. Specifically, we provide an approximate-DP algorithm that
+outputs all-pairs shortest path distances up to maximum additive error
+$\tilde\{O\}(\sqrt\{n\})$, and a pure-DP algorithm that outputs all pairs shortest
+path distances up to maximum additive error $\tilde\{O\}(n^\{2/3\})$ (where we
+ignore dependencies on $\varepsilon, \delta$). This improves over the previous
+best result of $\tilde\{O\}(n)$ additive error for both approximate-DP and
+pure-DP [Sea16], and partially resolves an open question posed by Sealfon
+[Sea16, Sea20]. We also show that if the graph is promised to have reasonably
+bounded weights, one can improve the error further to roughly
+$n^\{\sqrt\{2\}-1+o(1)\}$ in the approximate-DP setting and roughly
+$n^\{(\sqrt\{17\}-3)/2 + o(1)\}$ in the pure-DP setting. Previously, it was only
+known how to obtain $\tilde\{O\}(n^\{1/2\})$ additive error in the approximate-DP
+setting and $\tilde\{O\}(n^\{2/3\})$ additive error in the pure-DP setting for
+bounded-weight graphs [Sea16].},
+   author = {Justin Y. Chen and Shyam Narayanan and Yinzhan Xu},
+   doi = {10.48550/arxiv.2204.02335},
+   month = {4},
+   title = {All-Pairs Shortest Path Distances with Differential Privacy: Improved Algorithms for Bounded and Unbounded Weights},
+   url = {https://arxiv.org/abs/2204.02335v1},
+   year = {2022},
+}
+@article{Cooper2022,
+   abstract = {The idea that quantum effects could be harnessed to allow faster computation was first proposed by Feynman. As of 2020 we appear to have achieved 'quantum supremacy', that is, a quantum computer that performs a given task faster than its classical counterpart. This paper examines some possibilities opened up by potential future application of quantum computing to transportation simulation and planning. To date, no such research was found to exist, therefore we begin with an introduction to quantum computing for the programmers of transport models. We discuss existing quantum computing research relevant to transportation, finding developments in network analysis, shortest path computation, multi-objective routing, optimization and calibration - of which the latter three appear to offer the greater promise in future research. Two examples are developed in greater detail, (1) an application of Grover's quantum algorithm for extracting the mean, which has general applicability towards summarizing distributions which are expensive to compute classically, is applied to an assignment or betweenness model - quantum speedup is elusive in the general case but achievable when trading speed for accuracy for limited outputs; (2) quantum optimization is applied to an activity-based model, giving a theoretically quadratic speedup. Recent developments notwithstanding, implementation of quantum transportation algorithms will for the foreseeable future remain a challenge due to space overheads imposed by the requirement for reversible computation.},
+   author = {Crispin H.V. Cooper},
+   doi = {10.1109/TITS.2021.3132161},
+   issn = {15580016},
+   issue = {9},
+   journal = {IEEE Transactions on Intelligent Transportation Systems},
+   keywords = {Quantum computing,activity models,assignment,betweenness,flows,tour models},
+   month = {9},
+   pages = {14712-14720},
+   publisher = {Institute of Electrical and Electronics Engineers Inc.},
+   title = {Exploring Potential Applications of Quantum Computing in Transportation Modelling},
+   volume = {23},
+   year = {2022},
 }
 @book{Cormen2001,
    abstract = {Fourth edition. "The leading introductory textbook and reference on algorithms"-- Foundations -- Sorting and order statistics -- Data structures -- Advanced design and analysis techniques -- Advanced data structures -- Graph algorithms -- Selected topics -- Appendix. Mathematical background.},
@@ -176,6 +217,18 @@ computed worst case time bounds.},
    volume = {3106},
    url = {https://link.springer.com/chapter/10.1007/978-3-540-27798-9_31},
    year = {2004},
+}
+@article{Yuster2009,
+   abstract = {Sets of permutations play an important role in the design of some efficient algorithms. In this paper we design two algorithms that manipulate sets of permutations. Both algorithms, each solving a different problem, use fast matrix multiplication techniques to achieve a significant improvement in the running time over the naive solutions. For a set of permutations P ⊂ Sn we say that i k-dominates j if the number of permutations π ∈ P for which π(i) < π(j) is k. The dominance matrix of P is the n x n matrix DP where DP(i, j) = k if and only if i k-dominates j. We give an efficient algorithm for computing Dp using fast rectangular matrix multiplication. In particular, when |P| = n our algorithm runs in O(n 2.684) time. Computing the dominance matrix of permutations is computationally equivalent to the dominance problem in computational geometry. Thus, our algorithm slightly improves upon a well-known O(n2.688) time algorithm of Matousek for the dominance problem. Permutation dominance is used, together with several other ingredients, to obtain a truly sub-cubic algorithm for the All Pairs Shortest Paths (APSP) problem in real-weighted directed graphs, where the number of distinct weights emanating from each vertex is O(n0.338). A special case of this algorithm implies an O(n 2.842) time algorithm for real vertex-weighted APSP, which slightly improves a recent result of Chan [STOC-07]. A set of permutations P ⊂ S n is fully expanding if the product of any two elements of P yields a distinct permutation. Stated otherwise, |P2| = |P|2 where P2 ⊂ Sn is the set of products of two elements of P. We present a randomized algorithm that computes |P2| and hence decides if P is fully expanding. The algorithm also produces a table that, for any σ1, σ2, σ3, σ4 ∈ P, answers the query σ1σ 2 = σ3σ4 in Õ(1) time. The algorithm uses, among other ingredients, a combination of fast matrix multiplication and polynomial identity testing. In particular, for |P| = n our algorithm runs in O(nω) time where ω < 2.376 is the matrix multiplication exponent. We note that the naive deterministic solution for this problem requires Θ(n3) time. Copyright © by SIAM.},
+   author = {Raphael Yuster},
+   doi = {10.1137/1.9781611973068.103/ASSET/IMAGES/1.9781611973068.103.IMAGE.1.GIF},
+   isbn = {9780898716801},
+   journal = {Proceedings of the Annual ACM-SIAM Symposium on Discrete Algorithms},
+   pages = {950-957},
+   publisher = {Association for Computing Machinery (ACM)},
+   title = {Efficient algorithms on sets of permutations, dominance, and real-weighted APSP},
+   url = {https://epubs.siam.org/doi/10.1137/1.9781611973068.103},
+   year = {2009},
 }
 @article{Zwick2004,
    abstract = {We present an O(n3√log log n/ log n) time algorithm for the All Pairs Shortest Paths (APSP) problem for directed graphs with real edge lengths. This improves, by a factor of about √log n, previous algorithms for the problem obtained by Fredman, Takaoka and Dobosiewicz. © Springer-Verlag 2004.},
