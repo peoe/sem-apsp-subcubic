@@ -7,7 +7,7 @@ To this end, we discuss the distance product and algebraic relations of matrix p
 Turning away from Algebra and towards Graph Theory, we will finally connect the loose ends we have introduced throughout this manuscript.
 
 We start off with the definition of the \emph{min-plus product}, equivalently known as the \emph{distance product} to which we will restrict ourselves.
-In~\cite[Chapter~25]{Cormen2001}, the distance product is inherently linked to the canon matrix product by replacement of agebraic operations, whereas~\cite{Chan2007} defines it as a consequence of the structure of APSPPs.
+In~\cite[Chapter~25]{Cormen2001}, the distance product is inherently linked to the canonical matrix product by replacement of algebraic operations, whereas~\cite{Chan2007} defines it as a consequence of the structure of APSPPs.
 In contrast to these two practically inferred definitions,\ \cite[Section~5.6]{Aho1974} rigourously constructs the distance product in an axiomatic fashion.
 We aim for the common ground of both practices: define the distance product mathematically sound, and skim off the relevant algorithmic properties.
 
@@ -84,8 +84,8 @@ This approach would do the trick in solving an APSPP, but the connection between
     \begin{equation}\label{eq:dominating-pair-inequality}
         a_{i, k} + b_{k, j} \leq a_{i, k'} + b_{k', j} \iff a_{i, k} - a_{i, k'} \leq b_{k', j} - b_{k, j}.
     \end{equation}
-    The right hand term portraits the connection to dominating pairs: for a fixed $k \in \sset{1, 2, \dots, d}$ consider the vectors $\fk{a}_i \coloneqq {(a_{i, k} - a_{i, k'})}_{k' = 1}^d$ and $\fk{b}_j \coloneqq {(b_{k', j} - b_{k, j})}_{k' = 1}^d$.
-    Therefore, computing the set $X_k$ for some fixed $k \in \sset{1, 2, \dots, d}$ is equivalent to finding all dominating pairs between the sets $\bb{P}_{red}^{(k)} = {\{ \fk{a}_i \}}_{i = 1}^n$ and $\bb{P}_{blue}^{(k)} = {\{ \fk{b}_j \}}_{j = 1}^n$.
+    The right hand term portrays the connection to dominating pairs: for a fixed $k \in \sset{1, 2, \dots, d}$ consider the vectors $\fk{a}_i \coloneqq {(a_{i, k} - a_{i, k'})}_{k' = 1}^d$ and $\fk{b}_j \coloneqq {(b_{k', j} - b_{k, j})}_{k' = 1}^d$.
+    Therefore, computing the set $X_k$ for some fixed $k \in \sset{1, 2, \dots, d}$ is equivalent to finding all dominating pairs between the sets $\bb{P}_{\textsc{red}}^{(k)} = {\{ \fk{a}_i \}}_{i = 1}^n$ and $\bb{P}_{\textsc{blue}}^{(k)} = {\{ \fk{b}_j \}}_{j = 1}^n$.
     Lemma~\ref{lem:dominating-pairs} thus gives a computational complexity of $\mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} + \abs{X_k} \right)$.
     Summation over all indices $k = 1, 2, \dots, d$, the total time effort is equal to
     \[
@@ -98,7 +98,7 @@ This approach would do the trick in solving an APSPP, but the connection between
     In the worst case, it may hold that $a_{i, k} + b_{k, j} = a_{i, k'} + b_{k', j}$ for some $k' \in \sset{1, 2, \dots, d}$.
     In an effort to reduce ambiguity of the minima, we apply the following tie-breaker:
     \begin{displayquote}
-        If the inequality in~\ref{eq:dominating-pair-inequality} is not sharp, that is $\exists k' \in \sset{1, 2, \dots, n}: a_{i, k} + b_{k, j} = a_{i, k'} + b_{k', j}$, then we treat $a_{i, k} + b_{k, j}$ as smaller than $a_{i, k'} + b_{k', j}$ if $k$ is smaller than $k'$.
+        If the inequality in~\ref{eq:dominating-pair-inequality} is not sharp, that is $\exists k' \in \sset{1, 2, \dots, d}: a_{i, k} + b_{k, j} = a_{i, k'} + b_{k', j}$, then we treat $a_{i, k} + b_{k, j}$ as smaller than $a_{i, k'} + b_{k', j}$ if $k$ is smaller than $k'$.
     \end{displayquote}
     We will prove that every index pair $(i, j) \in \sset{1, 2, \dots, n}^2$ is contained exactly once in $\bigcup\limits_{k = 1}^d X_k$:
     \begin{enumerate}
@@ -116,7 +116,7 @@ This approach would do the trick in solving an APSPP, but the connection between
             Because the set $\sset{1, 2, \dots, d}$ is finite we can now choose $\tilde{k} \coloneqq \argmin\limits_{m = 1, 2, \dots, d} a_{i, m} + b_{m, j}$.
             The index $\tilde{k}$ thus satisfies $\forall k' = 1, 2, \dots, d: a_{i, \tilde{k}} + b_{\tilde{k}, j} \leq a_{i, k'} + b_{k', j}$, meaning that the index pair $(i, j)$ would have been included in $X_{\tilde{k}}$ in contradiction to the assumption. \Lightning{}
     \end{enumerate}
-    In conclusion, it holds $\bigcup\limits_{k = 1}^d X_k = \sset{1, 2, \dots, d}^2 \implies \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$.
+    In conclusion, it holds $\bigcup\limits_{k = 1}^d X_k = \sset{1, 2, \dots, n}^2 \implies \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + \sum\limits_{k = 1}^d \abs{X_k} \right) = \mathcal{O}\left( d c_\varepsilon^d n^{1 + \varepsilon} + n^2 \right)$.
 \end{proof}
 
 Conceptually, we can now quickly multiply rectangular matrices.
@@ -130,7 +130,7 @@ In the particular case of the distance product we can very easily multiply two r
 
 \begin{lemma}[Computing Split Distance Products]\label{lem:split-distance-products}
     Let $A$ and $B$ be matrices split into rectangular blocks as described above.
-    Then the distance product of $A$ and $B$ is defined elementwise as
+    Then the distance product of $A$ and $B$ is defined elementwise by
     \[
         \forall i, j = 1, 2, \dots, n: {(A \otimes B)}_{i, j} = \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} {(A_m \otimes B_m)}_{i, j}.
     \]
@@ -140,14 +140,14 @@ In the particular case of the distance product we can very easily multiply two r
     We denote the entries of the blocks $A_m$ and $B_m$ for each $m = 1, 2, \dots, \frac{n}{\ell}$ by $a_{i, k}^{(m)}$ and $b_{k, j}^{(m)}$.
     By applying the definition of the distance product it follows that
     \[
-        {(A \otimes B)}_{i, j} \overset{def.}{=} \min\limits_{k = 1, 2, \dots, n} a_{i, k} + b_{k, j} = \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} \left( \min\limits_{k = 1, 2, \dots, \ell} a_{i, k}^{(m)} + b_{k, j}^{(m)} \right) \overset{def.}{=} \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} {(A_m \otimes B_m)}_{i, j},
+        {(A \otimes B)}_{i, j} \overset{\text{def.}}{=} \min\limits_{k = 1, 2, \dots, n} a_{i, k} + b_{k, j} = \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} \left( \min\limits_{k = 1, 2, \dots, \ell} a_{i, k}^{(m)} + b_{k, j}^{(m)} \right) \overset{\text{def.}}{=} \min\limits_{m = 1, 2, \dots, \frac{n}{\ell}} {(A_m \otimes B_m)}_{i, j},
     \]
     where the inner equation follows from the fact that the matrix split also partitions the indices of all matrix entries, which means that the first minimum exactly corresponds to the latter two minima.
 \end{proof}
 
 All that is left to do now is to bundle up all results and lay down how they apply to APSPPs in the end.
 We begin by incorporating the split distance product computation from Lemma~\ref{lem:split-distance-products} into the result from Theorem~\ref{thm:rect-distance-product}.
-Afterwards we finish by portraiting the runtime for the APSPP-solving algorithm.
+Afterwards we finish by portraying the runtime for the APSPP-solving algorithm.
 
 \begin{theorem}[{Adapted from~\cite[Theorem~3.2]{Chan2007}}]\label{thm:distance-product}
     Let $A, B \in \bb{R}^{n \times n}$ be two matrices.
@@ -158,7 +158,7 @@ Afterwards we finish by portraiting the runtime for the APSPP-solving algorithm.
     Let $\ell \in \bb{N}$ be given; we will discuss the choice of this constant later in the proof.
     Firstly, employ the matrix split discussed before Lemma~\ref{lem:split-distance-products}: for $m = 1, 2, \dots, \frac{n}{\ell}$ let $A_m \in \bb{R}^{n \times \ell}$ denote the rectangular blocks of $A$, and $B_m \in \bb{R}^{\ell \times n}$ those of $B$ respectively.
     Secondly, we compute the rectangular distance products $A_m \otimes B_m$ for all $m = 1, 2, \dots, \frac{n}{\ell}$ according to Theorem~\ref{thm:rect-distance-product}.
-    The operation $A_m \otimes B_m$ needs to be carried out $\frac{n}{\ell}$ times, totaling up to a time effort of $\mathcal{O}\left( \frac{n}{\ell} \left( \ell c_\varepsilon^\ell n^{1 + \varepsilon} \right) \right) = \mathcal{O}\left( c_\varepsilon^\ell n^{2 + \varepsilon} + \frac{n^3}{\ell} \right)$.
+    The operation $A_m \otimes B_m$ needs to be carried out $\frac{n}{\ell}$ times, totaling up to a time effort of $\mathcal{O}\left( \frac{n}{\ell} \left( \ell c_\varepsilon^\ell n^{1 + \varepsilon} \right) \right) = \mathcal{O}\left( c_\varepsilon^\ell n^{2 + \varepsilon} \right)$.
     Afterwards, the quadratic distance product $A \otimes B$ is calculated as detailed in Lemma~\ref{lem:split-distance-products}, which incurs a computational cost of $\mathcal{O}\left( \frac{n}{\ell} n^2 \right) = \mathcal{O}\left( \frac{n^3}{\ell} \right)$ because we need to take the minimum over $\frac{n}{\ell}$ matrices of size $n \times n$.
     In combination, both steps thus amount to $\mathcal{O}\left( c_\varepsilon^\ell n^{2 + \varepsilon} + \frac{n^3}{\ell} \right)$ time.
     To finish the proof we make a few observations with respect to the constant $\ell$:
@@ -172,18 +172,24 @@ Afterwards we finish by portraiting the runtime for the APSPP-solving algorithm.
             Checking the growth by picking a factor such that $\ell \sim C \log(n)$ for some sufficiently small constant $C \in \bb{R}_{> 0}$ on the other hand delivers our desired result.
             We finally verify
             \[
-                \mathcal{O}\left( c_\varepsilon^{C \log(n)} + \frac{n^3}{C \log(n)} \right) = \mathcal{O}\left( n^{2 + C + \varepsilon} + \frac{n^3}{\log(n)} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right).
+                \mathcal{O}\left( n^{2 + \varepsilon} c_\varepsilon^{C \log(n)} + \frac{n^3}{C \log(n)} \right) = \mathcal{O}\left( n^{2 + C + \varepsilon} + \frac{n^3}{\log(n)} \right) = \mathcal{O}\left( \frac{n^3}{\log(n)} \right).
             \]
     \end{itemize}
     This finishes the proof.
 \end{proof}
+
+With this result the main problem given in this manuscript can be solved.
+Now, only a small step remains to be elaborated on, in which we apply the previous theorem.
+All in all, this last point is immediate, but we state it in full to conclude the section.
 
 \begin{corollary}[{Adapted from~\cite[Corollary~3.3]{Chan2007}}]\label{cor:apsp-subcubic}
     The All Pairs Shortest Paths Problem is solvable with a computational effort in the order of $\mathcal{O}\left( \frac{n^3}{\log(n)} \right)$ time.
 \end{corollary}
 
 \begin{proof}[Proof of Corollary~\ref{cor:apsp-subcubic}]
-    qwer
+    Let $W$ be the weight matrix representing the graph $G$ with a total of $n^2$ matrix entries.
+    To solve the APSPP we apply Theorem~\ref{thm:distance-product}.
+    The time effort is thus of the order $\mathcal{O}\left( \frac{n^3}{\log(n)} \right)$.
 \end{proof}
 
 \section{Recovering Shortest Paths}\label{sec:recovery}
@@ -205,7 +211,7 @@ Therefore, the index pair $(i, j)$ is included in the set $X_i$.
 Vice versa, assuming again w.l.o.g.\ $i < j$, if it holds that $(i, j) \in X_i$, then the shortest path from vertex $i$ to vertex $j$ must consist of the direct edge $(i, j) \in E$.
 By defining $m \in \bb{N}$ to resolve our assumed ordering $i < j$, that is $m \coloneqq \min \{ i, j \}$, we have thusly observed an equivalence of shortest path existence and set inclusion:
 \begin{displayquote}
-    ``Iff neighbouring vertices have a direct shortest path, then $(i, j) \in X_m$.''
+    ``Iff neighbouring vertices $i, j \in V$ have a direct shortest path, then $(i, j) \in X_m$.''
 \end{displayquote}
 
 Lastly, consider the more general case that the index pair $(i, j)$ is included in the set $X_k$ for some $k \in \sset{1, 2, \dots, n}$.
@@ -227,10 +233,10 @@ This algorithm has the trivial termination criterion that all $n^2$ possible ind
                 Index sets $X_k$ for $k = 1, 2, \dots, n$, starting vertex $i \in V$, target vertex $j \in V$
             }
             \SetKwProg{Def}{def}{:}{}
-            \Def{get\_shortest\_path$(i, j)$}{
+            \Def{\textsc{get\_shortest\_path}$(i, j)$}{
                 Set $k$ such that $(i, j) \in X_k$\;
                 \If{$k \not\in \{ i, j \}$}{
-                    Set $\mathfrak{p} := $ \emph{get\_shortest\_path}$(i, k)$ $\oplus$ \emph{get\_shortest\_path}$(k, j)$\;
+                    Set $\mathfrak{p} := $ \textsc{get\_shortest\_path}$(i, k)$ $\oplus$ \textsc{get\_shortest\_path}$(k, j)$\;
                 }
                 \Else{
                     Set $\mathfrak{p} := (i, j)$\;

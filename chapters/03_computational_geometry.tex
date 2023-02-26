@@ -4,19 +4,19 @@
 
 The essential idea in~\cite{Chan2007} is the reduction of the weight update in Figure~\ref{alg:floyd-warshall} to a geometric problem.
 Upon this reduction we make available a swath of methods from Computational Geometry, which we can then use to aid in solving our APSPPs.
-To this end, we consider a finite point set $\bb{P} \subseteq \bb{R}^d$ partitioned into a ``red'' set $\bb{P}_{red}$ and a ``blue'' set $\bb{P}_{blue}$ such that $\bb{P} = \bb{P}_{red} \cup \bb{P}_{blue}, \bb{P}_{red} \cap \bb{P}_{blue} = \emptyset$.
+To this end, we consider a finite point set $\bb{P} \subseteq \bb{R}^d$ partitioned into a ``red'' set $\bb{P}_{\textsc{red}}$ and a ``blue'' set $\bb{P}_{\textsc{blue}}$ such that $\bb{P} = \bb{P}_{\textsc{red}} \cup \bb{P}_{\textsc{blue}}, \bb{P}_{\textsc{red}} \cap \bb{P}_{\textsc{blue}} = \emptyset$.
 The connotation of ``red'' and ``blue'' is completely arbitrary and merely assists in comprehension of the underlying geometrical argument.
 
 \begin{definition}[Dominating Pairs]
-    Let $\bb{P}_{red}$ and $\bb{P}_{blue}$ be given as above. For a pair $(p, q) \in \bb{P}_{red} \times \bb{P}_{blue}$ we say that $q$ \emph{dominates} $p$, denoted $p \preccurlyeq q$, if it holds that
+    Let $\bb{P}_{\textsc{red}}$ and $\bb{P}_{\textsc{blue}}$ be given as above. For a pair $(p, q) \in \bb{P}_{\textsc{red}} \times \bb{P}_{\textsc{blue}}$ we say that $q$ \emph{dominates} $p$, denoted $p \preccurlyeq q$, if it holds that
     \[
         \forall i = 1, \dots, d: p_i \leq q_i.
     \]
-    A pair $(p, q) \in \bb{P}_{red} \times \bb{P}_{blue}$ is called a dominating pair iff $p \preccurlyeq q$.
+    A pair $(p, q) \in \bb{P}_{\textsc{red}} \times \bb{P}_{\textsc{blue}}$ is called a dominating pair iff $p \preccurlyeq q$.
 \end{definition}
 
 We note the fact all $d$ coordinates have to be dominated for $p \preccurlyeq q$ to hold --- highlighting this might just point out the obvious, but computing dominance for two points coordinate by coordinate benefits from this realisation.
-Furthermore, ``$p \preccurlyeq q$'' denotes a kind of ``relation'' on $\bb{P}_{red}$ and $\bb{P}_{blue}$ in the sense that any point $p \in \bb{P}_{red}$ can only be dominated by some point $q \in \bb{P}_{blue}$.
+Furthermore, ``$p \preccurlyeq q$'' denotes a kind of ``relation'' on $\bb{P}_{\textsc{red}}$ and $\bb{P}_{\textsc{blue}}$ in the sense that any point $p \in \bb{P}_{\textsc{red}}$ can only be dominated by some point $q \in \bb{P}_{\textsc{blue}}$.
 We will now use this property to compute all dominating pairs.
 
 \section{Fast Computation of Dominating Pairs}
@@ -28,7 +28,7 @@ We will now use this property to compute all dominating pairs.
 
 \begin{proof}[Proof of Lemma~\ref{lem:dominating-pairs}]
     Assume the set $\bb{P}$ is sorted by each component coordinate before the proof.
-    The constant effort caused by this assumption will only be incurred once during the entire argument to solve an APSPP, and is therefore dominated by the complexity of the remaining computations.
+    The $n \log(n)$ effort caused by this assumption will only be incurred once during the entire argument to solve an APSPP, and is therefore dominated by the complexity of the remaining computations.
     Additionally, the cost to output all $K$ dominating pairs will be deferred to the end of the proof for notational ease.
     The proposition will be proven in three steps:
     \begin{enumerate}
@@ -38,29 +38,29 @@ We will now use this property to compute all dominating pairs.
     \end{enumerate}
 
     We commence by describing the divide-and-conquer idea.
-    First of all, we split the sets $\bb{P}_{red}$ and $\bb{P}_{blue}$ by the $d$-th median coordinate of $\bb{P}$ denoted by $m_d$.
+    First of all, we split the sets $\bb{P}_{\textsc{red}}$ and $\bb{P}_{\textsc{blue}}$ by the $d$-th median coordinate of $\bb{P}$ denoted by $m_d$.
     This takes the form of
     \[
         \begin{split}
-            \bb{P}_{red, left} &\coloneqq \iset{p \in \bb{P}_{red}}{p_d \leq m_d}, \\
-            \bb{P}_{red, right} &\coloneqq \iset{p \in \bb{P}_{red}}{p_d > m_d},
+            \bb{P}_{\textsc{red}, \textsc{left}} &\coloneqq \iset{p \in \bb{P}_{\textsc{red}}}{p_d \leq m_d}, \\
+            \bb{P}_{\textsc{red}, \textsc{right}} &\coloneqq \iset{p \in \bb{P}_{\textsc{red}}}{p_d > m_d},
         \end{split}
         \qquad
         \begin{split}
-            \bb{P}_{blue, left} &\coloneqq \iset{q \in \bb{P}_{blue}}{q_d \leq m_d}, \\
-            \bb{P}_{blue, right} &\coloneqq \iset{q \in \bb{P}_{blue}}{q_d > m_d}.
+            \bb{P}_{\textsc{blue}, \textsc{left}} &\coloneqq \iset{q \in \bb{P}_{\textsc{blue}}}{q_d \leq m_d}, \\
+            \bb{P}_{\textsc{blue}, \textsc{right}} &\coloneqq \iset{q \in \bb{P}_{\textsc{blue}}}{q_d > m_d}.
         \end{split}
     \]
-    Having further presorted the $d$-th coordinates of all $n$ points, we can now observe that the computation of all dominating pairs in the set $\bb{P}_{red, left} \cup \bb{P}_{blue, right}$ involves only $d - 1$ coordinates.
-    All remaining combinations which we have to compare are included in the sets $\bb{P}_{red, left} \cup \bb{P}_{blue, left}$ and $\bb{P}_{red, right} \cup \bb{P}_{blue, right}$.
-    The final possible set, $\bb{P}_{red, right} \cup \bb{P}_{blue, left}$, cannot contain any dominating pairs because the $d$-th coordinates of all red points are larger than $m_d$, whereas the $d$-th coordinate values of all blue points are less than or equal to $m_d$ by the definitions of $\bb{P}_{red, right}$ and $\bb{P}_{blue, left}$.
+    Having further presorted the $d$-th coordinates of all $n$ points, we can now observe that the computation of all dominating pairs in the set $\bb{P}_{\textsc{red}, \textsc{left}} \cup \bb{P}_{\textsc{blue}, \textsc{right}}$ involves only $d - 1$ coordinates.
+    All remaining combinations which we have to compare are included in the sets $\bb{P}_{\textsc{red}, \textsc{left}} \cup \bb{P}_{\textsc{blue}, \textsc{left}}$ and $\bb{P}_{\textsc{red}, \textsc{right}} \cup \bb{P}_{\textsc{blue}, \textsc{right}}$.
+    The final possible set, $\bb{P}_{\textsc{red}, \textsc{right}} \cup \bb{P}_{\textsc{blue}, \textsc{left}}$, cannot contain any dominating pairs because the $d$-th coordinates of all red points are larger than $m_d$, whereas the $d$-th coordinate values of all blue points are less than or equal to $m_d$ by the definitions of $\bb{P}_{\textsc{red}, \textsc{right}}$ and $\bb{P}_{\textsc{blue}, \textsc{left}}$.
     The stopping criteria for the divide-and-conquer approach are as follows:
     \begin{itemize}
         \item %
             If the remaining number of points is $1$, then stop.
             In this case, no pairs of points can be formed.
         \item %
-            If the dimension reduction $d - 1$ in the $\bb{P}_{red, left} \cup \bb{P}_{blue, right}$ set evaluates to $0$, then output all pairs of red and blue points.
+            If the dimension reduction $d - 1$ in the $\bb{P}_{\textsc{red}, \textsc{left}} \cup \bb{P}_{\textsc{blue}, \textsc{right}}$ set evaluates to $0$, then output all pairs of red and blue points.
             Ceasing the iteration at this point is correct because no more component coordinates could be compared in the fictitious next iteration.
     \end{itemize}
 
@@ -68,23 +68,23 @@ We will now use this property to compute all dominating pairs.
     \begin{equation}\label{eq:recurrence}
         T_d(n) \leq 2 T_d\left( \frac{n}{2} \right) + T_{d - 1}(n) + \mathcal{O}(n).
     \end{equation}
-    The first summand describes the complexity of the subproblem where we consider the two sets $\bb{P}_{red, left} \cup \bb{P}_{blue, left}$ and $\bb{P}_{red, right} \cup \bb{P}_{blue, right}$ respectively.
+    The first summand in this inequality describes the complexity of the subproblem where we consider the two sets $\bb{P}_{\textsc{red}, \textsc{left}} \cup \bb{P}_{\textsc{blue}, \textsc{left}}$ and $\bb{P}_{\textsc{red}, \textsc{right}} \cup \bb{P}_{\textsc{blue}, \textsc{right}}$ respectively.
     Both sets only contain $\frac{n}{2}$ points (up to some rounding error of course) because we split along the median coordinate, but these points are not presorted.
-    The second summand corresponds to solving the problem for $\bb{P}_{red, left} \cup \bb{P}_{blue, right}$, which in contrast is always presorted by the $d$-th coordinate.
+    The second summand corresponds to solving the problem for $\bb{P}_{\textsc{red}, \textsc{left}} \cup \bb{P}_{\textsc{blue}, \textsc{right}}$, which in contrast is always presorted by the $d$-th coordinate.
     Unfortunately however, the number of values in need of comparison cannot be guaranteed to have shrunk:
-    Consider the degenerate case of the median $d$-th coordinate exactly separating $\bb{P}_{red}$ and $\bb{P}_{blue}$, that is
+    Consider the degenerate case of the median $d$-th coordinate exactly separating $\bb{P}_{\textsc{red}}$ and $\bb{P}_{\textsc{blue}}$, that is
     \[
         \begin{split}
-            \bb{P}_{red, left} &= \bb{P}_{red}, \\
-            \bb{P}_{red, right} &= \emptyset,
+            \bb{P}_{\textsc{red}, \textsc{left}} &= \bb{P}_{\textsc{red}}, \\
+            \bb{P}_{\textsc{red}, \textsc{right}} &= \emptyset,
         \end{split}
         \qquad
         \begin{split}
-            \bb{P}_{blue, left} &= \emptyset, \\
-            \bb{P}_{blue, right} &= \bb{P}_{blue}.
+            \bb{P}_{\textsc{blue}, \textsc{left}} &= \emptyset, \\
+            \bb{P}_{\textsc{blue}, \textsc{right}} &= \bb{P}_{\textsc{blue}}.
         \end{split}
     \]
-    Then all $n$ points have to be considered because the $d$-th component coordinate was already appropriately ordering $\bb{P}_{red}$ and $\bb{R}_{blue}$.
+    Then all $n$ points have to be considered because the $d$-th component coordinate was already appropriately ordering $\bb{P}_{\textsc{red}}$ and $\bb{R}_{\textsc{blue}}$.
     The constant $\mathcal{O}(n)$ summand arises when splitting all $n$ points along the median coordinate.
     Lastly, the termination criteria give $T_d(1) = \mathcal{O}(1)$, and $T_0(n) = \mathcal{O}(n)$.
 
@@ -116,18 +116,21 @@ We will now use this property to compute all dominating pairs.
     \end{align*}
     To get the solution we desire, we formulate the constraints that $c'$ must be sufficiently large in order for $\frac{c'}{b} N$ to dominate $c N$, and $\frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} = 1$ must hold.
     The second condition in particular lets us compute the previously arbitrary number $b$:
-    \[
-        \begin{split}
-            1 &= \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} \\
-            \iff b^{1 + \varepsilon} &= b^{1 + \varepsilon} \frac{1}{2^\varepsilon} + 1 \\
-            \iff -1 &= \frac{1 - 2^\varepsilon}{2^\varepsilon} b^{1 + \varepsilon}
-        \end{split}
-        \begin{split}
-            \iff 1 &= \frac{1}{2^\varepsilon} + \frac{1}{b^{1 + \varepsilon}} \\
-            \iff -1 &= \frac{b^{1 + \varepsilon}}{2^\varepsilon} - b^{1 + \varepsilon} \\
-            \iff b^{1 + \varepsilon} &= \frac{2^\varepsilon}{2^\varepsilon - 1} \eqqcolon c_\varepsilon.
-        \end{split}
-    \]
+    \begin{alignat*}{6}
+        &\phantom{\iff} &1 &= \frac{2}{2^{1 + \varepsilon}} + \frac{1}{b^{1 + \varepsilon}} &\iff &&1 &= \frac{1}{2^\varepsilon} + \frac{1}{b^{1 + \varepsilon}} \\
+        &\iff &b^{1 + \varepsilon} &= b^{1 + \varepsilon} \frac{1}{2^\varepsilon} + 1 &\iff &&-1 &= \frac{b^{1 + \varepsilon}}{2^\varepsilon} - b^{1 + \varepsilon} \\
+        &\iff &-1 &= \frac{1 - 2^\varepsilon}{2^\varepsilon} b^{1 + \varepsilon} &\iff &&b^{1 + \varepsilon} &= \frac{2^\varepsilon}{2^\varepsilon - 1} \eqqcolon c_\varepsilon.
+    \end{alignat*}
+    % \[
+    %     \begin{split}
+    %          \\ \\
+    %     \end{split}
+    %     \begin{split}
+
+    %          \\
+
+    %     \end{split}
+    % \]
     At last, we resubstitute and observe with $b^{1 + \varepsilon} = c_\varepsilon$:
     \[
         T'(N) = \mathcal{O}\left( N^{1 + \varepsilon} \right) \implies T_d(n) = \mathcal{O}\left( {\left( b^d n \right)}^{1 + \varepsilon} \right) = \mathcal{O}\left( c_\varepsilon^d n^{1 + \varepsilon} \right).

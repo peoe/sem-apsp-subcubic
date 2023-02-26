@@ -1,8 +1,8 @@
 \chapter{Introduction}
 
 Graph Theory is a research field with many applications.
-Whether one considers modelling gas pipelines, navigation through road networks, or reducing latency in communications networks, the underlying structure always depends on a graph structure.
-Figure~\ref{fig:graph-network} with the vertices $a, b,  \dots, j$ represents such a network graph with some associated ``weights'', such as latencies, distances, \dots, on the edges connecting the vertices.
+Whether one considers modelling gas pipelines, navigation through road networks, or reducing latency in communications networks, the underlying model structure can always be represented as a graph.
+Figure~\ref{fig:graph-network} represents such a network graph with some associated ``weights'', such as latencies, distances, \dots, on the edges connecting the vertices.
 For us the problem of finding shortest paths is of particular interest, that is paths between two vertices which minimize the cumulative weights along them among all possible paths connecting these vertices.
 
 \begin{figure}[ht]
@@ -18,19 +18,19 @@ For us the problem of finding shortest paths is of particular interest, that is 
         }%
             \path[directed edge] (\source) -- node[weight] {$\weight$} (\dest);
     \end{tikzpicture}
-    \caption{A simple network graph\label{fig:graph-network}}
+    \caption{A simple network graph with the vertices $a, b,  \dots, j$\label{fig:graph-network}}
 \end{figure}
 
 Solving these shortest paths problems is no trivial task.
-In general, a graph with $n \in \bb{N}$ vertices can possess upto $n^2$ edges in total.
+In general, a graph with $n \in \bb{N}$ vertices can possess up to $n^2$ edges in total.
 The total number of possible paths within a graph is finite, but even only considering every edge in the graph once for every node results in a time effort of $\mathcal{O}\left( n^3 \right)$.
-Thus, it is easy to imagine an optimization problem over the set of all possible paths to quickly become infeasible for more complex examples real-world applications.
+Thus, it is easy to imagine an optimization problem over the set of all possible paths to quickly become infeasible for more complex real-world applications.
 
 To combat this issue, many algorithms were devised over the years to obtain gradually improving computational complexities.
 The central object for this manuscript is the paper~\cite{Chan2007}.
 It combines previous ideas by noticing a connection to geometric subproblems which was previously omitted.
 While this is impressive, one should not hope for a drastic improvement in runtime.
-The improvements made over time are very gradual, as can be seen in Table~\ref{tab:runtimes}
+In fact, the progress made in the computational complexity over time is very gradual, as can be seen in Table~\ref{tab:runtimes}.
 
 \setlength{\tabcolsep}{18pt}
 \renewcommand{\arraystretch}{1.5}
@@ -53,10 +53,10 @@ The improvements made over time are very gradual, as can be seen in Table~\ref{t
 \end{table}
 
 In order to be less handwavy, we formally define shortest paths problems in Chapter~\ref{chap:problem-setting} in the Graph Theory framework we want to consider.
-We will also use this theoretical foundation to give an idea on how to classical solutions to different shortest paths problems are constructed.
+We will also use this theoretical foundation to give an idea on how classical solutions to different shortest paths problems are constructed.
 Afterwards, Chapter~\ref{chap:computational-geometry} will take us on a detour to Computational Geometry.
-Here, we are going to consider the problem of finding dominating pairs, which will seem very different at first.
+Here, we are going to consider the problem of finding dominating pairs, which will at first seem very different from the problem described in the previous chapter.
 In Chapter~\ref{chap:matrix-products} however, we shall see the central connection between these dominating pairs and the graph problem setting we have laid out for ourselves.
 Particularly, we will relate the components of dominating pairs, a specific matrix product, and shortest paths problems.
-To finish the chapter we then also state a method to recover the shortest paths computed from an intermediary data structure we create along the way.
+To finish the chapter we then also state a method to recover the shortest paths from an intermediary data structure we create along the way in an efficient manner.
 Lastly, Chapter~\ref{chap:summary} gives a summary of the entire manuscript, and puts the work mentioned here into context with later publications.

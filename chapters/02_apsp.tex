@@ -1,4 +1,4 @@
-\chapter{Problem Setting}\label{chap:problem-setting}
+\chapter{Problem Description}\label{chap:problem-setting}
 
 \section{Finding Shortest Paths}
 
@@ -6,10 +6,10 @@ Throughout this manuscript we assume $G = (V, E, \omega)$ to be a directed weigh
 In particular we make use of the notations of
 \begin{itemize}
     \item a set of \emph{vertices} $V \subseteq \bb{Z}$,
-    \item a set of \emph{edges} $E \subseteq \power{V}$, and
-    \item a \emph{weight mapping} $\omega \in E' = \ISET{\varphi: E \rightarrow \bb{R}}{$\varphi$ linear}$.
+    \item a set of \emph{edges} $E \subseteq V \times V$, and
+    \item a \emph{weight mapping} $\omega \in \ISET{\varphi: E \rightarrow \bb{R}}{$\varphi$ additive, that is $\omega(e_1 \oplus e_2) = \omega(e_1) + \omega(e_2)$}$.
 \end{itemize}
-In combining multiple edges we define a path $p \in \fk{P}(G)$ to be a tuple of edges $(e_1, e_2, \dots, e_n)$ such that each subsequent pair of edges within the path are connected within the graph.
+In combining multiple edges we define a path $p \in \fk{P}(G)$ in the set of all possible paths to be a tuple of edges $(e_1, e_2, \dots, e_n)$ such that each subsequent pair of edges within the path are connected within the graph.
 This can be expressed through the condition $\forall i = 1, \dots, n - 1: e_i^{(2)} = e_{i + 1}^{(1)}$, where $e^{(1)}$ denotes the starting vertex and $e^{(2)}$ signifies the end vertex of the edge $e$.
 By identifying each edge with its two constituent vertices and keeping track of the number of total elements in the tuple we can equivalently write $p = (e_1, e_2, \dots, e_n) = (v_1, \dots, v_{n + 1})$, where $e_i = (v_i, v_{i + 1})$.
 For ease of notation we further denote the subset of all paths from a vertex $u \in V$ to a vertex $v \in V$ by
@@ -22,9 +22,9 @@ For vertices $u, v, w \in V$ and related paths $p_1 = {(u_i)}_{i = 1}^n \in \fk{
 \]
 
 In applications of graph theory one often wants to find paths in a graph that satisfy certain properties.
-Our quantity of interest will be the \emph{weight} any path $p \in \fk{P}(G)$ on a weighted graph $G$ defined by
+Our quantity of interest will be the \emph{weight} of any path $p \in \fk{P}(G)$ on a weighted graph $G$ defined by
 \[
-    \omega(p) \coloneqq \omega\left( e_1 + e_2 + \cdots + e_n \right) = \sum\limits_{i = 1}^n \omega(e_i),
+    \omega(p) \coloneqq \sum\limits_{i = 1}^n \omega(e_i),
 \]
 where we applied the linearity of $\omega$ in the equality.
 In particular, we will try to find those paths which obtain the minimum weight possible between two vertices.
@@ -37,8 +37,8 @@ In general, the existence and uniqueness of a shortest path cannot be guaranteed
 One example where the existence can never be satisfied is a graph with two connected components $V_1, V_2$.
 Taking any nodes $u \in V_1, v \in V_2$, one can never find a path from $u$ to $v$, and vice versa.
 Such unconnected graphs can be dealt with by choosing an appropriate initialization in the shortest path finding algorithms.
-This, in practice, this never causes any problems.
-Much more problematic is the existence of \emph{negative weight cycles}, that is a path $c = (v_1, v_2, \dots, v_n), v_1 = v_n = a, a \in V$, with weight $\omega(c) < 0$.
+This, in practice, never causes any problems.
+Much more problematic is the existence of \emph{negative weight cycles}, that is paths $c = (v_1, v_2, \dots, v_n), v_1 = v_n = a, a \in V$, with weights $\omega(c) < 0$.
 Suppose that for two vertices $u, v \in V$ the vertex $a$ from the negative weight cycle $c$ were reachable on a path $p = (u_1, u_2, \dots, u_{j - 1}, a, u_{j + 1}, \dots, u_n), u_1 = u, u_n = v$, for some $j \in \sset{1, \dots, n}$.
 Decomposing $p = (u_1, u_2, \dots, u_{j - 1}, a) \oplus (a, u_{j + 1}, \dots, u_n) \eqqcolon p_1 \oplus p_2$, we can now compute
 \[
@@ -47,12 +47,12 @@ Decomposing $p = (u_1, u_2, \dots, u_{j - 1}, a) \oplus (a, u_{j + 1}, \dots, u_
 Hence, by repeatedly traversing the negative weight cycle $c$ after reaching vertex $a$ we can decrease the total weight of the path from $u$ to $v$ to an arbitrarily small number.
 By this construction, there can be no shortest path from $u$ to $v$ although there clearly exists a path $p \in \fk{P}(G; u, v)$.
 Concluding from this remark, we explicitly assume that our graph contains no negative weight cycles.
-This in fact does not prove a constraint on our weight function $\omega$ to only map to $\bb{R}_{\ge 0}$, but rather an abstract bound on the graphs we are about to consider further.
+This in fact does not prove a huge constraint on our weight function $\omega$ to only map to $\bb{R}_{\ge 0}$, but rather an abstract bound on the graphs we are about to consider further.
 
 \section{Single Source Shortest Paths Problems}
 
 With the elementary definition of a shortest path in hand we can now consider the general set of shortest paths problems, cf.~\cite[Chapter~24]{Cormen2001}.
-The obvious question is the number of degrees of freedom we consider when computing shortest paths.
+The question first turns to the number of degrees of freedom we consider when computing shortest paths.
 Instead of directly considering all possible vertex pairs $(u, v) \in V \times V$, we first reduce the problem of finding shortest paths to the following two cases:
 \begin{itemize}
     \item Fixing the vertex at the start of the shortest path, we can get the class of so-called \emph{Single Source Shortest Paths Problems} (SSSPPs).
@@ -77,7 +77,7 @@ We note that the ordering of the vertices can be seen in our description of $V \
 
 Solving SSSPPs in an algorithmic manner will always require an update by a so-called \emph{relaxation step}.
 In this update step the algorithm compares the weights of paths from the starting vertex through an intermediate vertex to the target vertex and then updates the underlying weight vector accordingly.
-This step corresponds to checking if a path with a lower weight is possible by taking a detour through another vertex.
+This step corresponds to checking if a path with a lower weight can be constructed by taking a detour through another vertex.
 Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; note that the source vertex is not explicitly mentioned, but instead implicitly given by the weight vector $w$.
 
 \begin{figure}[ht]
@@ -89,7 +89,7 @@ Figure~\ref{alg:relaxation} shows the relaxation in pseudocode for one edge; not
                 Edge $e = (u, v)$, \\
                 estimated weight vector $w$
             }
-            \Def{\emph{relax}$(u, v, w)$}{
+            \Def{\textsc{relax}$(u, v, w)$}{
                 \If{$w(v) > w(u) + \omega(e)$}{
                     $w(v) \coloneqq w(u) + \omega(e)$\;
                 }
@@ -103,9 +103,9 @@ This relaxation can now be used in the \emph{Bellman-Ford algorithm}, of which a
 We progressively iterate over all vertices, and update the estimated weight vector with the relaxation step.
 At every step within the algorithm the estimated weight vector gives an upper bound on the weight of the shortest path from a starting vertex $s \in V$.
 The particular implementation here lacks a few features present in~\cite{Cormen2001}.
-These features are mainly twofold: keeping track of preceding vertices and checking for negative weight cycles.
+These features are twofold: keeping track of preceding vertices and checking for negative weight cycles.
 The former can be easily inserted into the relaxation step by keeping track of each vertices predecessor after a potential update; we omit this property here because the algorithm proposed by~\cite{Chan2007} uses a completely different mechanism which we will discuss in Section~\ref{sec:recovery}.
-In contrast, the latter feature is rendered obsolete thanks to our assumption of the absence of any negative weight cycles from our graph.
+In contrast, the need for checking the existence of negative weight cycles is rendered obsolete thanks to our assumption of the absence of any negative weight cycles from our graph.
 
 \begin{figure}[ht]
     \centering
@@ -117,7 +117,7 @@ In contrast, the latter feature is rendered obsolete thanks to our assumption of
             }
             \For{$i = 1, \dots, \abs{V} - 1$}{
                 \ForEach{$e = (u, v) \in E$}{
-                    $relax(u, v, w)$
+                    \textsc{relax}$(u, v, w)$
                 }
             }
         \end{algorithm}
@@ -146,7 +146,7 @@ Computing the runtime for a graph with $\abs{V} = n \in \bb{N}$ we get $\mathcal
 There are multiple well known improvements to be made to this algorithm.
 The first is related to graph structure and its algebraic representation through matrix multiplication yielding $\mathcal{O}\left( n^3 \log(n) \right)$.
 This approach exploits efficient matrix multiplication by application of appropriate matrix products and algebraic properties.
-However, we want to deal with the matrix-graph relation later on in Section~\ref{sec:dist-prod} to make a straightforward connection to the method proposed by~\cite{Chan2007}.
+For now we will ignore this because we want to deal with the matrix-graph relation later on in Section~\ref{sec:dist-prod} to make a straightforward connection to the method proposed by~\cite{Chan2007}.
 Another improvement can be made by using the \emph{Floyd-Warshall algorithm}.
 That algorithm will be discussed in the remainder of this chapter.
 
@@ -158,7 +158,7 @@ That algorithm will be discussed in the remainder of this chapter.
             \ForEach{$s \in V$}{
                 \For{$i = 1, \dots, \abs{V} - 1$}{
                     \ForEach{$e = (u, v) \in E$}{
-                        $relax(u, v, w_s)$
+                        \textsc{relax}$(u, v, w_s)$
                     }
                 }
             }
@@ -170,11 +170,11 @@ That algorithm will be discussed in the remainder of this chapter.
 The Floyd-Warshall algorithm in Figure~\ref{alg:floyd-warshall} operates directly on matrices.
 These matrices again consist of upper bounds on the weights of shortest paths.
 Connecting the set of vectors ${(w_v)}_{v \in V}$ in Figure~\ref{alg:bellman-ford-apsp} to a matrix is straightforward by indexing the vertices according to their superset $V \subseteq \bb{Z}$.
-For convenience sake we assume that all vertices are numbered using $1, 2, \dots, n$, that is instead of considering $V \subseteq \bb{Z}$ we instead consider them to be represented by consecutive natural numbers.
+For convenience's sake we assume that all vertices are numbered using $1, 2, \dots, n$, that is instead of considering $V \subseteq \bb{Z}$ we instead consider them to be represented by consecutive natural numbers.
 We thus obtain a weight matrix $W \coloneqq {(w_{i, j})}_{i, j = 1}^{n, n}$.
 
-Initializing this weight matrix before the first iteration is apparent by the direct edges originating from every vertex, and the convention that a shortest path from $u \in V$ to itself incurs a weight of $0$.
-Observing the reasonability of this convention is immediate: Assuming the existence of a path $p = (u, u_1, u_2, \dots, u_n, u)$ with $\omega(p) < 0$, we notice that $p$ is a negative weight cycle and hence such a path cannot exist within our graph.
+The initialization this weight matrix before the first iteration is apparent from the direct edges originating from every vertex, and the convention that a shortest path from $u \in V$ to itself incurs a weight of $0$.
+This convention can immediately be seen to be intuitive: Assuming the existence of a path $p = (u, u_1, u_2, \dots, u_n, u)$ with $\omega(p) < 0$, we notice that $p$ is a negative weight cycle and hence such a path cannot exist within our graph.
 The other matrix entries are initialized in the following manner:
 \[
     w_{i, j} \coloneqq \begin{cases}
@@ -183,7 +183,7 @@ The other matrix entries are initialized in the following manner:
     \end{cases}
 \]
 
-To be able to recover shortest paths after runtime,\ \cite[Chapter~25]{Cormen2001} proposes to create a new weight matrix for every iteration.
+To be able to recover shortest paths after running the algorithm,\ \cite[Chapter~25]{Cormen2001} proposes to create a new weight matrix for every iteration.
 We will omit this additional notation here, because path recovery in~\cite{Chan2007} uses a completely different mechanism, as previously mentioned.
 This causes no problems with the algorithm, cf.~\cite[Exercise~25.4-5]{Cormen2001}.
 
@@ -205,10 +205,10 @@ This causes no problems with the algorithm, cf.~\cite[Exercise~25.4-5]{Cormen200
 \end{figure}
 
 To further highlight the connection to the previous approach we take a look at the update of the weights in Figure~\ref{alg:floyd-warshall}.
-When compared to the relaxation comparison in Figure~\ref{alg:relaxation} there is a striking similarity representing the the check for a shorter path via an other intermediate vertex.
+When compared to the relaxation comparison in Figure~\ref{alg:relaxation} there is a striking similarity representing the check for a shorter path via an other intermediate vertex.
 This relation will be preserved when we have a look at the approach described in~\cite{Chan2007} because it is essential to all shortest paths problems.
 In particular, fast evaluation of this expression will play a considerable role when considering different arguments.
 
-The complexity now amounts to $\mathcal{O}\left( n^3 \right)$ because we just need to consider three \textbf{\texttt{for}} loops over $n$ elements each.
+The complexity now amounts to $\mathcal{O}\left( n^3 \right)$ because we just need to consider three \textbf{for} loops over $n$ elements each.
 This is much better than the naive $\mathcal{O}\left( n^4 \right)$, or even the improved $\mathcal{O}\left( n^3 \log(n) \right)$, but still separated by the result from~\cite{Chan2007} by another logarithmic factor.
 What change in methodology might yield this illusive logarithmic factor\textinterrobang{}
